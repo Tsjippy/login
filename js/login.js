@@ -322,8 +322,7 @@ let startConditionalRequest = async (mediation) => {
 		let credential = await navigator.credentials.get({
 			signal: abortController.signal,
 			publicKey: {
-				challenge: publicKey.challenge,
-				hints: "client-device"
+				challenge: publicKey.challenge
 			},
 			//mediation: 'silent',
 			//mediation: 'conditional',
