@@ -8,9 +8,13 @@ add_action('init',function(){
     if(SIM\isRestApiRequest()){
         return;
     }
-    
+
     global $pagenow;
-	if( $pagenow == 'wp-login.php' && get_option("wpstg_is_staging_site") != "true" && (!isset($_GET['action']) || $_GET['action'] != 'logout')){
+	if( 
+        $pagenow == 'wp-login.php' &&                       // we want the default login page                  
+        get_option("wpstg_is_staging_site") != "true" &&    // we are not on a staging site
+        !is_user_logged_in()                                // we are not logged in  
+    ){                    
         //redirect to login screen
         wp_redirect(SITEURL."/?showlogin");
         exit;

@@ -908,6 +908,12 @@ function userLogin(){
         $redirect   = $_GET['redirect'];
     }
 
+    $result = checkAdminDetails($user);
+
+    if($result){
+        return $result;
+    }
+
     if(!empty($redirect)){
         return $redirect;
     }elseif(rtrim( $_SERVER['HTTP_REFERER'], '/' ) == rtrim(home_url(), '/')){
@@ -1073,8 +1079,65 @@ function allowPasswordlessLogin( $user, $username, $password ) {
 
         session_write_close();
 
-        return get_user_by( 'login', getFromTransient('username') );
+        $user   =  get_user_by( 'login', getFromTransient('username') );
+
+        return $user;
     }
 
     return $user;
- }
+}
+
+/**
+ * Function to redirect an admin to a page to confirm his e-mail address
+ * Taken from wp-login.php
+ *
+ * @param   object  $user       WP User object
+ *
+ * @return  string|bool         Returns a url to redirect to or false if check is not needed
+ */
+function checkAdminDetails($user){
+    // Check if it is time to add a redirect to the admin email confirmation screen.
+    if ( $user instanceof \WP_User && $user->exists() && $user->has_cap( 'manage_options' ) ) {
+        $adminEmailLifespan = (int) get_option( 'admin_email_lifespan' );
+
+        /*
+        * If `0` (or anything "falsey" as it is cast to int) is returned, the user will not be redirected
+        * to the admin email confirmation screen.
+        */
+        /** This filter is documented in wp-login.php */
+        $adminEmailCheckInterval = (int) apply_filters( 'admin_email_check_interval', 6 * MONTH_IN_SECONDS );
+
+        if ( $adminEmailCheckInterval > 0 && time() > $adminEmailLifespan ) {
+            if ( isset( $_REQUEST['redirect_to'] ) && is_string( $_REQUEST['redirect_to'] ) ) {
+                $redirectTo = $_REQUEST['redirect_to'];
+            } else {
+                $redirectTo = admin_url();
+            }
+
+            $requestedRedirectTo = isset( $_REQUEST['redirect_to'] ) && is_string( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
+
+            /**
+             * Filters the login redirect URL.
+             *
+             * @since 3.0.0
+             *
+             * @param string           $redirectTo              The redirect destination URL.
+             * @param string           $requestedRedirectTo     The requested redirect destination URL passed as a parameter.
+             * @param WP_User|WP_Error $user                    WP_User object if login was successful, WP_Error object otherwise.
+             */
+            $redirectTo = apply_filters( 'login_redirect', $redirectTo, $requestedRedirectTo, $user );
+
+            $redirectTo = add_query_arg(
+                array(
+                    'action'  => 'confirm_admin_email',
+                    'wp_lang' => get_user_locale( $user ),
+                ),
+                site_url( 'wp-login.php', 'login' )
+            );
+
+            return $redirectTo;
+        }
+    }
+
+    return false;
+}
