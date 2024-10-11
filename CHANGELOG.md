@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- redirect to admin check screen
 
 ### Changed
 
