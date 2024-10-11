@@ -27,10 +27,10 @@ async function requestLogin(){
 	//show login message
 	document.getElementById('logging_in_wrapper').classList.remove('hidden');
 
-	var form 		= document.getElementById('loginform');
-	var formData	= new FormData(form);
+	let form 		= document.getElementById('loginform');
+	let formData	= new FormData(form);
 	form.querySelectorAll('.hidden [required]').forEach(el=>{el.required = false});
-	var validity	= form.reportValidity();
+	let validity	= form.reportValidity();
 	//if not valid return
 	if(!validity){
 		return false;
@@ -38,7 +38,7 @@ async function requestLogin(){
 
 	await Main.waitForInternet();
 
-	var response	= await fetchRestApi('request_login', formData);
+	let response	= await fetchRestApi('request_login', formData);
 
 	if(response){
 		document.querySelector('#logging_in_wrapper .status_message').textContent='Succesfully logged in, redirecting...';
