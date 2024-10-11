@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- enqueing of styles and scripts
 
 ### Fixed
 
