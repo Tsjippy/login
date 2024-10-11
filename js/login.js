@@ -33,7 +33,7 @@ async function requestLogin(){
 	var validity	= form.reportValidity();
 	//if not valid return
 	if(!validity){
-		return;
+		return false;
 	}
 
 	await Main.waitForInternet();
@@ -48,10 +48,14 @@ async function requestLogin(){
 		}else{
 			location.href = response;
 		}
+
+		return true;
 	}else{
 		document.getElementById('logging_in_wrapper').classList.add('hidden');
 
 		document.querySelector('.current-method').classList.remove('hidden');
+
+		return false;
 	}
 }
 
@@ -234,6 +238,7 @@ async function processCredential(credential){
 	if(credParsing){
 		return;
 	}
+
 	if (credential) {
 		credParsing	= true;
 		let username = String.fromCodePoint(...new Uint8Array(credential.response.userHandle));
@@ -256,11 +261,11 @@ async function processCredential(credential){
 
 			showMessage('Passkey login failed, try using your username and password');
 
-			return;
+			return false;
 		}
 
 		//authentication success
-		requestLogin();
+		return await requestLogin();
 
 	} else {
 		console.log("Credential returned null");
@@ -269,6 +274,8 @@ async function processCredential(credential){
 		document.getElementById('webauthn_wrapper').classList.add('hidden');
 
 		showMessage('Passkey login failed');
+
+		return false;
 	}
 }
 
@@ -295,10 +302,10 @@ let startConditionalRequest = async (mediation) => {
 	abortController	= new AbortController();
 		
 	abortController.onAbort	= function(ev){
-		//console.log(ev);
+		console.log(ev);
 	}
 	abortController.signal.onAbort	= function(ev){
-		//console.log(ev);
+		console.log(ev);
 	}
 
 	if(mediation != 'conditional'){
@@ -337,12 +344,11 @@ let startConditionalRequest = async (mediation) => {
 			showMessage('Performing passkey login');
 		}
 		
-		processCredential(credential);
-
+		return await processCredential(credential);
 	} catch (error) {
 		if (error == "aborted") {
 			console.log("request aborted");
-			return;
+			return false;
 		}
 
 		if(error.message.includes('A request is already pending.')){
@@ -358,6 +364,8 @@ let startConditionalRequest = async (mediation) => {
 		}
 
 		console.log(error);
+
+		return false;
 	}
 }
 
@@ -493,7 +501,7 @@ function openLoginModal(){
 	modal.style.display = 'block';
 
 	//reset form
-	//modal.querySelectorAll('form > div:not(.hidden, .cf-turnstile)').forEach(el=>el.classList.add('hidden'));
+	modal.querySelectorAll('.authenticator_wrapper:not(.hidden)').forEach(el=>el.classList.add('hidden'));
 	modal.querySelector('#usercred_wrapper').classList.remove('hidden');
 
 	modal.classList.remove('hidden');
@@ -510,12 +518,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	});	
 });
 
-document.addEventListener("click", function(event){
+document.addEventListener("click", async function(event){
 	var target = event.target;
 
 	if(target.matches('.login')){
-		// Show modal with login form
 		openLoginModal();
+
+		let result	= await startConditionalRequest('silent');
+
+		// Show modal with login form
+		if(!result){
+			showMessage('Automatic passkey login failed, try using your username and password');
+
+			openLoginModal();
+		}
 	}else if(target.id == 'check_cred'){
 		// Check if a valid username and password is submitted
 		verifyCreds();
