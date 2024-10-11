@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- redirect to admin check screen
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.0.3] - 2024-10-11
+
+
+### Added
+- redirect to admin check screen
 
 ## [8.0.2] - 2024-10-11
 
