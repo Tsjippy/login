@@ -5,6 +5,7 @@
 
 ### Changed
 - enqueing of styles and scripts
+- auto login when login button clicked
 
 ### Fixed
 
