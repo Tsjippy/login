@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- enqueing of styles and scripts
-- auto login when login button clicked
 
 ### Fixed
 
 ### Updated
+
+## [8.0.2] - 2024-10-11
+
+
+### Changed
+- enqueing of styles and scripts
+- auto login when login button clicked
 
 ## [8.0.1] - 2024-10-09
 
