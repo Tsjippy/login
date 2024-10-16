@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- qr code login
 
 ### Changed
 - code cleanup
