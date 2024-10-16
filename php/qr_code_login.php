@@ -77,6 +77,10 @@ $user		= wp_get_current_user();
                 margin: 10px 0 20px 0;
                 text-align: center;
             }
+
+            main, .loadergif_wrapper{
+                margin-top: 20px;
+            }
         </style>
     </head>
     <body>
@@ -85,11 +89,11 @@ $user		= wp_get_current_user();
 			
 			<span id='message' class='uploadmessage'>Waiting for biometric</span>
 		</div>
-		<div>
+		<main>
 			<p>
 				Please authenticate to approve the qr code login request
 			</p>
-		</div>
+		</main>
     </body>
 </html>
 <?php
