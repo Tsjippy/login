@@ -1,4 +1,4 @@
-@use '../../../css/scss/global' as *;
+@use '../../../plugins/sim-plugin/includes/css/scss/global' as *;
 
 #login_wrapper {
     margin: 0;
@@ -13,7 +13,7 @@
     }
 
     .message {
-        border-left: 4px solid #bd2919;
+        border-left: 4px solid $primary_color;
         padding: 5px;
 
         &:empty{
@@ -113,6 +113,8 @@
 }
 
 #loginform{
+    padding-bottom: 20px;
+    
     div input[type="text"],
     div input[type="tel"],
     div input[type="email"],
@@ -120,10 +122,17 @@
     {
         width: 100%;
     }
-
-    padding-bottom: 20px;
 }
 
 #password-reset-form{
     margin-bottom: 5px;
+}
+
+.close-qr{
+    color: $primary_color;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-right: -15px;
 }

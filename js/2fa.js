@@ -2,27 +2,31 @@
 import {
     preparePublicKeyCredentials,
     preparePublicKeyOptions,
-	fetchRestApi
-} from './shared.js';
+} from './partials/shared.js';
+
+
+import {
+    checkWebauthnAvailable,
+} from './partials/webauth.js';
+
 
 
 console.log("2fa.js loaded");
 
-
 async function saveTwofaSettings(target){
 	// Show loader
-	var loader	= target.closest('.submit_wrapper').querySelector('.loadergif');
+	let loader	= target.closest('.submit_wrapper').querySelector('.loadergif');
 	loader.classList.remove('hidden');
 
-	var form		= target.closest('form');
+	let form		= target.closest('form');
 
 	form.querySelectorAll('.hidden [required], select[required]').forEach(el=>{el.required = false});
 
-	var validity	= form.reportValidity();
+	let validity	= form.reportValidity();
 
 	if(validity){
-		var formData	= new FormData(form);
-		var response 	= await fetchRestApi('save_2fa_settings', formData);
+		let formData	= new FormData(form);
+		let response 	= await FormSubmit.fetchRestApi('login/save_2fa_settings', formData);
 
 		if(response){
 			form.querySelectorAll('[id^="setup-"]:not(.hidden)').forEach(el=>el.classList.add('hidden'));
@@ -35,25 +39,6 @@ async function saveTwofaSettings(target){
 	}
 
 	loader.classList.add('hidden');
-}
-
-function checkWebauthnAvailable(){
-	if (window.PublicKeyCredential) {
-		PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then((available) => {
-			if (available) {
-				console.log("Supported.");
-				document.getElementById('webauthn_wrapper').classList.remove('hidden');
-			} else {
-				console.log("WebAuthn supported, Platform Authenticator not supported.");
-			}
-		})
-		.catch((err) => {
-			console.error("Something went wrong.");
-			console.error(err);
-		});
-	} else {
-		console.log("Not supported.");
-	}
 }
 
 function showTwofaSetup(target) {
@@ -77,15 +62,15 @@ function showTwofaSetup(target) {
 }
 
 async function removeWebAuthenticator(target){
-	var table   = target.closest('table');
-	var row     = target.closest('tr');
+	let table   = target.closest('table');
+	let row     = target.closest('tr');
 
-	var formData	= new FormData();
+	let formData	= new FormData();
 	formData.append('key',target.dataset.key);
 
 	Main.showLoader(target, true);
 
-	var response 	= await fetchRestApi('remove_web_authenticator', formData);
+	let response 	= await FormSubmit.fetchRestApi('login/remove_web_authenticator', formData);
 
 	if(response){
 		if(table.rows.length==2){
@@ -100,7 +85,7 @@ async function removeWebAuthenticator(target){
 
 //Start registration with button click
 async function registerBiometric(target){
-    var identifier  = target.closest('#webauthn_wrapper').querySelector('[name="identifier"]').value;
+    let identifier  = target.closest('#webauthn_wrapper').querySelector('[name="identifier"]').value;
     if(identifier == ''){
 		Main.displayMessage('Please specify a device name', 'error');
       return;
@@ -108,25 +93,25 @@ async function registerBiometric(target){
 
     //show loader
     document.getElementById('add_webauthn').classList.add('hidden');
-    var loaderHtml = `<div id="loader_wrapper" style='margin-bottom:20px;'><span class="message"></span><img class="loadergif" src="${sim.loadingGif}" height="30px;"></div>`;
+    let loaderHtml = `<div id="loader_wrapper" style='margin-bottom:20px;'><span class="message"></span><img class="loadergif" src="${sim.loadingGif}" height="30px;"></div>`;
     document.getElementById('add_webauthn').insertAdjacentHTML('afterEnd', loaderHtml);
-	var message		= document.querySelector('#loader_wrapper .message');
+	let message		= document.querySelector('#loader_wrapper .message');
 
 	try{
 		// Get biometric challenge
-		var formData			= new FormData();
+		let formData			= new FormData();
 		formData.append('identifier', identifier);
-		var response			= await fetchRestApi('fingerprint_options', formData);
+		let response			= await FormSubmit.fetchRestApi('login/fingerprint_options', formData);
 		if(!response){
 			throw new Error('Options retrieval failed');
 		}
-		var publicKey 			= preparePublicKeyOptions(response);
+		let publicKey 			= preparePublicKeyOptions(response);
 
 		// Update the message
 		message.textContent  	= 'Please authenticate...';
 
 		// Ask user to verify
-		var credentials 		= await navigator.credentials.create({publicKey});
+		let credentials 		= await navigator.credentials.create({publicKey});
 
 		// Update the message
 		message.textContent  	= 'Saving authenticator...';
@@ -136,7 +121,7 @@ async function registerBiometric(target){
 		
 		formData			= new FormData();
 		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
-		response			= await fetchRestApi('store_fingerprint', formData);
+		response			= await FormSubmit.fetchRestApi('login/store_fingerprint', formData);
 		if(!response){
 			throw new Error('Storing biometric failed');
 		}
@@ -173,7 +158,7 @@ async function sendValidationEmail(target){
 	var formData	= new FormData();
 	formData.append('username', username);
 
-	var response	= await fetchRestApi('request_email_code', formData);
+	var response	= await FormSubmit.fetchRestApi('login/request_email_code', formData);
 
 	if(response){
 		document.getElementById('email-message').innerHTML	= response;

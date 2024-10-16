@@ -53,6 +53,9 @@ function loginModal($message='', $required=false, $username=''){
                 <p class="message"><?php
                     if(!empty($message)){echo $message;}
                 ?></p>
+
+                <div id='qrcode-wrapper' style='margin-top: -30px;min-height: 30px;'><span></span></div>
+
                 <form id="loginform" action="login" method="post">
                     <input type='hidden' name='action' value='request_login'>
 
@@ -81,6 +84,7 @@ function loginModal($message='', $required=false, $username=''){
                         <?php do_action( 'login_form' );?>
                         
                         <button type='button' id='check_cred' class='button'>Verify credentials</button>
+                        <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
                         <img class='loadergif hidden' src='<?php echo SIM\LOADERIMAGEURL;?>' loading='lazy' alt='loader'>
                     </div>
 

@@ -4,6 +4,24 @@ use SIM;
 
 add_shortcode('twofa_setup', __NAMESPACE__.'\twoFaSettingsForm');
 function twoFaSettingsForm($userId=''){
+	//we need to approve a qr code login
+	if(!empty($_GET['token']) && !empty($_GET['key'])){
+		?>
+		<div class='loadergif_wrapper'>
+			<img class='loadergif' src='<?php echo SIM\LOADERIMAGEURL;?>' loading='lazy'>
+			
+			<span id='message' class='uploadmessage'>Waiting for biometric</span>
+		</div>
+		<div>
+			<p>
+				Please authenticate to approve the qr code login request
+			</p>
+		</div>
+		<?php
+		wp_enqueue_script('sim_qr_code_login', SIM\pathToUrl(MODULE_PATH.'js/qr_code_login.min.js'), [], MODULE_VERSION, true);
+		return ob_get_clean();
+	}
+
 	//Load js
 	wp_enqueue_script('sim_2fa_script');
 

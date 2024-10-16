@@ -1,6 +1,5 @@
 import {
-    closeMobileMenu,
-    fetchRestApi
+    closeMobileMenu
 } from './shared.js';
 
 console.log("logout.js loaded");
@@ -43,7 +42,7 @@ async function logout(event){
 
         var formData	= new FormData();
 
-        var response    = await fetchRestApi('logout', formData);
+        var response    = await FormSubmit.fetchRestApi('login/logout', formData);
 
         if(response){
             Main.displayMessage(response,'success', false, true);

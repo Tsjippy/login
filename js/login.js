@@ -1,20 +1,25 @@
 import {
 	closeMobileMenu,
-    preparePublicKeyCredentials,
-    preparePublicKeyOptions,
-	fetchRestApi
-} from './shared.js';
+	showMessage
+} from './partials/shared.js';
 
-window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
-	result => {
-	  if (!result) {
-		console.log("No platform authenticator found. If your OS does not come with one, try using devtools to set one up.");
-	  }
-	}
-);
+import {
+	showLoginQrCode,
+	hideQrCode
+} from './partials/qr_login.js';
+
+import {
+	verifyWebauthn,
+	startConditionalRequest,
+	checkWebauthnAvailable,
+	showTwoFaFields,
+	webauthnSupported
+} from './partials/webauth.js';
 
 //Add an event listener to the login or register button
 console.log("Login.js loaded");
+
+let modal;
 
 //show loader
 async function requestLogin(){
@@ -38,7 +43,7 @@ async function requestLogin(){
 
 	await Main.waitForInternet();
 
-	let response	= await fetchRestApi('request_login', formData);
+	let response	= await FormSubmit.fetchRestApi('login/request_login', formData);
 
 	if(response){
 		document.querySelector('#logging_in_wrapper .status_message').textContent='Succesfully logged in, redirecting...';
@@ -56,89 +61,6 @@ async function requestLogin(){
 		document.querySelector('.current-method').classList.remove('hidden');
 
 		return false;
-	}
-}
-
-// Send request to start webauthn
-async function verifyWebauthn(methods){	
-	//show webauthn messages
-	document.getElementById('webauthn_wrapper').classList.remove('hidden');
-
-	var username	= document.getElementById('username').value;
-
-	try{
-		var formData			= new FormData();
-		formData.append('username', username);
-
-		var response			= await fetchRestApi('auth_start', formData);
-		if(!response){
-			throw new Error('auth_start failed');
-		}
-
-		var publicKey			= preparePublicKeyOptions(response);
-
-		// Update message
-		document.querySelector('#webauthn_wrapper .status_message').textContent	= 'Waiting for biometric';
-
-		// Verify on device
-		var credentials			= await navigator.credentials.get({	publicKey });
-
-		// Update message
-		document.querySelector('#webauthn_wrapper .status_message').textContent	= 'Verifying...';
-
-		// Verify on the server
-		const publicKeyCredential 	= preparePublicKeyCredentials(credentials);
-		formData					= new FormData();
-		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
-		response					= await fetchRestApi('auth_finish', formData);
-		if(!response){
-			throw new Error('auth_finish failed');
-		}
-
-		//authentication success
-		requestLogin();
-	}catch (error){
-		if(document.getElementById('logging_in_wrapper').classList.add('hidden'));
-
-		//authentication failed
-		document.querySelector('#webauthn_wrapper').classList.add('hidden');
-
-		if(methods.length == 1){
-			showMessage('Authentication failed, please setup an additional login factor.');
-			requestLogin();
-		}else{
-			var message;
-			if(error['message'] == "No authenticator available"){
-				message = "No biometric login for this device found. <br>Give verification code.";
-			}else{
-				message = 'Web authentication failed, please give verification code.';
-				message += '<button type="button" class="button small" id="retry_webauthn" style="float:right;margin-top:-20px;">Retry</button>';
-				console.error('Authentication failure: '+error['message']);
-			}
-			showMessage(message);
-
-			//Show other 2fa fields
-			showTwoFaFields(methods);
-		}
-	}
-}
-
-// Request email code for 2fa login
-async function requestEmailCode(){
-	//add new one
-	var loader				= "<img id='loader' src='"+sim.loadingGif+"' style='height:30px;margin-top:-6px;float:right;'>";
-	showMessage(`Sending e-mail... ${loader}`);
-
-	var username	= document.getElementById('username').value;
-	var formData	= new FormData();
-	formData.append('username',username);
-
-	var response	= await fetchRestApi('request_email_code', formData, false);
-	
-	if(response){
-		showMessage(response);
-	}else{
-		showMessage(`Sending e-mail failed`);
 	}
 }
 
@@ -162,7 +84,7 @@ async function verifyCreds(){
 	formData.append('username',username);
 	formData.append('password',password);
 
-	var response	= await fetchRestApi('check_cred', formData);
+	var response	= await FormSubmit.fetchRestApi('login/check_cred', formData);
 
  	if(response){
 		if(response == 'false') {
@@ -193,7 +115,7 @@ async function resetPassword(form){
 	let formData	= new FormData(form);
 	formData.append('username', username);
 	
-	let response	= await fetchRestApi('request_pwd_reset', formData);
+	let response	= await FormSubmit.fetchRestApi('login/request_pwd_reset', formData);
 
 	if (response) {
 		Main.displayMessage(response,'success');
@@ -212,7 +134,7 @@ async function requestAccount(target){
 
 	var formData	= new FormData(form);
 
-	var response	= await fetchRestApi('request_user_account', formData);
+	var response	= await FormSubmit.fetchRestApi('login/request_user_account', formData);
 	
 	if(response){
 		Main.displayMessage(response);
@@ -223,194 +145,6 @@ async function requestAccount(target){
 
 	// Hide loader
 	form.querySelector('.loadergif').classList.add('hidden');
-}
-
-function showMessage(message){
-	document.querySelector("#login_wrapper .message").innerHTML= DOMPurify.sanitize(message);
-}
-
-let webauthnSupported	= false;
-let modal;
-let credParsing			= false;
-let abortController;
-
-async function processCredential(credential){
-	if(credParsing){
-		return;
-	}
-
-	if (credential) {
-		credParsing	= true;
-		let username = String.fromCodePoint(...new Uint8Array(credential.response.userHandle));
-
-		document.querySelector('#webauthn_wrapper .status_message').textContent='Verifying credentials...';
-
-		// Verify on the server
-		const publicKeyCredential 	= preparePublicKeyCredentials(credential);
-		let formData				= new FormData();
-		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
-		let response				= await fetchRestApi('auth_finish', formData, false);
-
-		if(response){
-			showMessage('Passkey login succesfull');
-		}else{
-			document.querySelector('#webauthn_wrapper .status_message').textContent='Please authenticate';
-
-			document.getElementById('usercred_wrapper').classList.remove('hidden');
-			document.getElementById('webauthn_wrapper').classList.add('hidden');
-
-			showMessage('Passkey login failed, try using your username and password');
-
-			return false;
-		}
-
-		//authentication success
-		return await requestLogin();
-
-	} else {
-		console.log("Credential returned null");
-
-		document.getElementById('usercred_wrapper').classList.remove('hidden');
-		document.getElementById('webauthn_wrapper').classList.add('hidden');
-
-		showMessage('Passkey login failed');
-
-		return false;
-	}
-}
-
-let startConditionalRequest = async (mediation) => {
-	if (window.PublicKeyCredential && PublicKeyCredential.isConditionalMediationAvailable) {
-		console.log("Conditional UI is understood by the browser");
-		if (!await window.PublicKeyCredential.isConditionalMediationAvailable()) {
-			console.log("Conditional UI is understood by your browser but not available");
-			return;
-		}
-	} else {
-		if (!navigator.credentials.conditionalMediationSupported) {
-			console.log("Your browser does not implement Conditional UI (are you running the right chrome/safari version with the right flags?)");
-			return;
-		} else {
-			console.log("This browser understand the old version of Conditional UI feature detection");
-		}
-	}
-
-	if(abortController != undefined){
-		abortController.abort('aborted');
-	}
-	
-	abortController	= new AbortController();
-		
-	abortController.onAbort	= function(ev){
-		console.log(ev);
-	}
-	abortController.signal.onAbort	= function(ev){
-		console.log(ev);
-	}
-
-	if(mediation != 'conditional'){
-		document.getElementById('usercred_wrapper').classList.add('hidden');
-		document.getElementById('webauthn_wrapper').classList.remove('hidden');
-
-		showMessage('Performing passkey login');
-	}
-
-	try {
-		let formData			= new FormData();
-		formData.append('username', '');
-
-		let response			= await fetchRestApi('auth_start', formData);
-		if(!response){
-			throw new Error('auth_start failed');
-		}
-
-		let publicKey			= preparePublicKeyOptions(response);
-
-		let credential = await navigator.credentials.get({
-			signal: abortController.signal,
-			publicKey: {
-				challenge: publicKey.challenge
-			},
-			//mediation: 'silent',
-			//mediation: 'conditional',
-			//mediation: 'required',
-			mediation: mediation
-		});
-
-		if(mediation == 'conditional'){	
-			document.getElementById('usercred_wrapper').classList.add('hidden');
-			document.getElementById('webauthn_wrapper').classList.remove('hidden');
-	
-			showMessage('Performing passkey login');
-		}
-		
-		return await processCredential(credential);
-	} catch (error) {
-		if (error == "aborted") {
-			console.log("request aborted");
-			return false;
-		}
-
-		if(error.message.includes('A request is already pending.')){
-			startConditionalRequest(mediation);
-		}
-
-		// only do when login modal is open
-		if(document.getElementById('usercred_wrapper').closest('.hidden') == null){
-			document.getElementById('usercred_wrapper').classList.remove('hidden');
-			document.getElementById('webauthn_wrapper').classList.add('hidden');
-
-			showMessage('Passkey login failed, try using your username and password');
-		}
-
-		console.log(error);
-
-		return false;
-	}
-}
-
-function checkWebauthnAvailable(){
-	if (window.PublicKeyCredential) {
-		PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then((available) => {
-			if (available) {
-				console.log("Supported.");
-				webauthnSupported = true;
-			} else {
-				console.log("WebAuthn supported, Platform Authenticator not supported.");
-			}
-		})
-		.catch((err) => {
-			console.error("Something went wrong.");
-			console.error(err);
-		});
-	} else {
-		console.log("Not supported.");
-	}
-}
-
-// Display the form for the 2fa email or authenticator code
-function showTwoFaFields(methods){
-	if(methods.includes('email')){
-		requestEmailCode();
-	}
-
-	//show 2fa fields
-	for(const element of methods){
-		if(element == 'webauthn'){
-			//do not show webauthn
-			continue;
-		}
-		var wrapper	= document.getElementById(element+'_wrapper');
-		if(wrapper != null){
-			wrapper.classList.remove('hidden');
-			wrapper.querySelectorAll('input').forEach(el=>window.setTimeout(() => el.focus(), 0));
-		}
-	}
-
-	//enable login button
-	document.querySelector("#login_button").disabled			= '';
-	//show login button
-	document.querySelector('#submit_login_wrapper').classList.remove('hidden');
 }
 
 function addMethods(result){
@@ -524,14 +258,15 @@ document.addEventListener("click", async function(event){
 	if(target.matches('.login')){
 		openLoginModal();
 
-		let result	= await startConditionalRequest('silent');
+		//let result	= await startConditionalRequest('silent');
 
 		// Show modal with login form
-		if(!result){
+		/* if(!result){
 			showMessage('Automatic passkey login failed, try using your username and password');
 
 			openLoginModal();
-		}
+		} */
+
 	}else if(target.id == 'check_cred'){
 		// Check if a valid username and password is submitted
 		verifyCreds();
@@ -549,6 +284,10 @@ document.addEventListener("click", async function(event){
 		requestAccount(target);
 	}else if(target.closest(`[name='fingerprintpicture']`) != null){
 		startConditionalRequest('silent');
+	}else if(target.matches('.show-login-qr')){
+		showLoginQrCode();
+	}else if(target.matches('.close-qr')){
+		hideQrCode();
 	}
 });
 
@@ -575,6 +314,5 @@ const checkIsIOS = () =>/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.
 if (checkIsIOS()) {
 	addMaximumScaleToMetaViewport();
 }
-
 
 startConditionalRequest('conditional');

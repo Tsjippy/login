@@ -5,45 +5,6 @@ export function closeMobileMenu(){
 	document.querySelectorAll("#mobile-menu-control-wrapper > button").forEach(el=>el.ariaExpanded = 'false');
 }
 
-// get response from rest api server
-export async function fetchRestApi(url, formData, showErrors=true){
-	let response;
-	formData.append('_wpnonce', sim.restNonce);
-
-	let result = await fetch(
-		`${sim.baseUrl}/wp-json${sim.restApiPrefix}/login/${url}`,
-		{
-			method: 'POST',
-			credentials: 'same-origin',
-			body: formData
-		}
-	);
-
-	try{
-		response	= await result.json();
-	}catch (error){
-		console.error(result);
-		console.error(error);
-		return false;
-	}
-
-	if(result.ok){
-		return response;
-	}else if(response.code == 'rest_cookie_invalid_nonce'){
-		Main.displayMessage('Please refresh the page and try again!', 'error');
-		console.error(response);
-		console.error(`/login/${url}`);
-		return false;
-	}else{
-		console.error(response);
-		if(showErrors){
-			Main.displayMessage(response.message, 'error');
-		}
-		console.error(`/login/${url}`);
-		return false;
-	}
-}
-
 // Decodes a Base64Url string
 const base64UrlDecode = (input) => {
 input = input
@@ -154,3 +115,7 @@ export const preparePublicKeyCredentials = data => {
 
 	return publicKeyCredential;
 };
+
+export function showMessage(message){
+	document.querySelector("#login_wrapper .message").innerHTML= DOMPurify.sanitize(message);
+}
