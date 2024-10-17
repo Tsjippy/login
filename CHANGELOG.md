@@ -9,6 +9,7 @@
 - js bug
 
 ### Updated
+- readme
 
 ## [8.04] - 2024-10-17
 
