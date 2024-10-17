@@ -94,5 +94,5 @@ export function hideQrCode(){
 
 	document.getElementById('usercred_wrapper').classList.remove('hidden');
 
-	document.getElementById(`qrcode-wrapper`).forEach(el=>el.innerHTML = '');
+	document.getElementById(`qrcode-wrapper`).innerHTML = '';
 }
