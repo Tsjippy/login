@@ -3,6 +3,7 @@
 
 ### Added
 - qr code login
+- qr code login count down timer
 
 ### Changed
 - code cleanup
