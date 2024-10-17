@@ -26,7 +26,8 @@ class QrCodeLogin{
      * @return  string      The login link
      */
     private function getLoginLink(){
-        $url            = SIM\pathToUrl(MODULE_PATH.'/php/qr_code_login.php');
+        //$url            = SIM\ADMIN\getDefaultPageLink('login', '2fa_page');
+        $url            = SIM\pathToUrl(MODULE_PATH.'php/qr_code_login.php');
 
         $this->token    = bin2hex(random_bytes(10));
         $this->key      = time();
