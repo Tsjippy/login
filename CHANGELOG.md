@@ -10,6 +10,7 @@
 - qr code login url
 
 ### Fixed
+- approve qr login url
 
 ### Updated
 
