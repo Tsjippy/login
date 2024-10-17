@@ -6,6 +6,13 @@
 ### Changed
 
 ### Fixed
+
+### Updated
+
+## [8.0.5] - 2024-10-17
+
+
+### Fixed
 - js bug
 
 ### Updated
