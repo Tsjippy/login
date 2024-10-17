@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [8.04] - 2024-10-17
+
+
+### Added
 - qr code login
 - qr code login count down timer
 
@@ -11,8 +22,6 @@
 
 ### Fixed
 - approve qr login url
-
-### Updated
 
 ## [8.0.3] - 2024-10-11
 
