@@ -7,6 +7,7 @@
 
 ### Changed
 - code cleanup
+- qr code login url
 
 ### Fixed
 
