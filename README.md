@@ -23,5 +23,5 @@ if not:
 on Devices without webauthenticators people can login by scanning a qr code using a device with authenticator enabled
 
 <br>
-2fa setup is done on the page containging the twofa_setup shortcode.<br>
+2fa setup is done on the page containing the twofa_setup shortcode.<br>
 Use like this: <code>[twofa_setup]</code>
