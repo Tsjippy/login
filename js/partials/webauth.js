@@ -1,7 +1,8 @@
 import {
     preparePublicKeyCredentials,
     preparePublicKeyOptions,
-	showMessage
+	showMessage,
+	requestLogin
 } from './shared.js';
 
 let credParsing			        = false;

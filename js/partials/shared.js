@@ -119,3 +119,46 @@ export const preparePublicKeyCredentials = data => {
 export function showMessage(message){
 	document.querySelector("#login_wrapper .message").innerHTML= DOMPurify.sanitize(message);
 }
+
+//show loader
+export async function requestLogin(){
+	//hide everything
+	document.querySelectorAll('.authenticator_wrapper:not(.hidden)').forEach(el=>{
+		el.classList.add('hidden');
+		el.classList.add('current-method');
+	});
+	
+	//show login message
+	document.getElementById('logging_in_wrapper').classList.remove('hidden');
+
+	let form 		= document.getElementById('loginform');
+	let formData	= new FormData(form);
+	form.querySelectorAll('.hidden [required]').forEach(el=>{el.required = false});
+	let validity	= form.reportValidity();
+	//if not valid return
+	if(!validity){
+		return false;
+	}
+
+	await Main.waitForInternet();
+
+	let response	= await FormSubmit.fetchRestApi('login/request_login', formData);
+
+	if(response){
+		document.querySelector('#logging_in_wrapper .status_message').textContent='Succesfully logged in, redirecting...';
+
+		if(!response.startsWith('http')){
+			location.reload();
+		}else{
+			location.href = response;
+		}
+
+		return true;
+	}else{
+		document.getElementById('logging_in_wrapper').classList.add('hidden');
+
+		document.querySelector('.current-method').classList.remove('hidden');
+
+		return false;
+	}
+}
