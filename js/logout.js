@@ -1,6 +1,6 @@
 import {
     closeMobileMenu
-} from './shared.js';
+} from './partials/shared.js';
 
 console.log("logout.js loaded");
 

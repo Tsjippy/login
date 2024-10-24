@@ -203,6 +203,15 @@ function checkCredentials(){
     return 'false';
 }
 
+// function to update the $_COOKIE variable without refreshing the page
+// Needed to create a nonce after ajax login
+function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type, $token){
+    // make sure we only write the right cookie
+    if(get_current_user_id() == $userId){
+        $_COOKIE[ LOGGED_IN_COOKIE ] = $loggedInCookie;
+    }
+}
+
 // Perform the login
 function userLogin(){
     $username       = !empty($_REQUEST['username'])   ? sanitize_text_field($_REQUEST['username'])   : '';
@@ -217,12 +226,28 @@ function userLogin(){
 
     // add a filter to allow passwordless sign in
     add_filter( 'authenticate', __NAMESPACE__.'\allowPasswordlessLogin', 999, 3 );
+
+    // perform the login
     $user = wp_signon( $creds);
+
+    // remove the filter to allow passwordless sign in
     remove_filter( 'authenticate', __NAMESPACE__.'\allowPasswordlessLogin', 999, 3 );
 
     if ( is_wp_error( $user ) ) {
         return new WP_Error('Login error', $user->get_error_message());
     }
+
+    // make sure we set the current user to the just logged in user
+    wp_set_current_user($user->ID);
+
+    // Add action to store the login cookie in $_COOKIE
+    add_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar', 10, 6 );
+
+    // Store the login in cookie
+    wp_set_auth_cookie($user->ID);
+
+    // Remove action to store the login cookie in $_COOKIE
+    remove_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar' );
 
     //Update the current logon count
     $currentLoginCount = get_user_meta( $user->ID, 'login_count', true );
@@ -255,34 +280,44 @@ function userLogin(){
     //store login date
     update_user_meta( $user->ID, 'last_login_date', date('Y-m-d'));
 
-    $accountPage  = SIM\ADMIN\getDefaultPageLink('usermanagement', 'account_page');
-
-    // Get mandatory or recommended fields
-    if(function_exists('SIM\FORMS\getAllEmptyRequiredElements') && !empty($accountPage)){
-        $fieldList   = SIM\FORMS\getAllEmptyRequiredElements($user->ID, 'all');
-    }
-
     /* check if we should redirect */
-    $urlComp    = parse_url($_SERVER['HTTP_REFERER']);
     $redirect   = '';
-    if(isset($urlComp['query'])){
+
+    // check url query arguments
+    $urlComp    = parse_url($_SERVER['HTTP_REFERER']);
+
+    // redirect to the current page if not the home page
+    if(SIM\getCurrentUrl() != get_home_url()){
+        $redirect   = get_home_url();
+    }
+    // Redirect from rest api
+    elseif(isset($urlComp['query'])){
         parse_str($urlComp['query'], $urlParam);
+
         if(isset($urlParam['redirect'])){
             $redirect   = $urlParam['redirect'];
         }
-    }elseif(!empty($_GET['redirect'])){
+    }
+    // Redirect from url
+    elseif(!empty($_GET['redirect'])){
         $redirect   = $_GET['redirect'];
     }
 
-    $result = checkAdminDetails($user);
+    $redirect   = apply_filters('login_redirect', $redirect, $redirect, $user);
+
+    // check if we are an admin that needs to confirm its details
+    $result     = checkAdminDetails($user);
 
     if($result){
-        return $result;
+        $redirect   = $result;
     }
 
-    if(!empty($redirect)){
-        return $redirect;
-    }elseif(rtrim( $_SERVER['HTTP_REFERER'], '/' ) == rtrim(home_url(), '/')){
+    $message    = 'Login successful';
+
+    if(
+        empty($redirect) &&                                                 // we are not redirecting
+        rtrim( $_SERVER['HTTP_REFERER'], '/' ) == rtrim(home_url(), '/')    // We are logging in to the home page
+    ){
         //get 2fa methods for this user
         $methods  = get_user_meta($user->ID, '2fa_methods', true);
 
@@ -292,22 +327,17 @@ function userLogin(){
 
             SIM\printArray($url);
             if($url){
-                return $url;
+                $redirect   = $url;
             }
         }
-
-        //redirect to account page to fill in required fields
-        if (!isset($_SESSION['showpage']) && !empty($fieldList) && !empty($accountPage)){
-            return $accountPage;
-        }else{
-            if(isset($_SESSION['showpage'])){
-                unset($_SESSION['showpage']);
-            }
-            return 'Login successful';
-        }
-    }else{
-        return 'Login successful';
     }
+
+    return [
+        'redirect'  => $redirect,
+        'message'   => $message,
+        'nonce'     => wp_create_nonce('wp_rest'),
+        'id'        => $user->ID
+    ];
 }
 
 // Send password reset e-mail

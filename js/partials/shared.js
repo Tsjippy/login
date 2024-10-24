@@ -117,7 +117,7 @@ export const preparePublicKeyCredentials = data => {
 };
 
 export function showMessage(message){
-	document.querySelector("#login_wrapper .message").innerHTML= DOMPurify.sanitize(message);
+	document.querySelector("#message").innerHTML= DOMPurify.sanitize(message);
 }
 
 //show loader
@@ -145,12 +145,36 @@ export async function requestLogin(){
 	let response	= await FormSubmit.fetchRestApi('login/request_login', formData);
 
 	if(response){
-		document.querySelector('#logging_in_wrapper .status_message').textContent='Succesfully logged in, redirecting...';
+		console.log(response);
+		// We are logging in from an iframe
+		if(window.self !== window.top){
 
-		if(!response.startsWith('http')){
-			location.reload();
+			// change message
+			console.log(window.parent.document.getElementById('iframe-loader'));
+			console.log(window.parent.document);
+			console.log(window.parent);
+			window.parent.document.getElementById('iframe-loader').textContent	= 'Succesfully logged in, you may now close this popup';
+
+			// Refresh the rest api nonce
+			window.parent.sim.restNonce	= response.nonce;
+
+			// Update user id
+			window.parent.sim.userId	= response.id;
+
+			console.log(window.parent.document.getElementById('iframe-loader'));
+
+			// close all iframes
+			window.parent.document.querySelectorAll('iframe').forEach(el=>el.remove());
 		}else{
-			location.href = response;
+			document.querySelector('#logging_in_wrapper .status_message').textContent='Succesfully logged in, redirecting...';
+
+			if(response.redirect == ''){
+				// refresh the page
+				location.reload();
+			}else{
+				// go to the redirect page
+				location.href = response.redirect;
+			}
 		}
 
 		return true;

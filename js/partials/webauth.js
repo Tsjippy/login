@@ -83,10 +83,14 @@ export async function verifyWebauthn(methods){
 	let username	= document.getElementById('username').value;
 
 	try{
-		webAuthVerification(username, document.querySelector('#webauthn_wrapper .status_message'));
+		let result	= await webAuthVerification(username, document.querySelector('#webauthn_wrapper .status_message'));
+
+		if(!result){
+			throw new Error( 'Webauthentication failed' );
+		}
 
 		//authentication success
-		requestLogin();
+		await requestLogin();
 	}catch (error){
 		if(document.getElementById('logging_in_wrapper').classList.add('hidden'));
 
