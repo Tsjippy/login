@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- login modal to login and continue on the same page
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.0.8] - 2024-10-24
+
+
+### Added
+- login modal to login and continue on the same page
 
 ## [8.0.7] - 2024-10-18
 
