@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- login modal to login and continue on the same page
 
 ### Changed
 
