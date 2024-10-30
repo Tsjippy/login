@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- login problems
 
 ### Updated
+
+## [8.0.9] - 2024-10-30
+
+
+### Fixed
+- login problems
 
 ## [8.0.8] - 2024-10-24
 
