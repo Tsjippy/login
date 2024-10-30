@@ -198,6 +198,7 @@ export let startConditionalRequest = async (mediation) => {
 	}
 
 	if(abortController != undefined){
+		console.log('Cancelling previous request');
 		abortController.abort('aborted');
 	}
 	

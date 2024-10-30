@@ -216,14 +216,15 @@ document.addEventListener("click", async function(event){
 	if(target.matches('.login')){
 		openLoginModal();
 
-		//let result	= await startConditionalRequest('silent');
+		console.log('Trying silent login');
+		let result	= await startConditionalRequest('silent');
 
 		// Show modal with login form
-		/* if(!result){
+		if(!result){
 			showMessage('Automatic passkey login failed, try using your username and password');
 
 			openLoginModal();
-		} */
+		}
 
 	}else if(target.id == 'check_cred'){
 		// Check if a valid username and password is submitted
@@ -272,5 +273,3 @@ const checkIsIOS = () =>/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.
 if (checkIsIOS()) {
 	addMaximumScaleToMetaViewport();
 }
-
-startConditionalRequest('conditional');
