@@ -7,6 +7,7 @@
 
 ### Fixed
 - webauth login
+- input color in darkmode
 
 ### Updated
 
