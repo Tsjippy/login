@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- login on mobile
 
 ### Updated
+
+## [8.1.0] - 2024-11-01
+
+
+### Fixed
+- login on mobile
 
 ## [8.0.9] - 2024-10-30
 
