@@ -9,8 +9,6 @@ import {
     checkWebauthnAvailable,
 } from './partials/webauth.js';
 
-
-
 console.log("2fa.js loaded");
 
 async function saveTwofaSettings(target){
@@ -180,6 +178,8 @@ document.addEventListener("DOMContentLoaded",function() {
 	var el = document.querySelector('#webauthn_wrapper.hidden');
 	if(el != null){
 		checkWebauthnAvailable();
+
+		el.classList.remove('hidden');
 	}	
 });
 
