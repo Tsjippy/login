@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- webauth login
 
 ### Updated
 
