@@ -54,14 +54,14 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                 <div id='usercred_wrapper'>
                     <label style="width: 100%;">
                         Username<br>
-                        <input id="username" type="text" class='wide' name="username" value="<?php echo $username;?>" autofocus autocomplete="username webauthn" style='width: calc(100% - 40px);display:inline-block;color: black;'>
+                        <input id="username" type="text" class='wide' name="username" value="<?php echo $username;?>" autofocus autocomplete="username webauthn" style='width: calc(100% - 40px);display:inline-block;'>
                         <?php echo $imgSvg;?>
                     </label>
 
                     <div class="password">
                         <label style='width:100%'>
                             Password
-                            <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn" style='color: black;'>
+                            <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn">
                         </label>
                         <button type="button" class='toggle_pwd_view' data-toggle="0" title="Show password">
                             <img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
