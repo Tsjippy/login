@@ -1,4 +1,4 @@
-import { fetchRestApi } from './shared.js';
+import { fetchRestApi } from './partials/shared.js';
 import { togglePassworView } from './login.js';
 
 console.log('Password strength.js loaded');

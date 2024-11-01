@@ -261,7 +261,7 @@ export let startConditionalRequest = async (mediation) => {
 		}
 
 		// only do when login modal is open
-		if(usercredWrapper != null && usercredWrapper.closest('.hidden') == null){
+		if(usercredWrapper != null){
 			usercredWrapper.classList.remove('hidden');
 			document.getElementById('webauthn_wrapper').classList.add('hidden');
 
