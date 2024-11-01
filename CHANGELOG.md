@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- webauth login
-- input color in darkmode
 
 ### Updated
+
+## [8.1.1] - 2024-11-01
+
+
+### Fixed
+- webauth login
+- input color in darkmode
 
 ## [8.1.0] - 2024-11-01
 
