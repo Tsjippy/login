@@ -2,6 +2,8 @@
 namespace SIM\LOGIN;
 use SIM;
 
+$standAlone = false;
+
 if ( !defined( 'ABSPATH' ) ) {
     require_once(__DIR__ . '/wordpress_loader.php');
     loadWordpress('Login');
@@ -9,11 +11,12 @@ if ( !defined( 'ABSPATH' ) ) {
     $username   = '';
     
     $required   = true;
+    $standAlone = true;
 }elseif($required === null){
     return;
 }
 
-if(is_user_logged_in()){
+if($standAlone && is_user_logged_in()){
     ?>
     <body>
         <div style='text-align:center;margin-top:20px;'>
@@ -117,6 +120,8 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
 </div>
 <?php
 
-print_footer_scripts();
+if($standAlone){
+    print_footer_scripts();
 
-exit;
+    exit;
+}
