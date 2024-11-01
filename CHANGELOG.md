@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- some bugs
 
 ### Updated
+
+## [8.1.2] - 2024-11-01
+
+
+### Fixed
+- some bugs
 
 ## [8.1.1] - 2024-11-01
 
