@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- auto webauth when login modal is open
 
 ### Fixed
 
