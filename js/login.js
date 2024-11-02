@@ -273,3 +273,12 @@ const checkIsIOS = () =>/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.
 if (checkIsIOS()) {
 	addMaximumScaleToMetaViewport();
 }
+
+let params = new Proxy(new URLSearchParams(window.location.search), {
+	get: (searchParams, prop) => searchParams.get(prop),
+});
+
+if(params['showlogin'] != null){
+	console.log('Trying silent login');
+	startConditionalRequest('silent');
+}
