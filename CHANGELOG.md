@@ -7,6 +7,7 @@
 - auto webauth when login modal is open
 
 ### Fixed
+- login redirect
 
 ### Updated
 
