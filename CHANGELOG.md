@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.1.3] - 2024-11-14
+
+
+### Changed
 - auto webauth when login modal is open
 
 ### Fixed
 - login redirect
-
-### Updated
 
 ## [8.1.2] - 2024-11-01
 
