@@ -288,7 +288,7 @@ function userLogin(){
 
     // redirect to the current page if not the home page
     if(SIM\getCurrentUrl() != get_home_url()){
-        $redirect   = get_home_url();
+        $redirect   = SIM\getCurrentUrl();
     }
     // Redirect from rest api
     elseif(isset($urlComp['query'])){
