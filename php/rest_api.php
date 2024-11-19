@@ -13,7 +13,8 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 use WP_Error;
 
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', function($urls){
+add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addLoginUrls');
+function addLoginUrls($urls){
     $urls[] = RESTAPIPREFIX.'/login/check_cred';
     $urls[] = RESTAPIPREFIX.'/login/request_login';
     $urls[] = RESTAPIPREFIX.'/login/request_pwd_reset';
@@ -21,9 +22,10 @@ add_filter('sim_allowed_rest_api_urls', function($urls){
     $urls[] = RESTAPIPREFIX.'/login/request_user_account';
 
     return $urls;
-});
+}
 
-add_action( 'rest_api_init', function () {
+add_action( 'rest_api_init', __NAMESPACE__.'\loginRestApi');
+function loginRestApi() {
     // check credentials
 	register_rest_route(
 		RESTAPIPREFIX.'/login',
@@ -138,9 +140,10 @@ add_action( 'rest_api_init', function () {
 			)
 		)
 	);
-});
+}
 
-add_filter( 'check_password', function($check, $password, $storedHash, $userId ){
+add_filter( 'check_password', __NAMESPACE__.'\checkPassword', 10, 4);
+function checkPassword($check, $password, $storedHash, $userId ){
     if(empty($check) && empty($storedHash)){
         $user           = get_user_by('id', $userId);
         $storedHash    = $user->data->user_pass;
@@ -174,7 +177,7 @@ add_filter( 'check_password', function($check, $password, $storedHash, $userId )
     }
 
     return $check;
-}, 10, 4);
+}
 
 
 // Verify username and password

@@ -3,7 +3,8 @@ namespace SIM\LOGIN;
 use SIM;
 
 //disable wp-login.php except for logout
-add_action('init',function(){
+add_action('init', __NAMESPACE__.'\redirectToLogin');
+function redirectToLogin(){
     // do not run during rest request
     if(SIM\isRestApiRequest()){
         return;
@@ -19,15 +20,17 @@ add_action('init',function(){
         wp_redirect(SITEURL."/?showlogin");
         exit;
 	}
-});
+}
 
 //make sure wp_login_url returns correct url
-add_filter( 'login_url', function($loginUrl, $redirect ){
+add_filter( 'login_url', __NAMESPACE__.'\loginUrl', 10, 2);
+function loginUrl($loginUrl, $redirect ){
     return add_query_arg(['showlogin' => '', 'redirect' => $redirect], home_url());
-}, 10, 2);
+}
 
 // Tweak the message people see when not logged in and making an ajax request
-add_filter('sim-content-filter-rest-not-logged-in-message', function($message){
+add_filter('sim-content-filter-rest-not-logged-in-message', __NAMESPACE__.'\notLoggedInMsg');
+function notLoggedInMsg($message){
     $message    = "<div id='iframe-loader'>";
         $message    .= "<h4>You are not logged in, loading login form...</h4>";
         $message    .= "<img class='loadergif' src='".SIM\LOADERIMAGEURL."'>";
@@ -35,16 +38,17 @@ add_filter('sim-content-filter-rest-not-logged-in-message', function($message){
     $message    .= "<iframe src='".SITEURL."/wp-content/sim-modules/login/php/login_modal.php?iframe=true' style='position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
     
     return $message;
-});
+}
 
 // Tweak the message people see when not logged in and making an ajax request
-add_filter('sim-content-filter-rest-not-logged-in-data', function($data){
+add_filter('sim-content-filter-rest-not-logged-in-data', __NAMESPACE__.'\notLoggedInData');
+function notLoggedInData($data){
     if(!empty($data['status'])){
         unset($data['status']);
     }
 
     return $data;
-});
+}
 
 /**
  * Creates a login form modal
@@ -60,7 +64,8 @@ function loginModal($message='', $required=false, $username=''){
 }
 
 //add hidden login modal to page if not logged in
-add_action( 'loop_end', function () {
+add_action( 'loop_end', __NAMESPACE__.'\loopEnd', 99999);
+function loopEnd() {
     if(!is_main_query()){
         return;
     }
@@ -72,7 +77,7 @@ add_action( 'loop_end', function () {
             loginModal();
         }
     }
-}, 99999);
+}
 
 // Disable administration email verification
 add_filter( 'admin_email_check_interval', '__return_false' );

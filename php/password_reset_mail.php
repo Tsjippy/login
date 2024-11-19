@@ -29,7 +29,8 @@ function sendPasswordResetMessage($user){
 	}
 }
 
-add_filter( 'retrieve_password_message', function($message, $key, $userLogin, $user){
+add_filter( 'retrieve_password_message', __NAMESPACE__.'\passwordMessage', 10, 4);
+function passwordMessage($message, $key, $userLogin, $user){
 	$pageurl	 = get_permalink(SIM\getModuleOption(MODULE_SLUG, 'password_reset_page')[0]);
 
 	if(!$pageurl){
@@ -41,4 +42,4 @@ add_filter( 'retrieve_password_message', function($message, $key, $userLogin, $u
 	$mail->filterMail();
 
 	return $mail->message;
-}, 10, 4);
+}

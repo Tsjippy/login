@@ -3,7 +3,8 @@ namespace SIM\LOGIN;
 use SIM;
 
 //add login and logout buttons to menu's
-add_filter('wp_nav_menu_items', function ($items, $args) {
+add_filter('wp_nav_menu_items', __NAMESPACE__.'\menuItems', 10, 2);
+function menuItems($items, $args) {
     $loginMenus     = SIM\getModuleOption(MODULE_SLUG, 'loginmenu', false);
     $logoutMenus    = SIM\getModuleOption(MODULE_SLUG, 'logoutmenu', false);
 
@@ -68,4 +69,4 @@ add_filter('wp_nav_menu_items', function ($items, $args) {
         $items .= "<li class='menu-item login hidden'><a href='#login' class='login $class'>Log in</a></li>";
     }
   return $items;
-}, 10, 2);
+}

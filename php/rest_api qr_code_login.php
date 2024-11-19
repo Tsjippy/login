@@ -13,14 +13,16 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 use WP_Error;
 
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', function($urls){
+add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addQrLoginUrls');
+function addQrLoginUrls($urls){
     $urls[] = RESTAPIPREFIX.'/login/get_login_qr_code';
     $urls[] = RESTAPIPREFIX.'/login/qr_code_scanned';
 
     return $urls;
-});
+}
 
-add_action( 'rest_api_init', function () {
+add_action( 'rest_api_init', __NAMESPACE__.'\qrLoginRestApi');
+function qrLoginRestApi() {
     // request qr image for login
 	register_rest_route(
 		RESTAPIPREFIX.'/login',
@@ -69,7 +71,7 @@ add_action( 'rest_api_init', function () {
 			)
 		)
 	);
-});
+}
 
 /**
  * Retrives a login qr code

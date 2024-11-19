@@ -143,7 +143,8 @@ function reset2fa($userId){
 }
 
 //Check 2fa after user credentials are checked
-add_filter( 'authenticate', function ( $user) {
+add_filter( 'authenticate', __NAMESPACE__.'\authenticate', 40);
+function authenticate( $user) {
     if(is_wp_error($user)){
         return $user;
     }
@@ -230,10 +231,11 @@ add_filter( 'authenticate', function ( $user) {
     session_write_close();
 
     return $user;
-}, 40);
+}
 
 //Redirect to 2fa page if not setup
-add_action('init', function(){
+add_action('init', __NAMESPACE__.'\redirectTo2fa');
+function redirectTo2fa(){
     // do not run during rest request
     if(SIM\isRestApiRequest()){
         return;
@@ -285,4 +287,4 @@ add_action('init', function(){
             exit();
         }
     }
-});
+}

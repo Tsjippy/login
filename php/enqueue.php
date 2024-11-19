@@ -2,7 +2,8 @@
 namespace SIM\LOGIN;
 use SIM;
 
-add_action( 'wp_enqueue_scripts', function(){
+add_action( 'wp_enqueue_scripts', __NAMESPACE__.'\loadAssets');
+function loadAssets(){
     if(!is_user_logged_in()){
 	    //login form
 	    wp_register_style( 'sim_login_style', SIM\pathToUrl(MODULE_PATH.'css/login.min.css'), array(), MODULE_VERSION);
@@ -32,4 +33,4 @@ add_action( 'wp_enqueue_scripts', function(){
             wp_enqueue_script('sim_2fa_script');
         }
     }
-});
+}

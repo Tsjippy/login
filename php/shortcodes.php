@@ -72,7 +72,8 @@ add_filter( 'password_reset_expiration', function(){
 });
 
 // Display password reset
-add_shortcode("change_password", function(){
+add_shortcode("change_password", __NAMESPACE__.'\changePassword');
+function changePassword(){
 	if(!is_user_logged_in()){
 		$user	= check_password_reset_key($_GET['key'], esc_html($_GET['login']));
 		
@@ -88,13 +89,14 @@ add_shortcode("change_password", function(){
 	}
 
 	return passwordResetForm($user);
-});
+}
 
 #####
 # ACCOUNT REQUEST #
 #####
 //Shortcode for people to register themselves
-add_shortcode('request_account', function (){
+add_shortcode('request_account', __NAMESPACE__.'\requestAccount');
+function requestAccount(){
 	ob_start();
 	?>
 	<form class='request-account'>
@@ -138,4 +140,4 @@ add_shortcode('request_account', function (){
 	<?php
 	
 	return ob_get_clean();
-});
+}

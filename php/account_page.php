@@ -2,7 +2,8 @@
 namespace SIM\LOGIN;
 use SIM;
 
-add_filter('sim_user_info_page', function($html, $showCurrentUserData, $user){
+add_filter('sim_user_info_page', __NAMESPACE__.'\userInfoPage', 10, 3);
+function userInfoPage($html, $showCurrentUserData, $user){
     /*
         Two FA Info
 
@@ -20,4 +21,4 @@ add_filter('sim_user_info_page', function($html, $showCurrentUserData, $user){
     }
 
     return $html;
-}, 10, 3);
+}

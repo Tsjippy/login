@@ -10,7 +10,8 @@ DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 
 require( MODULE_PATH  . 'lib/vendor/autoload.php');
 
-add_filter('sim_submenu_description', function($description, $moduleSlug){
+add_filter('sim_submenu_description', __NAMESPACE__.'\moduleDescription', 10, 2);
+function moduleDescription($description, $moduleSlug){
 	//module slug should be the same as the constant
 	if($moduleSlug != MODULE_SLUG)	{
 		return $description;
@@ -65,9 +66,10 @@ add_filter('sim_submenu_description', function($description, $moduleSlug){
 	}
 
 	return $description.ob_get_clean();
-}, 10, 2);
+}
 
-add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings){
+add_filter('sim_submenu_options', __NAMESPACE__.'\moduleOptions', 10, 3);
+function moduleOptions($optionsHtml, $moduleSlug, $settings){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $optionsHtml;
@@ -198,9 +200,10 @@ add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings)
 	echo "</table>";
 
 	return ob_get_clean();
-}, 10, 3);
+}
 
-add_filter('sim_email_settings', function($optionsHtml, $moduleSlug, $settings){
+add_filter('sim_email_settings', __NAMESPACE__.'\emailSettings', 10, 3);
+function emailSettings($optionsHtml, $moduleSlug, $settings){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $optionsHtml;
@@ -259,9 +262,10 @@ add_filter('sim_email_settings', function($optionsHtml, $moduleSlug, $settings){
 	<br>
 	<?php
 	return ob_get_clean();
-}, 10, 3);
+}
 
-add_filter('sim_module_updated', function($newOptions, $moduleSlug, $oldOptions){
+add_filter('sim_module_updated', __NAMESPACE__.'\moduleUpdated', 10, 3);
+function moduleUpdated($newOptions, $moduleSlug, $oldOptions){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $newOptions;
@@ -291,9 +295,10 @@ add_filter('sim_module_updated', function($newOptions, $moduleSlug, $oldOptions)
 
 	return $newOptions;
 
-}, 10, 3);
+}
 
-add_filter('display_post_states', function ( $states, $post ) {
+add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
+function postStates( $states, $post ) {
 
     if(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'password_reset_page', false)) ) {
         $states[] = __('Password reset page');
@@ -304,9 +309,10 @@ add_filter('display_post_states', function ( $states, $post ) {
     }
 
     return $states;
-}, 10, 2);
+}
 
-add_action('sim_module_deactivated', function($moduleSlug, $options){
+add_action('sim_module_deactivated', __NAMESPACE__.'\moduleDeActivated', 10, 2);
+function moduleDeActivated($moduleSlug, $options){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG)	{
 		return;
@@ -331,4 +337,4 @@ add_action('sim_module_deactivated', function($moduleSlug, $options){
 		// Remove the auto created page
 		wp_delete_post($page, true);
 	}
-}, 10, 2);
+}

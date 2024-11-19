@@ -13,15 +13,17 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 use WP_Error;
 
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', function($urls){
+add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addBioUrls');
+function addBioUrls($urls){
     $urls[]	= RESTAPIPREFIX.'/login/auth_finish';
     $urls[]	= RESTAPIPREFIX.'/login/auth_start';
     $urls[] = RESTAPIPREFIX.'/login/request_email_code';
 
     return $urls;
-});
+}
 
-add_action( 'rest_api_init', function () {
+add_action( 'rest_api_init', __NAMESPACE__.'\bioRestApi');
+function bioRestApi() {
     // Send authentication request for storing fingerprint
 	register_rest_route(
         RESTAPIPREFIX.'/login',
@@ -136,7 +138,7 @@ add_action( 'rest_api_init', function () {
 			)
 		)
 	);
-});
+}
 
 function requestEmailCode(){
     $username   = sanitize_text_field($_REQUEST['username']);
@@ -583,7 +585,8 @@ function finishAuthentication(){
     }
 }
 
-add_filter( 'check_password', function($check, $password, $storedHash, $userId ){
+add_filter( 'check_password', __NAMESPACE__.'\checkBioPassword', 10, 4);
+function checkBioPassword($check, $password, $storedHash, $userId ){
     if(empty($check) && empty($storedHash)){
         $user           = get_user_by('id', $userId);
         $storedHash    = $user->data->user_pass;
@@ -617,7 +620,7 @@ add_filter( 'check_password', function($check, $password, $storedHash, $userId )
     }
 
     return $check;
-}, 10, 4);
+}
 
 
 // Save 2fa options
