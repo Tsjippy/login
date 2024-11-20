@@ -11,7 +11,7 @@ function loadAssets(){
 
         wp_enqueue_script('sim_login_script', SIM\pathToUrl(MODULE_PATH.'js/login.min.js'), array('sim_script', 'sim_purify', 'sim_formsubmit_script'), MODULE_VERSION, true);
     }else{
-        wp_enqueue_script('sim_logout_script', SIM\pathToUrl(MODULE_PATH.'js/logout.min.js'), array(), MODULE_VERSION, true);
+        wp_enqueue_script('sim_logout_script', SIM\pathToUrl(MODULE_PATH.'js/logout.min.js'), array('sim_script', 'sim_formsubmit_script'), MODULE_VERSION, true);
     }
 
     wp_register_style( 'sim_pw_reset_style', SIM\pathToUrl(MODULE_PATH.'css/pw_reset.min.css'), array(), MODULE_VERSION);
