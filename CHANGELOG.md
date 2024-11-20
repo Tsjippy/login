@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.1.4] - 2024-11-20
+
+
+### Changed
 - remove anonymous functions
 
 ### Fixed
 - logout bug
-
-### Updated
 
 ## [8.1.3] - 2024-11-14
 
