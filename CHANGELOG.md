@@ -7,6 +7,7 @@
 - remove anonymous functions
 
 ### Fixed
+- logout bug
 
 ### Updated
 
