@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- post password login
 
 ### Updated
+
+## [8.1.5] - 2024-11-27
+
+
+### Fixed
+- post password login
 
 ## [8.1.4] - 2024-11-20
 
