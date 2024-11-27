@@ -12,7 +12,11 @@ function redirectToLogin(){
 
     global $pagenow;
 	if( 
-        $pagenow == 'wp-login.php' &&                       // we want the default login page                  
+        $pagenow == 'wp-login.php' &&                       // we want the default login page      
+        (
+            !isset($_GET['action'])     ||                  // There is not action param set
+            $_GET['action'] != "postpass"                   // or the post password action is not set
+        )   &&
         get_option("wpstg_is_staging_site") != "true" &&    // we are not on a staging site
         !is_user_logged_in()                                // we are not logged in  
     ){                    
