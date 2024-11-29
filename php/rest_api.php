@@ -230,8 +230,14 @@ function userLogin(){
     // add a filter to allow passwordless sign in
     add_filter( 'authenticate', __NAMESPACE__.'\allowPasswordlessLogin', 999, 3 );
 
+    // Add action to store the login cookie in $_COOKIE
+    add_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar', 10, 6 );
+
     // perform the login
     $user = wp_signon( $creds);
+
+    // Remove action to store the login cookie in $_COOKIE
+    remove_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar' );
 
     // remove the filter to allow passwordless sign in
     remove_filter( 'authenticate', __NAMESPACE__.'\allowPasswordlessLogin', 999, 3 );
@@ -241,16 +247,7 @@ function userLogin(){
     }
 
     // make sure we set the current user to the just logged in user
-    wp_set_current_user($user->ID);
-
-    // Add action to store the login cookie in $_COOKIE
-    add_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar', 10, 6 );
-
-    // Store the login in cookie
-    wp_set_auth_cookie($user->ID);
-
-    // Remove action to store the login cookie in $_COOKIE
-    remove_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar' );
+    wp_set_current_user($user->ID);    
 
     //Update the current logon count
     $currentLoginCount = get_user_meta( $user->ID, 'login_count', true );
