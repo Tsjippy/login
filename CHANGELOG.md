@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- login cookie problems
 
 ### Updated
+
+## [8.1.6] - 2024-11-29
+
+
+### Fixed
+- login cookie problems
 
 ## [8.1.5] - 2024-11-27
 
