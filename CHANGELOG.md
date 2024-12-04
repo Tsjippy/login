@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- removed auto webauth
 
 ### Fixed
 
 ### Updated
+
+## [8.1.7] - 2024-12-04
+
+
+### Changed
+- removed auto webauth
 
 ## [8.1.6] - 2024-11-29
 
