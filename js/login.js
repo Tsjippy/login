@@ -217,14 +217,14 @@ document.addEventListener("click", async function(event){
 		openLoginModal();
 
 		console.log('Trying silent login');
-		let result	= await startConditionalRequest('silent');
+		//let result	= await startConditionalRequest('silent');
 
 		// Show modal with login form
-		if(!result){
-			showMessage('Automatic passkey login failed, try using your username and password');
+		//if(!result){
+			//showMessage('Automatic passkey login failed, try using your username and password');
 
 			openLoginModal();
-		}
+		//}
 
 	}else if(target.id == 'check_cred'){
 		// Check if a valid username and password is submitted
