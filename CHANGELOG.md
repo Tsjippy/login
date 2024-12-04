@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- removed auto webauth
 
 ### Fixed
 
