@@ -1,4 +1,3 @@
-import { fetchRestApi } from './partials/shared.js';
 import { togglePassworView } from './login.js';
 
 console.log('Password strength.js loaded');
@@ -84,7 +83,7 @@ async function submitPasswordChange(event){
 
 	var formData	= new FormData(form);
 
-	var response	= await fetchRestApi('update_password', formData);
+	var response	= await FormSubmit.fetchRestApi('login/update_password', formData);
 
 	if(response){
 		Main.displayMessage(response.message);
