@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- password reset
 
 ### Updated
+
+## [8.1.8] - 2024-12-09
+
+
+### Fixed
+- password reset
 
 ## [8.1.7] - 2024-12-04
 
