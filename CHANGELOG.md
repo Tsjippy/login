@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- password reset
 
 ### Updated
 
