@@ -179,7 +179,6 @@ function checkPassword($check, $password, $storedHash, $userId ){
     return $check;
 }
 
-
 // Verify username and password
 function checkCredentials(){
     $username   = sanitize_text_field($_POST['username']);
@@ -210,9 +209,9 @@ function checkCredentials(){
 // Needed to create a nonce after ajax login
 function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type, $token){
     // make sure we only write the right cookie
-    if(get_current_user_id() == $userId){
+    //if(get_current_user_id() == $userId){
         $_COOKIE[ LOGGED_IN_COOKIE ] = $loggedInCookie;
-    }
+    //}
 }
 
 // Perform the login
