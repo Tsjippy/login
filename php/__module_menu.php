@@ -10,13 +10,8 @@ DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 
 require( MODULE_PATH  . 'lib/vendor/autoload.php');
 
-add_filter('sim_submenu_description', __NAMESPACE__.'\moduleDescription', 10, 2);
+add_filter('sim_submenu_login_description', __NAMESPACE__.'\moduleDescription', 10, 2);
 function moduleDescription($description, $moduleSlug){
-	//module slug should be the same as the constant
-	if($moduleSlug != MODULE_SLUG)	{
-		return $description;
-	}
-
 	ob_start();
 	$menus			= wp_get_nav_menus();
 	$menuLocations	= get_nav_menu_locations();
@@ -68,13 +63,8 @@ function moduleDescription($description, $moduleSlug){
 	return $description.ob_get_clean();
 }
 
-add_filter('sim_submenu_options', __NAMESPACE__.'\moduleOptions', 10, 3);
-function moduleOptions($optionsHtml, $moduleSlug, $settings){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $optionsHtml;
-	}
-
+add_filter('sim_submenu_login_options', __NAMESPACE__.'\moduleOptions', 10, 2);
+function moduleOptions($optionsHtml, $settings){
 	ob_start();
 	?>
 	<p>
@@ -199,16 +189,11 @@ function moduleOptions($optionsHtml, $moduleSlug, $settings){
 
 	echo "</table>";
 
-	return ob_get_clean();
+	return $optionsHtml.ob_get_clean();
 }
 
-add_filter('sim_email_settings', __NAMESPACE__.'\emailSettings', 10, 3);
-function emailSettings($optionsHtml, $moduleSlug, $settings){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $optionsHtml;
-	}
-
+add_filter('sim_email_login_settings', __NAMESPACE__.'\emailSettings', 10, 2);
+function emailSettings($html, $settings){
 	ob_start();
 	?>
 	<h4>E-mail with the two factor login code</h4>
@@ -261,7 +246,7 @@ function emailSettings($optionsHtml, $moduleSlug, $settings){
 	<br>
 	<br>
 	<?php
-	return ob_get_clean();
+	return $html.ob_get_clean();
 }
 
 add_filter('sim_module_login_after_save', __NAMESPACE__.'\moduleUpdated', 10, 2);
@@ -306,13 +291,8 @@ function postStates( $states, $post ) {
     return $states;
 }
 
-add_action('sim_module_deactivated', __NAMESPACE__.'\moduleDeActivated', 10, 2);
-function moduleDeActivated($moduleSlug, $options){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG)	{
-		return;
-	}
-
+add_action('sim_module_login_deactivated', __NAMESPACE__.'\moduleDeActivated');
+function moduleDeActivated($options){
 	$removePages	= [];
 
 	if(is_array($options['password_reset_page'])){
