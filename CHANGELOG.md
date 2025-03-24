@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- signal dependency
 
 ### Fixed
 
