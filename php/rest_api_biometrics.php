@@ -267,8 +267,6 @@ function biometricOptions(){
         storeInTransient('pkcco', $publicKeyCredentialCreationOptions);
         storeInTransient('userEntity', $userEntity);
         storeInTransient('username', $user->user_login);
-        SIM\printArray(getFromTransient('username'));
-        SIM\printArray($user->user_login);
         storeInTransient('identifier', $identifier);
 
         return $publicKeyCredentialCreationOptions;

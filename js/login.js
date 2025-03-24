@@ -13,8 +13,7 @@ import {
 	verifyWebauthn,
 	startConditionalRequest,
 	checkWebauthnAvailable,
-	showTwoFaFields,
-	webauthnSupported
+	showTwoFaFields
 } from './partials/webauth.js';
 
 //Add an event listener to the login or register button
@@ -39,8 +38,8 @@ async function verifyCreds(){
 	await Main.waitForInternet();
 
 	var formData	= new FormData();
-	formData.append('username',username);
-	formData.append('password',password);
+	formData.append('username', username);
+	formData.append('password', password);
 
 	var response	= await FormSubmit.fetchRestApi('login/check_cred', formData);
 
@@ -132,7 +131,7 @@ function addMethods(result){
 		showMessage('');
 
 		if(result.find(element => element == 'webauthn')){
-			if(webauthnSupported){
+			if(checkWebauthnAvailable()){
 				//correct creds and webauthn enabled
 				verifyWebauthn(result);
 			}else if(result.length == 1){

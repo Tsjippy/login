@@ -7,7 +7,6 @@ import {
 
 let credParsing			        = false;
 let abortController;
-export let webauthnSupported	= false;
 
 window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 	result => {
@@ -286,12 +285,11 @@ export let startConditionalRequest = async (mediation) => {
 }
 
 export async function checkWebauthnAvailable(){
-	console.log(webauthnSupported);
-
+	let webauthnSupported	= false;
+	
 	if (window.PublicKeyCredential) {
 		let available	= await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
 		if (available) {
-			console.log("Supported.");
 			webauthnSupported = true;
 		} else {
 			console.log("WebAuthn supported, Platform Authenticator not supported.");
@@ -299,8 +297,6 @@ export async function checkWebauthnAvailable(){
 	} else {
 		console.log("Not supported.");
 	}
-
-	console.log(webauthnSupported);
 
 	return webauthnSupported;
 }
