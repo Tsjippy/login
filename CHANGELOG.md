@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- signal dependency
-- force to register webauthn
 
 ### Fixed
 
 ### Updated
+
+## [8.2.2] - 2025-03-24
+
+
+### Changed
+- signal dependency
+- force to register webauthn
 
 ## [8.2.1] - 2025-02-13
 
