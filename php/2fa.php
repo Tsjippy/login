@@ -129,12 +129,7 @@ function reset2fa($userId){
     $wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE '2fa%' AND user_id=$userId" );
 	
 	$userdata = get_userdata($userId);
-	//Send email and signal message
-	SIM\trySendSignal(
-		"Hi ".$userdata->first_name.",\n\nYour account is unlocked you can now login using your credentials. Please enable 2FA as soon as possible",
-		$_GET['user_id']
-	);
-
+    
 	//Send e-mail
     $twoFaReset    = new TwoFaReset($userdata);
 	$twoFaReset->filterMail();

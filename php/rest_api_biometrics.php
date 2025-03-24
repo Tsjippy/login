@@ -669,12 +669,6 @@ function saveTwoFaSettings(){
         if(verifyEmailCode()){
             $userdata   = get_userdata($userId);
 
-            SIM\trySendSignal(
-                "Hi ".$userdata->first_name.",\n\nYou have succesfully setup e-mail verification on ".SITENAME,
-                $userId,
-                true
-            );
-
             //Send e-mail
             $emailVerfEnabled    = new EmailVerfEnabled($userdata);
             $emailVerfEnabled->filterMail();

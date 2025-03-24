@@ -22,9 +22,12 @@ window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
  * @param {string} username The user name to authenticate
  * @param {*} messageEl the html onject to display messages in
  */
-export async function webAuthVerification(username, messageEl){
-	messageEl.classList.remove('success');
-	messageEl.classList.remove('error');
+export async function webAuthVerification(username, messageEl=null){
+	if(messageEl != null){
+		messageEl.classList.remove('success');
+		messageEl.classList.remove('error');
+	}
+
 	try{
 		// Get the challenge
 		let formData			= new FormData();
@@ -62,6 +65,8 @@ export async function webAuthVerification(username, messageEl){
 		if(messageEl != null){
 			messageEl.textContent	= 'Verification successfull';
 			messageEl.classList.add('success');
+		}else{
+			Main.displayMessage('Verification successfull');
 		}
 
 		return true;
@@ -69,6 +74,8 @@ export async function webAuthVerification(username, messageEl){
 		if(messageEl != null){
 			messageEl.textContent	= error;
 			messageEl.classList.add('error');
+		}else{
+			Main.displayMessage(error, 'error');
 		}
 
 		return false;
