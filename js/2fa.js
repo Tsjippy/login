@@ -1,14 +1,3 @@
-// Import the registration hook
-import {
-    preparePublicKeyCredentials,
-    preparePublicKeyOptions,
-} from './partials/shared.js';
-
-
-import {
-    checkWebauthnAvailable,
-} from './partials/webauth.js';
-
 console.log("2fa.js loaded");
 
 async function saveTwofaSettings(target){
@@ -81,71 +70,6 @@ async function removeWebAuthenticator(target){
 	}
 }
 
-//Start registration with button click
-async function registerBiometric(target){
-    let identifier  = target.closest('#webauthn_wrapper').querySelector('[name="identifier"]').value;
-    if(identifier == ''){
-		Main.displayMessage('Please specify a device name', 'error');
-      return;
-    }
-
-    //show loader
-    document.getElementById('add_webauthn').classList.add('hidden');
-    let loaderHtml = `<div id="loader_wrapper" style='margin-bottom:20px;'><span class="message"></span><img class="loadergif" src="${sim.loadingGif}" height="30px;"></div>`;
-    document.getElementById('add_webauthn').insertAdjacentHTML('afterEnd', loaderHtml);
-	let message		= document.querySelector('#loader_wrapper .message');
-
-	try{
-		// Get biometric challenge
-		let formData			= new FormData();
-		formData.append('identifier', identifier);
-		let response			= await FormSubmit.fetchRestApi('login/fingerprint_options', formData);
-		if(!response){
-			throw new Error('Options retrieval failed');
-		}
-		let publicKey 			= preparePublicKeyOptions(response);
-
-		// Update the message
-		message.textContent  	= 'Please authenticate...';
-
-		// Ask user to verify
-		let credentials 		= await navigator.credentials.create({publicKey});
-
-		// Update the message
-		message.textContent  	= 'Saving authenticator...';
-
-		// Store result
-		var publicKeyCredential = preparePublicKeyCredentials(credentials);
-		
-		formData			= new FormData();
-		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
-		response			= await FormSubmit.fetchRestApi('login/store_fingerprint', formData);
-		if(!response){
-			throw new Error('Storing biometric failed');
-		}
-
-		var wrapper 			= document.getElementById('webautn_devices_wrapper');
-		if(wrapper == null){
-			//add authenthn table
-			document.getElementById('webauthn_wrapper').insertAdjacentHTML('beforeEnd', response);
-		}else{
-			//update authenthn table
-			wrapper.outerHTML = response;
-		}
-  
-		//labels for use
-		SimTableFunctions.setTableLabel();
-  
-		Main.displayMessage('Registration success');
-	}catch(error){
-		document.getElementById('add_webauthn').classList.remove('hidden');
-		console.error(error);
-		Main.displayMessage(error, 'error');
-	}
-
-    document.querySelector('#loader_wrapper').remove();
-}
-
 async function sendValidationEmail(target){
 	// Request email code for 2fa login setup
 	var loader				= `<img id='loader' src='${sim.loadingGif}' style='height:30px;margin-top:-6px;float:right;'>`;
@@ -177,8 +101,6 @@ document.addEventListener("DOMContentLoaded",function() {
 	//hide the webauthn table if not possible
 	var el = document.querySelector('#webauthn_wrapper.hidden');
 	if(el != null){
-		checkWebauthnAvailable();
-
 		el.classList.remove('hidden');
 	}	
 });
@@ -192,10 +114,6 @@ document.addEventListener('click', ev =>{
 
 	if(target.matches('.remove_webauthn')){
 		removeWebAuthenticator(target);
-	}
-	
-	if(target.id == 'add_fingerprint'){
-		registerBiometric(target);
 	}
 
 	if(target.name == 'save2fa'){

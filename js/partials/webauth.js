@@ -104,17 +104,21 @@ export async function verifyWebauthn(methods){
 		//authentication failed
 		document.querySelector('#webauthn_wrapper').classList.add('hidden');
 
+		let response	= await FormSubmit.fetchRestApi('login/mark_bio_as_failed', '', false);
+		
+		console.log(response);
+
 		if(methods.length == 1){
 			showMessage('Authentication failed, please setup an additional login factor.');
 			requestLogin();
 		}else{
+			console.error(error);
 			var message;
 			if(error['message'] == "No authenticator available"){
 				message = "No biometric login for this device found. <br>Give verification code.";
 			}else{
 				message = 'Web authentication failed, please give verification code.';
 				message += '<button type="button" class="button small" id="retry_webauthn" style="float:right;margin-top:-20px;">Retry</button>';
-				console.error('Authentication failure: '+error['message']);
 			}
 			showMessage(message);
 
@@ -281,23 +285,24 @@ export let startConditionalRequest = async (mediation) => {
 	}
 }
 
-export function checkWebauthnAvailable(){
+export async function checkWebauthnAvailable(){
+	console.log(webauthnSupported);
+
 	if (window.PublicKeyCredential) {
-		PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then((available) => {
-			if (available) {
-				console.log("Supported.");
-				webauthnSupported = true;
-			} else {
-				console.log("WebAuthn supported, Platform Authenticator not supported.");
-			}
-		})
-		.catch((err) => {
-			console.error("Something went wrong.");
-			console.error(err);
-		});
+		let available	= await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+		if (available) {
+			console.log("Supported.");
+			webauthnSupported = true;
+		} else {
+			console.log("WebAuthn supported, Platform Authenticator not supported.");
+		}
 	} else {
 		console.log("Not supported.");
 	}
+
+	console.log(webauthnSupported);
+
+	return webauthnSupported;
 }
 
 // Display the form for the 2fa email or authenticator code

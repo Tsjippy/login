@@ -144,34 +144,7 @@ function twoFaSettingsForm($userId=''){
 
 	<div id='webauthn_wrapper' class='hidden'>
 		<?php
-		if(empty($publicKeyCredentialId)){
-			?>
-			<div id='add_webauthn'>
-				<h4>Additional second login factor</h4>
-				<div class="infobox" name="traveltype_info">
-					<div style="float:right">
-						<p class="info_icon" style='margin-top: -30px;padding-top: 0px;'>
-							<img draggable="false" role="img" class="emoji" alt="ℹ" src="<?php echo SIM\PICTURESURL;?>/info.png" loading='lazy' style='max-height:25px;'>
-						</p>
-					</div>
-					<span class="info_text">
-						Additionally you may add a biometric login (fingerprint or facial recognition).<br>
-						This is setup per device, meaning that if you setup a biometric on your phone, it will not work on your laptop.<br>
-						If you want it on another device you have to add that device as well.<br>
-						<br>
-						If you have setup biometric on a device, you don't need to fill in a e-mail or authenticator code.<br>
-						<br>
-						To set it up you just have to fill in a name for this device and click the button.
-					</span>
-				</div>
-				<label>
-					Device name
-					<input type="text" name="identifier">
-				</label>
-				<button type='button' id='add_fingerprint' class='button' style='margin:10px 0px;'>Add biometric</button>
-			</div>
-			<?php
-		}
+		
 		echo authTable($publicKeyCredentialId);
 		?>
 	</div>

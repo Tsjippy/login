@@ -18,6 +18,7 @@ function addBioUrls($urls){
     $urls[]	= RESTAPIPREFIX.'/login/auth_finish';
     $urls[]	= RESTAPIPREFIX.'/login/auth_start';
     $urls[] = RESTAPIPREFIX.'/login/request_email_code';
+    $urls[] = RESTAPIPREFIX.'/login/mark_bio_as_failed';
 
     return $urls;
 }
@@ -136,6 +137,21 @@ function bioRestApi() {
 					'required'	=> true
 				),
 			)
+		)
+	);
+
+    // Mark Biometrics login as failed
+    register_rest_route(
+		RESTAPIPREFIX.'/login',
+		'/mark_bio_as_failed',
+		array(
+			'methods' 				=> 'POST',
+			'callback' 				=> function(){
+                storeInTransient('webauthn', 'failed');
+
+                return 'Marked as failed';
+            },
+			'permission_callback' 	=> '__return_true',
 		)
 	);
 }
@@ -270,6 +286,8 @@ function biometricOptions(){
 // Verify and save the attestation
 function storeBiometric(){
     try{
+        storeInTransient('webauthn', 'success');
+
         $credentialId  = sanitize_text_field($_POST["publicKeyCredential"]);
 
         // Check param
@@ -500,12 +518,14 @@ function finishAuthentication(){
 
             $userId = $usedIds[json_decode(stripslashes($_POST['publicKeyCredential']))->rawId];
             if(empty($userId)){
+                storeInTransient('webauthn', 'failed');
                 return new WP_Error('webauthn',"Authenticator id not found");
             }
 
             $user           = get_userdata($userId);
 
             if(empty($userId)){
+                storeInTransient('webauthn', 'failed');
                 return new WP_Error('webauthn',"User not found");
             }
 
@@ -529,8 +549,8 @@ function finishAuthentication(){
         // If user entity is not saved, read from WordPress
         $webauthnKey   = get_user_meta($user->ID, '2fa_webauthn_key', true);
         if(!$webauthnKey){
-            SIM\printArray("ajax_auth_response: (ERROR)User not initialized, exit");
-            return new WP_Error('webauthn',"User not inited.");
+            storeInTransient('webauthn', 'failed');
+            return new WP_Error('webauthn', "User not inited.");
         }
 
         if(empty($userEntity)){
@@ -621,7 +641,6 @@ function checkBioPassword($check, $password, $storedHash, $userId ){
 
     return $check;
 }
-
 
 // Save 2fa options
 function saveTwoFaSettings(){
