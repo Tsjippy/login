@@ -5,6 +5,7 @@
 
 ### Changed
 - signal dependency
+- force to register webauthn
 
 ### Fixed
 
