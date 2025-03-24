@@ -109,7 +109,7 @@ export async function verifyWebauthn(methods){
 		console.log(response);
 
 		if(methods.length == 1){
-			showMessage('Authentication failed, please setup an additional login factor.');
+			showMessage('Authentication failed, please setup an additional login factor.', 'error');
 			requestLogin();
 		}else{
 			console.error(error);
@@ -120,7 +120,7 @@ export async function verifyWebauthn(methods){
 				message = 'Web authentication failed, please give verification code.';
 				message += '<button type="button" class="button small" id="retry_webauthn" style="float:right;margin-top:-20px;">Retry</button>';
 			}
-			showMessage(message);
+			showMessage(message, 'error');
 
 			//Show other 2fa fields
 			showTwoFaFields(methods);
@@ -141,9 +141,9 @@ export async function requestEmailCode(){
 	var response	= await FormSubmit.fetchRestApi('login/request_email_code', formData, false);
 	
 	if(response){
-		showMessage(response);
+		showMessage(response, 'success');
 	}else{
-		showMessage(`Sending e-mail failed`);
+		showMessage(`Sending e-mail failed`, 'error');
 	}
 }
 
@@ -165,14 +165,14 @@ export async function processCredential(credential){
 		let response				= await FormSubmit.fetchRestApi('login/auth_finish', formData, false);
 
 		if(response){
-			showMessage('Passkey login succesfull');
+			showMessage('Passkey login succesfull', 'success');
 		}else{
 			document.querySelector('#webauthn_wrapper .status_message').textContent='Please authenticate';
 
 			document.querySelectorAll('#usercred_wrapper').forEach(el=>el.classList.remove('hidden'));
 			document.querySelectorAll('#webauthn_wrapper').forEach(el=>el.classList.add('hidden'));
 
-			showMessage('Passkey login failed, try using your username and password');
+			showMessage('Passkey login failed, try using your username and password', 'error');
 
 			return false;
 		}
@@ -186,7 +186,7 @@ export async function processCredential(credential){
 		document.getElementById('usercred_wrapper').classList.remove('hidden');
 		document.getElementById('webauthn_wrapper').classList.add('hidden');
 
-		showMessage('Passkey login failed');
+		showMessage('Passkey login failed', 'error');
 
 		return false;
 	}
@@ -276,7 +276,7 @@ export let startConditionalRequest = async (mediation) => {
 			usercredWrapper.classList.remove('hidden');
 			document.getElementById('webauthn_wrapper').classList.add('hidden');
 
-			showMessage('Passkey login failed, try using your username and password');
+			showMessage('Passkey login failed, try using your username and password', 'error');
 		}
 
 		console.log(error);

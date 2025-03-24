@@ -31,7 +31,7 @@ async function verifyCreds(){
 	if(username != '' && password != ''){
 		document.querySelector('#usercred_wrapper .loadergif').classList.remove('hidden');
 	}else{
-		showMessage('Please give an username and password!');
+		showMessage('Please give an username and password!', 'warning');
 		return;
 	}
 
@@ -46,7 +46,7 @@ async function verifyCreds(){
 
  	if(response){
 		if(response == 'false') {
-			showMessage('Invalid login, try again');
+			showMessage('Invalid login, try again', 'error');
 			
 			// hide loader
 			document.querySelector('#usercred_wrapper .loadergif').classList.add('hidden');
@@ -123,7 +123,7 @@ function addMethods(result){
 		}
 	}else if(!result){
 		//incorrect creds add message, but only once
-		showMessage('Invalid username or password!');
+		showMessage('Invalid username or password!', 'error');
 	}else if(typeof(result) == 'object'){
 		//hide cred fields
 		document.querySelectorAll("#usercred_wrapper").forEach(el=>el.classList.add('hidden'));
@@ -136,7 +136,7 @@ function addMethods(result){
 				//correct creds and webauthn enabled
 				verifyWebauthn(result);
 			}else if(result.length == 1){
-				showMessage('You do not have a valid second login method for this device, please add one.');
+				showMessage('You do not have a valid second login method for this device, please add one.', 'warning');
 				requestLogin();
 			}else{
 				showTwoFaFields(result);

@@ -116,8 +116,25 @@ export const preparePublicKeyCredentials = data => {
 	return publicKeyCredential;
 };
 
-export function showMessage(message){
-	document.querySelector("#message").innerHTML= DOMPurify.sanitize(message);
+export function showMessage(message, type=''){
+	let el = document.querySelector("#message");
+	el.innerHTML= DOMPurify.sanitize(message);
+
+	el.classList.remove('success');
+	el.classList.remove('warning');
+	el.classList.remove('error');
+
+	if(type == 'success'){
+		el.classList.add('success');
+	}
+
+	if(type == 'warning'){
+		el.classList.add('warning');
+	}
+
+	if(type == 'error'){
+		el.classList.add('error');
+	}
 }
 
 //show loader

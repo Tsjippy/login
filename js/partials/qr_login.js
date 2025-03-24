@@ -23,7 +23,7 @@ export function showLoginQrCode(){
 function login(response){
 	clearInterval(intervalId);
 
-	showMessage('Succesfully logged in, redirecting...');
+	showMessage('Succesfully logged in, redirecting...', 'success');
 
 	Main.showLoader(document.getElementById(`qrcode-wrapper`));
 
@@ -66,7 +66,7 @@ async function refreshQrCode(){
 		}else{
 			wrapperinnerHTML='';
 
-			showMessage('QR Code Refresh Failed');
+			showMessage('QR Code Refresh Failed', 'error');
 		}
 	}else{
 		console.log('Checking for login permission');

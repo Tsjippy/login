@@ -76,7 +76,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                     <?php do_action( 'login_form' );?>
                     
                     <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
-                    <button type='button' id='check_cred' class='button'>Verify credentials</button>
+                    <button type='button' id='check_cred' class='button'>Login</button>
                     <img class='loadergif hidden' src='<?php echo SIM\LOADERIMAGEURL;?>' loading='lazy' alt='loader'>
                 </div>
 
