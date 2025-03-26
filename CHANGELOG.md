@@ -7,6 +7,7 @@
 
 ### Fixed
 - ask for passkey only once
+- checkCredentioals when no 2fa
 
 ### Updated
 
