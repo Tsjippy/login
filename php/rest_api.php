@@ -189,7 +189,7 @@ function checkCredentials(){
     //validate credentials
     if($user && wp_check_password($password, $user->data->user_pass, $user->ID)){
         //get 2fa methods for this user
-        $methods  = get_user_meta($user->ID, '2fa_methods', true);
+        $methods  = (array) get_user_meta($user->ID, '2fa_methods', true);
 
         if(!in_array('webauthn', $methods)){
             storeInTransient('webauthn', 'failed');
