@@ -377,7 +377,7 @@ function storeBiometric(){
         }
 
         // Store as a 2fa option
-        $methods    = (array)get_user_meta($user->ID,'2fa_methods',true);
+        $methods    = (array)get_user_meta($user->ID, '2fa_methods', true);
         if(!in_array('webauthn', $methods)){
             $methods[]  = 'webauthn';
             update_user_meta($user->ID, '2fa_methods', $methods);
