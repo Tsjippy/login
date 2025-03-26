@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- ask for passkey only once
 
 ### Updated
 
