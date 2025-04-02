@@ -74,17 +74,22 @@ add_filter( 'password_reset_expiration', function(){
 // Display password reset
 add_shortcode("change_password", __NAMESPACE__.'\changePassword');
 function changePassword(){
-	if(!is_user_logged_in()){
+	$user	= '';
+
+	if(!empty($_GET['key']) && !empty($_GET['login'])){
 		$user	= check_password_reset_key($_GET['key'], esc_html($_GET['login']));
-		
-		if(is_wp_error($user)){
+	}
+
+	if(is_wp_error($user) || empty($user)){
+		if(!is_user_logged_in() && !empty($user)){		
 			if($user->get_error_message() == "Invalid key."){
 				return "This link has expired, please request a new password using the login menu.";
 			}
-
+	
 			return $user->get_error_message(). "<br>Please try again.";
 		}
-	}else{
+		
+		
 		$user	= wp_get_current_user();
 	}
 
