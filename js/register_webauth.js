@@ -25,7 +25,7 @@ async function registerBiometric(){
             </div>`;
 
         let modalHtml   = `
-            <div id='release_modal' class='modal'>
+            <div id='register_biometrics_modal' class='modal'>
                 <div class="modal-content" style='width:500px;'>
                     <h4>Please take a few seconds to setup your login token</h4>
                     ${loaderHtml}
@@ -65,14 +65,11 @@ async function registerBiometric(){
 		}
   
 		Main.displayMessage('Registration success');
-
-        Main.hideModals();
 	}catch(error){
 		console.error(error);
-		Main.displayMessage(error, 'error');
 	}
 
-    document.querySelector('#loader_wrapper').remove();
+    Main.hideModals();
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
