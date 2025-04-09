@@ -6,12 +6,17 @@
 ### Changed
 
 ### Fixed
+
+### Updated
+
+## [8.2.4] - 2025-04-09
+
+
+### Fixed
 - ask for passkey only once
 - checkCredentioals when no 2fa
 - password reset key with hash when already logged in
 - issue with webauthn registering failures
-
-### Updated
 
 ## [8.2.3] - 2025-03-24
 
