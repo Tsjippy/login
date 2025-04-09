@@ -9,6 +9,7 @@
 - ask for passkey only once
 - checkCredentioals when no 2fa
 - password reset key with hash when already logged in
+- issue with webauthn registering failures
 
 ### Updated
 
