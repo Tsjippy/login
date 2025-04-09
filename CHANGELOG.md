@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- redirect issues
 
 ### Updated
+
+## [8.2.5] - 2025-04-09
+
+
+### Fixed
+- redirect issues
 
 ## [8.2.4] - 2025-04-09
 
