@@ -218,9 +218,6 @@ function authenticate( $user) {
         unset($_SESSION['user_name_auth']);
         unset($_SESSION['user_auth']);
         unset($_SESSION['user_info']);
-        if(isset($_SESSION['webauthn']) && $_SESSION['webauthn'] == 'success'){
-            unset($_SESSION['webauthn']);
-        }
     }
 
     session_write_close();
@@ -253,7 +250,7 @@ function redirectTo2fa(){
         (
             !$methods                                   ||	// and we have no 2fa enabled or
             (
-                !isset($_SESSION['webauthn'])           &&
+                !isset($_SESSION['webauthn'])           &&  // the current login is not with webauth
                 count($methods) == 1                    &&	// and we only have one 2fa method
                 in_array('webauthn', $methods)				// and that method is webauthn
             )

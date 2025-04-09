@@ -107,42 +107,38 @@ async function requestAccount(target){
 function addMethods(result){
 	document.querySelector('#usercred_wrapper .loadergif').classList.add('hidden');
 	
-	if(typeof(result) == 'string' && result){
-		//hide login form
-		document.querySelectorAll("#usercred_wrapper").forEach(el=>el.classList.add('hidden'));
-
-		document.getElementById('logging_in_wrapper').classList.remove('hidden');
-
-		if(location.href != result){
-			//redirect to the returned webpage
-			location.href	= result;
-		}else{
-			//close login modal
-			Main.hideModals();
-		}
-	}else if(!result){
+	if(!result){
 		//incorrect creds add message, but only once
 		showMessage('Invalid username or password!', 'error');
 	}else if(typeof(result) == 'object'){
-		//hide cred fields
-		document.querySelectorAll("#usercred_wrapper").forEach(el=>el.classList.add('hidden'));
+		if('redirect' in result){
+			//redirect to the returned webpage
+			location.href	= result.redirect;
 
-		//hide messsages
-		showMessage('');
+			return;
+		}
 
-		if(result.find(element => element == 'webauthn')){
-			if(checkWebauthnAvailable()){
-				//correct creds and webauthn enabled
-				verifyWebauthn(result);
-			}else if(result.length == 1){
-				showMessage('You do not have a valid second login method for this device, please add one.', 'warning');
-				requestLogin();
+		if(result instanceof Array){
+			//hide cred fields
+			document.querySelectorAll("#usercred_wrapper").forEach(el=>el.classList.add('hidden'));
+
+			//hide messsages
+			showMessage('');
+
+			if(result.find(element => element == 'webauthn')){
+				if(checkWebauthnAvailable()){
+					//correct creds and webauthn enabled
+					verifyWebauthn(result);
+				}else if(result.length == 1){
+					showMessage('You do not have a valid second login method for this device, please add one.', 'warning');
+					requestLogin();
+				}else{
+					showTwoFaFields(result);
+				}
 			}else{
+				//correct creds and 2fa enabled
 				showTwoFaFields(result);
 			}
-		}else{
-			//correct creds and 2fa enabled
-			showTwoFaFields(result);
 		}
 	}else{
 		//something went wrong, reload the page

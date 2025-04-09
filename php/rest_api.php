@@ -218,7 +218,11 @@ function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type,
     //}
 }
 
-// Perform the login
+/**
+ * Perform the login
+ * 
+ * @return array        Array of 'redirect'  => $redirect,  'message'   => $message, 'nonce'     => wp_create_nonce('wp_rest'),  'id'        => $user->ID
+ **/
 function userLogin(){
     $username       = !empty($_REQUEST['username'])   ? sanitize_text_field($_REQUEST['username'])   : '';
     $password       = !empty($_REQUEST['password'])   ? sanitize_text_field($_REQUEST['password'])   : '';
@@ -316,24 +320,6 @@ function userLogin(){
     }
 
     $message    = 'Login successful';
-
-    if(
-        empty($redirect) &&                                                 // we are not redirecting
-        rtrim( $_SERVER['HTTP_REFERER'], '/' ) == rtrim(home_url(), '/')    // We are logging in to the home page
-    ){
-        //get 2fa methods for this user
-        $methods  = get_user_meta($user->ID, '2fa_methods', true);
-
-        //Redirect to account page if 2fa is not set
-        if(!$methods || empty($methods)){
-            $url		= SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, '2fa_page');
-
-            SIM\printArray($url);
-            if($url){
-                $redirect   = $url;
-            }
-        }
-    }
 
     return [
         'redirect'  => $redirect,
