@@ -117,7 +117,6 @@ export async function verifyWebauthn(methods){
 				message = "No biometric login for this device found. <br>Give verification code.";
 			}else{
 				message = 'Web authentication failed, please give verification code.';
-				message += '<button type="button" class="button small" id="retry_webauthn" style="float:right;margin-top:-20px;">Retry</button>';
 			}
 			showMessage(message, 'error');
 
