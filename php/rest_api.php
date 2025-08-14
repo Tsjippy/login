@@ -184,7 +184,13 @@ function checkCredentials(){
     $username   = sanitize_text_field($_POST['username']);
     $password   = sanitize_text_field($_POST['password']);
 
-    $user   = get_user_by('login', $username);
+    $user       = get_user_by('login', $username);
+
+    $user       = apply_filters( 'authenticate', $user, $username, $password );
+
+    if(is_wp_error($user)){
+        return $user;
+    }
 
     //validate credentials
     if($user && wp_check_password($password, $user->data->user_pass, $user->ID)){
@@ -451,6 +457,19 @@ function requestUserAccount(){
   * @return bool|WP_User a WP_User object if the username matched an existing user, or false if it didn't
 */
 function allowPasswordlessLogin( $user, $username, $password ) {
+    
+    $ignoreCodes    = [
+        "invalid_username",
+        "incorrect_password",
+        "empty_username",
+        'empty_password'
+    ];
+
+    // If the user is an error object with an arror code not in the ignore list, return it
+    if(is_wp_error($user) && array_diff($user->get_error_codes(), $ignoreCodes)){
+        return $user;
+    }
+
     session_start();
 
     if(isset($_SESSION['allow_passwordless_login'])){

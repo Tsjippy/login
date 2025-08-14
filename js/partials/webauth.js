@@ -54,7 +54,7 @@ export async function webAuthVerification(username, messageEl=null){
 
 		// Verify on the server
 		const publicKeyCredential 	= preparePublicKeyCredentials(credentials);
-		formData					= new FormData();
+		formData					= new FormData(document.getElementById('loginform'));
 		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
 		response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
 		if(!response){
@@ -158,7 +158,7 @@ export async function processCredential(credential){
 
 		// Verify on the server
 		const publicKeyCredential 	= preparePublicKeyCredentials(credential);
-		let formData				= new FormData();
+		let formData				= new FormData(document.getElementById('loginform'));
 		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
 		let response				= await FormSubmit.fetchRestApi('login/auth_finish', formData, false);
 

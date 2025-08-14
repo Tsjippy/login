@@ -37,9 +37,7 @@ async function verifyCreds(){
 	// Make sure we have a internet connection
 	await Main.waitForInternet();
 
-	var formData	= new FormData();
-	formData.append('username', username);
-	formData.append('password', password);
+	var formData	= new FormData(document.getElementById('loginform'));
 
 	var response	= await FormSubmit.fetchRestApi('login/check_cred', formData);
 

@@ -137,7 +137,7 @@ function reset2fa($userId){
 	wp_mail( $userdata->user_email, $twoFaReset->subject, $twoFaReset->message);
 }
 
-//Check 2fa after user credentials are checked
+// Check 2fa after user credentials are checked
 add_filter( 'authenticate', __NAMESPACE__.'\authenticate', 40);
 function authenticate( $user) {
     if(is_wp_error($user)){
