@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.6] - 2025-08-14
+
+
+### Added
 - captcha on login
 - only show reset password form elements when clicked
 
 ### Changed
 - js imports
-
-### Fixed
-
-### Updated
 
 ## [8.2.5] - 2025-04-09
 
