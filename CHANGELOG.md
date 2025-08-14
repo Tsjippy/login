@@ -3,6 +3,7 @@
 
 ### Added
 - captcha on login
+- only show reset password form elements when clicked
 
 ### Changed
 - js imports
