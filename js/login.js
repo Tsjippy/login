@@ -37,9 +37,9 @@ async function verifyCreds(){
 	// Make sure we have a internet connection
 	await Main.waitForInternet();
 
-	var formData	= new FormData(document.getElementById('loginform'));
+	let formData	= new FormData(document.getElementById('loginform'));
 
-	var response	= await FormSubmit.fetchRestApi('login/check_cred', formData);
+	let response	= await FormSubmit.fetchRestApi('login/check_cred', formData);
 
  	if(response){
 		if(response == 'false') {
@@ -54,11 +54,16 @@ async function verifyCreds(){
 }
 
 //request password reset e-mail
-async function resetPassword(form){
-	var username	= document.getElementById('username').value;
+async function resetPassword(target){
+	let form 		= target.closest('form');
+
+	// Show the form
+	form.querySelector('div.form-elements').classList.remove('hidden');
+
+	let username	= document.getElementById('username').value;
 
 	if(username == ''){
-		Main.displayMessage('Specify your username first','error');
+		Main.displayMessage('Specify your username first', 'error');
 		return;
 	}
 
@@ -82,14 +87,14 @@ async function resetPassword(form){
 
 // request a new user account
 async function requestAccount(target){
-	var form 		= target.closest('form');
+	let form 		= target.closest('form');
 
 	// Show loader
 	form.querySelector('.loadergif').classList.remove('hidden');
 
-	var formData	= new FormData(form);
+	let formData	= new FormData(form);
 
-	var response	= await FormSubmit.fetchRestApi('login/request_user_account', formData);
+	let response	= await FormSubmit.fetchRestApi('login/request_user_account', formData);
 	
 	if(response){
 		Main.displayMessage(response);
@@ -228,7 +233,7 @@ document.addEventListener("click", async function(event){
 	}else if(target.closest('.toggle_pwd_view') != null){
 		togglePassworView(event);
 	}else if(target.id == 'password-reset-form' || target.id == "lost_pwd_link"){
-		resetPassword(target.closest('form'));
+		resetPassword(target);
 	}else if(target.id == 'retry_webauthn'){
 		showMessage('');
 		verifyWebauthn([]);

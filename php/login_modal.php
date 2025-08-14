@@ -112,7 +112,9 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                 </div>
             </form>
             <form id="password-reset-form">
-                <?php echo do_action('resetpass_form');?>
+                <div class='form-elements hidden'>
+                    <?php echo do_action('resetpass_form');?>
+                </div>
                 <a href='#pwd_reset' id='lost_pwd_link'>Request password reset</a>
             </form>
         </div>
