@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- captcha on login
 
 ### Changed
 - js imports
