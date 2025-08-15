@@ -55,22 +55,48 @@ async function verifyCreds(){
 
 //request password reset e-mail
 async function resetPassword(target){
-	let form 		= target.closest('form');
+	let username		= document.getElementById('username').value;
+	
+	let form 			= target.closest('form');
 
-	// Show the form
-	form.querySelector('div.form-elements').classList.remove('hidden');
+	let button			= form.querySelector('#lost_pwd_link');
 
-	let username	= document.getElementById('username').value;
+	let extraElements	= form.querySelector('div.form-elements');
+
+	// If the extra elements are not present, create them
+	if(extraElements != null && extraElements.innerHTML != '' && extraElements.classList.contains('hidden')){
+		// Hide the login form
+		document.getElementById('loginform').classList.add('hidden');
+
+		if(form.querySelector(`[name='username']`) == null){
+			extraElements.innerHTML	= `<label class="form-label">
+				Username<br>
+				<input type="text" name="username" id="username" class="form-control" value="${username}" required>
+			</label><br>`+extraElements.innerHTML;
+		}
+
+		// Show the form
+		extraElements.classList.remove('hidden');
+
+		button.dataset.orghtml	= button.innerHTML;
+		button.innerHTML	= 'Request Password Reset';
+
+		button.classList.add('button');
+
+		return;
+	}
+
+	if(form.querySelector(`[name='username']`) != null){
+		username	= form.querySelector(`[name='username']`).value;
+	}
 
 	if(username == ''){
 		Main.displayMessage('Specify your username first', 'error');
 		return;
 	}
-
-	let button	= form.querySelector('#lost_pwd_link');
 	
 	button.classList.add('hidden');
-	let loader = Main.showLoader(button, false, 'Sending e-mail...   ');
+	let loader = Main.showLoader(button, false, 'Requesting Password Reset...   ');
 
 	let formData	= new FormData(form);
 	formData.append('username', username);
@@ -78,11 +104,20 @@ async function resetPassword(target){
 	let response	= await FormSubmit.fetchRestApi('login/request_pwd_reset', formData);
 
 	if (response) {
-		Main.displayMessage(response,'success');
+		Main.displayMessage(response, 'success');
+		
+		// Show the login form
+		document.getElementById('loginform').classList.remove('hidden');
+
+		extraElements.classList.add('hidden');
+
+		button.innerHTML	= button.dataset.orghtml;
+		button.classList.remove('button');
 	}
 
 	loader.remove();
 	button.classList.remove('hidden');
+
 }
 
 // request a new user account

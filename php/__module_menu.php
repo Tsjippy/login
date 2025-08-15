@@ -2,6 +2,8 @@
 namespace SIM\LOGIN;
 use SIM;
 
+use function SIM\ADMIN\getDefaultPageLink;
+
 const MODULE_VERSION		= '8.2.5';
 //module slug is the same as grandparent folder name
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
@@ -76,6 +78,14 @@ function moduleOptions($optionsHtml, $settings){
 		<input type="checkbox" name="user_registration" value="enabled" <?php if($settings['user_registration']){echo 'checked';}?>>
 		Enable user registration
 	</label>
+	<?php 
+	if($settings['user_registration']){
+		$url	= getDefaultPageLink(MODULE_SLUG, 'register_page');
+		?>
+		<a href="<?php echo $url;?>" target="_blank">View registration page</a>
+		<?php
+	}
+	?>
 	<br>
 	<br>
 	Where should the login menu item be added?
