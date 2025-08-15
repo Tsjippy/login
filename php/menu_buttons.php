@@ -66,7 +66,8 @@ function menuItems($items, $args) {
             }
         }
 
-        $items .= "<li class='menu-item login hidden'><a href='#login' class='login $class'>Log in</a></li>";
+        $menuItem   = apply_filters('sim-login-menu-item', "<a href='#login' class='login $class'>Log in</a>");
+        $items     .=  "<li class='menu-item login hidden'>$menuItem</li>";
     }
   return $items;
 }
