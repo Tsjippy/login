@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- 'sim-login-menu-item' filter
 
 ### Changed
 
