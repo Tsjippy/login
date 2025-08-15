@@ -1,7 +1,6 @@
 <?php
 namespace SIM\LOGIN;
 use SIM;
-
 use function SIM\ADMIN\getDefaultPageLink;
 
 const MODULE_VERSION		= '8.2.6';

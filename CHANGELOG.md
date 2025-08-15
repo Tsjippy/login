@@ -3,11 +3,7 @@
 
 ### Added
 
-### Added
-- captcha on login
-
 ### Changed
-- js imports
 
 ### Updated
 
