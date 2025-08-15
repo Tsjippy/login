@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- 'sim-login-menu-item' filter
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.2.8] - 2025-08-15
+
+
+### Added
+- 'sim-login-menu-item' filter
 
 ## [8.2.7] - 2025-08-15
 
