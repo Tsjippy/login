@@ -2,8 +2,10 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- show registration page link in settings
 
 ### Added
+- show registration page link in settings
 - captcha on login
 
 ### Changed
