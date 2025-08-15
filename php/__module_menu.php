@@ -4,8 +4,6 @@ use SIM;
 
 use function SIM\ADMIN\getDefaultPageLink;
 
-use function SIM\ADMIN\getDefaultPageLink;
-
 const MODULE_VERSION		= '8.2.6';
 //module slug is the same as grandparent folder name
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));

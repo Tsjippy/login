@@ -3,9 +3,11 @@
 
 ### Added
 
-### Changed
+### Added
+- captcha on login
 
-### Fixed
+### Changed
+- js imports
 
 ### Updated
 
