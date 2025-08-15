@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.7] - 2025-08-15
+
+
+### Added
 - show registration page link in settings
 
 ### Changed
