@@ -586,11 +586,6 @@ function finishAuthentication(){
 
             storeInTransient('webauthn', 'success');
 
-            $user       = apply_filters( 'authenticate', $user, $user->user_login, $_REQUEST['password'] );
-
-            if(is_wp_error($user)){
-                return $user;
-            }
             return true;
         }catch(\Throwable $exception){
             // Failed to verify
