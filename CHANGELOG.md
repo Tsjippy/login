@@ -7,6 +7,7 @@
 - do not run authenticate filter after webauth
 
 ### Fixed
+- bug in login
 
 ### Updated
 
