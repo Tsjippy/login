@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.9] - 2025-08-18
+
+
+### Changed
 - do not run authenticate filter after webauth
 
 ### Fixed
 - bug in login
-
-### Updated
 
 ## [8.2.8] - 2025-08-15
 
