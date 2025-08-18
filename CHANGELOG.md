@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- only listen to return key if button not disabled
 
 ### Updated
+
+## [8.3.0] - 2025-08-18
+
+
+### Fixed
+- only listen to return key if button not disabled
 
 ## [8.2.9] - 2025-08-18
 
