@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- only listen to return key if button not disabled
 
 ### Updated
 
