@@ -186,7 +186,7 @@ function addMethods(result){
 
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && document.querySelector("#usercred_wrapper") != null){
-		if(!document.querySelector("#usercred_wrapper").classList.contains('hidden')) {
+		if(!document.querySelector("#usercred_wrapper").classList.contains('hidden') && document.getElementById('check_cred') != null && document.getElementById('check_cred').disabled == false){
 			verifyCreds();
 		}else if(!document.querySelector("#submit_login_wrapper").classList.contains('hidden')){
 			requestLogin();
