@@ -3,6 +3,7 @@
 - apply_filters( 'lostpassword_errors', $errors, $user );
 - apply_filters( 'registration_errors', $errors, $userdata );
 - sim-login-menu-item
+- sim-after-user-check
 
 # Actions
 - 

@@ -186,7 +186,7 @@ function checkCredentials(){
 
     $user       = get_user_by('login', $username);
 
-    $user       = apply_filters( 'authenticate', $user, $username, $password );
+    $user       = apply_filters( 'sim-after-user-check', $user);
 
     if(is_wp_error($user)){
         return $user;
