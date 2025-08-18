@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- bug in webauthentication
 
 ### Updated
+
+## [8.3.1] - 2025-08-18
+
+
+### Fixed
+- bug in webauthentication
 
 ## [8.3.0] - 2025-08-18
 
