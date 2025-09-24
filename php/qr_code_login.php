@@ -47,13 +47,13 @@ if(!is_user_logged_in() && !auth_redirect()){
             text-align: center;
         }
 
-        main, .loadergif_wrapper{
+        main, .loader_wrapper{
             margin-top: 20px;
         }
     </style>
     <body>
-        <div class='loadergif_wrapper'>
-			<img class='loadergif' src='<?php echo SIM\LOADERIMAGEURL;?>' loading='lazy' width=50 height=50>
+        <div class='loader_wrapper'>
+			<?php echo SIM\LOADERIMAGE;?>
 			
 			<span id='message' class='uploadmessage' style='display: block;'>Waiting for biometric</span>
 		</div>

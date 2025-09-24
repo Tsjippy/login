@@ -7,8 +7,8 @@ function twoFaSettingsForm($userId=''){
 	//we need to approve a qr code login
 	if(!empty($_GET['token']) && !empty($_GET['key'])){
 		?>
-		<div class='loadergif_wrapper'>
-			<img class='loadergif' src='<?php echo SIM\LOADERIMAGEURL;?>' loading='lazy'>
+		<div class='loader_wrapper'>
+			<?php echo SIM\LOADERIMAGE;?>
 			
 			<span id='message' class='uploadmessage'>Waiting for biometric</span>
 		</div>
