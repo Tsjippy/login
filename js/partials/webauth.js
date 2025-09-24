@@ -132,14 +132,14 @@ export async function verifyWebauthn(methods){
 // Request email code for 2fa login
 export async function requestEmailCode(){
 	//add new one
-	var loader				= "<img id='loader' src='"+sim.loadingGif+"' style='height:30px;margin-top:-6px;float:right;'>";
+	let loader				= sim.loaderHtml;
 	showMessage(`Sending e-mail... ${loader}`);
 
-	var username	= document.getElementById('username').value;
-	var formData	= new FormData();
+	let username	= document.getElementById('username').value;
+	let formData	= new FormData();
 	formData.append('username',username);
 
-	var response	= await FormSubmit.fetchRestApi('login/request_email_code', formData, false);
+	let response	= await FormSubmit.fetchRestApi('login/request_email_code', formData, false);
 	
 	if(response){
 		showMessage(response, 'success');

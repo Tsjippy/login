@@ -2,7 +2,7 @@ console.log("2fa.js loaded");
 
 async function saveTwofaSettings(target){
 	// Show loader
-	let loader	= target.closest('.submit_wrapper').querySelector('.loadergif');
+	let loader	= target.closest('.submit_wrapper').querySelector('.loader_wrapper');
 	loader.classList.remove('hidden');
 
 	let form		= target.closest('form');
@@ -72,15 +72,15 @@ async function removeWebAuthenticator(target){
 
 async function sendValidationEmail(target){
 	// Request email code for 2fa login setup
-	var loader				= `<img id='loader' src='${sim.loadingGif}' style='height:30px;margin-top:-6px;float:right;'>`;
+	let loader				= sim.loaderHtml;
 
 	document.getElementById('email-message').innerHTML	= `Sending e-mail... ${loader}`;
 
-	var username	= document.getElementById('username').value;
-	var formData	= new FormData();
+	let username	= document.getElementById('username').value;
+	let formData	= new FormData();
 	formData.append('username', username);
 
-	var response	= await FormSubmit.fetchRestApi('login/request_email_code', formData);
+	let response	= await FormSubmit.fetchRestApi('login/request_email_code', formData);
 
 	if(response){
 		document.getElementById('email-message').innerHTML	= response;

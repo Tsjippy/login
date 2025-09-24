@@ -25,7 +25,7 @@ async function logout(event){
 
         if(typeof(Swal) != 'undefined'){
             var options = {
-                iconHtml: '<img src="'+sim.loadingGif+'">',
+                iconHtml: sim.loaderHtml,
                 title: 'Logging out...',
                 showConfirmButton: false,
                 customClass: {

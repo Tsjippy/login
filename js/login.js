@@ -28,7 +28,7 @@ async function verifyCreds(){
 
 	// Check if the fields are filled
 	if(username != '' && password != ''){
-		document.querySelector('#usercred_wrapper .loadergif').classList.remove('hidden');
+		document.querySelector('#usercred_wrapper .loader_wrapper').classList.remove('hidden');
 	}else{
 		showMessage('Please give an username and password!', 'warning');
 		return;
@@ -46,7 +46,7 @@ async function verifyCreds(){
 			showMessage('Invalid login, try again', 'error');
 			
 			// hide loader
-			document.querySelector('#usercred_wrapper .loadergif').classList.add('hidden');
+			document.querySelector('#usercred_wrapper .loader_wrapper').classList.add('hidden');
 		} else {
 			addMethods(response);
 		}
@@ -125,7 +125,7 @@ async function requestAccount(target){
 	let form 		= target.closest('form');
 
 	// Show loader
-	form.querySelector('.loadergif').classList.remove('hidden');
+	form.querySelector('.loader_wrapper').classList.remove('hidden');
 
 	let formData	= new FormData(form);
 
@@ -139,11 +139,11 @@ async function requestAccount(target){
 	form.reset();
 
 	// Hide loader
-	form.querySelector('.loadergif').classList.add('hidden');
+	form.querySelector('.loader_wrapper').classList.add('hidden');
 }
 
 function addMethods(result){
-	document.querySelector('#usercred_wrapper .loadergif').classList.add('hidden');
+	document.querySelector('#usercred_wrapper .loader_wrapper').classList.add('hidden');
 	
 	if(!result){
 		//incorrect creds add message, but only once

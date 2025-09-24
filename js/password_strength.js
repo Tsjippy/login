@@ -79,7 +79,7 @@ async function submitPasswordChange(event){
 	var form	= event.target.closest('form');
 
 	// show loader
-	form.querySelector('.submit_wrapper .loadergif').classList.remove('hidden');
+	form.querySelector('.submit_wrapper .loader_wrapper').classList.remove('hidden');
 
 	var formData	= new FormData(form);
 
@@ -95,7 +95,7 @@ async function submitPasswordChange(event){
 	}
 
 	// hide loader
-	form.querySelector('.submit_wrapper .loadergif').classList.add('hidden');
+	form.querySelector('.submit_wrapper .loader_wrapper').classList.add('hidden');
 }
 					
 document.addEventListener("DOMContentLoaded", function() {

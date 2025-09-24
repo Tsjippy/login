@@ -20,7 +20,7 @@ async function registerBiometric(){
         let loaderHtml = `
             <div id="loader_wrapper" style='margin-bottom:20px;'>
                 <span class="message"></span>
-                <img class="loadergif" src="${sim.loadingGif}" height="30px;">
+                ${sim.loaderHtml}
                 <span class='message'></span> 
             </div>`;
 
