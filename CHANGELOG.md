@@ -4,11 +4,13 @@
 ### Added
 
 ### Changed
-- js generated loader
 
 ### Fixed
 
 ### Updated
+
+## [8.3.4] - 2025-09-25
+
 
 ## [8.3.3] - 2025-09-24
 
