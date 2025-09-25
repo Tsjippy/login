@@ -10,7 +10,7 @@ function twoFaSettingsForm($userId=''){
 		<div class='loader_wrapper'>
 			<?php echo SIM\LOADERIMAGE;?>
 			
-			<span id='message' class='uploadmessage'>Waiting for biometric</span>
+			<span id='message' class='message'>Waiting for biometric</span>
 		</div>
 		<div>
 			<p>

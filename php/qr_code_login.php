@@ -55,7 +55,7 @@ if(!is_user_logged_in() && !auth_redirect()){
         <div class='loader_wrapper'>
 			<?php echo SIM\LOADERIMAGE;?>
 			
-			<span id='message' class='uploadmessage' style='display: block;'>Waiting for biometric</span>
+			<span id='message' class='message' style='display: block;'>Waiting for biometric</span>
 		</div>
 		<main>
 			<p>
