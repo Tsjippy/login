@@ -17,12 +17,7 @@ async function registerBiometric(){
         let identifier          = `${device.device.type}_${device.device.brand}_${device.device.model}_${device.client.name}`;
 
         //show loader
-        let loaderHtml = `
-            <div id="loader_wrapper" style='margin-bottom:20px;'>
-                <span class="message"></span>
-                ${sim.loaderHtml}
-                <span class='message'></span> 
-            </div>`;
+        let loaderHtml = Main.showLoader(null, false, 50, 'Preparing biometric registration...', true);
 
         let modalHtml   = `
             <div id='register_biometrics_modal' class='modal'>

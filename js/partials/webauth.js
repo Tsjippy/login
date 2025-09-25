@@ -132,7 +132,7 @@ export async function verifyWebauthn(methods){
 // Request email code for 2fa login
 export async function requestEmailCode(){
 	//add new one
-	let loader				= sim.loaderHtml;
+	let loader				= Main.showLoader(null, false, 50, '', true);
 	showMessage(`Sending e-mail... ${loader}`);
 
 	let username	= document.getElementById('username').value;

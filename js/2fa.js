@@ -72,7 +72,7 @@ async function removeWebAuthenticator(target){
 
 async function sendValidationEmail(target){
 	// Request email code for 2fa login setup
-	let loader				= sim.loaderHtml;
+	let loader				= Main.showLoader(target, false, 50, '', true);
 
 	document.getElementById('email-message').innerHTML	= `Sending e-mail... ${loader}`;
 

@@ -23,9 +23,11 @@ async function logout(event){
 	if(target.matches(".logout")){
         closeMobileMenu();
 
+        let loader				= Main.showLoader(target, false, 50, '', true);
+
         if(typeof(Swal) != 'undefined'){
             var options = {
-                iconHtml: sim.loaderHtml,
+                iconHtml: loader,
                 title: 'Logging out...',
                 showConfirmButton: false,
                 customClass: {

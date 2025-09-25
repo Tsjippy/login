@@ -96,7 +96,7 @@ async function resetPassword(target){
 	}
 	
 	button.classList.add('hidden');
-	let loader = Main.showLoader(button, false, 'Requesting Password Reset...   ');
+	let loader = Main.showLoader(button, false, 50, 'Requesting Password Reset...   ');
 
 	let formData	= new FormData(form);
 	formData.append('username', username);
