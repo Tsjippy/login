@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- classnames replace _ with -
-- better login experience
 
 ### Fixed
 
 ### Updated
+
+## [8.3.5] - 2025-09-26
+
+
+### Changed
+- classnames replace _ with -
+- better login experience
 
 ## [8.3.4] - 2025-09-25
 
