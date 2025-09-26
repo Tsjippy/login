@@ -5,6 +5,7 @@
 
 ### Changed
 - classnames replace _ with -
+- better login experience
 
 ### Fixed
 
