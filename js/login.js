@@ -26,13 +26,25 @@ async function verifyCreds(){
 	var username	= document.getElementById('username').value;
 	var password	= document.getElementById('password').value;
 
+	let curScreen			= document.getElementById('usercred-wrapper');
+	let loginScreen 		= document.getElementById('logging-in-wrapper');
+	let passwordResetForm 	= document.getElementById('password-reset-form');
+
 	// Check if the fields are filled
 	if(username != '' && password != ''){
-		document.querySelector('#usercred_wrapper .loader-wrapper').classList.remove('hidden');
+		passwordResetForm.classList.add('hidden');
+
+		curScreen.classList.add('hidden');
+		
+		loginScreen.classList.remove('hidden');
+
+		var orgMessage	= loginScreen.querySelector('.status-message').textContent;
+
+		loginScreen.querySelector('.status-message').textContent	= 'Verifying Credentials';
 	}else{
 		showMessage('Please give an username and password!', 'warning');
 		return;
-	}
+	}	
 
 	// Make sure we have a internet connection
 	await Main.waitForInternet();
@@ -42,13 +54,20 @@ async function verifyCreds(){
 	let response	= await FormSubmit.fetchRestApi('login/check-cred', formData);
 
  	if(response){
-		if(response == 'false') {
+		if(response != 'false') {
+			response	= addMethods(response);
+		}else{
+			response 	= false;
+		}
+
+		if(!response) {
+			loginScreen.querySelector('.status-message').textContent	= orgMessage;
+
+			curScreen.classList.remove('hidden');
+			passwordResetForm.classList.remove('hidden');
+			loginScreen.classList.add('hidden');
+
 			showMessage('Invalid login, try again', 'error');
-			
-			// hide loader
-			document.querySelector('#usercred_wrapper .loader-wrapper').classList.add('hidden');
-		} else {
-			addMethods(response);
 		}
 	}
 }
@@ -142,23 +161,25 @@ async function requestAccount(target){
 	form.querySelector('.loader-wrapper').classList.add('hidden');
 }
 
-function addMethods(result){
-	document.querySelector('#usercred_wrapper .loader-wrapper').classList.add('hidden');
-	
+function addMethods(result){	
 	if(!result){
 		//incorrect creds add message, but only once
 		showMessage('Invalid username or password!', 'error');
-	}else if(typeof(result) == 'object'){
+
+		return false;
+	}
+	
+	if(typeof(result) == 'object'){
 		if('redirect' in result){
 			//redirect to the returned webpage
 			location.href	= result.redirect;
 
-			return;
+			return true;
 		}
 
 		if(result instanceof Array){
 			//hide cred fields
-			document.querySelectorAll("#usercred_wrapper").forEach(el=>el.classList.add('hidden'));
+			document.querySelectorAll("#logging-in-wrapper").forEach(el=>el.classList.add('hidden'));
 
 			//hide messsages
 			showMessage('');
@@ -177,6 +198,8 @@ function addMethods(result){
 				//correct creds and 2fa enabled
 				showTwoFaFields(result);
 			}
+
+			return true;
 		}
 	}else{
 		//something went wrong, reload the page
@@ -185,8 +208,8 @@ function addMethods(result){
 }
 
 document.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter' && document.querySelector("#usercred_wrapper") != null){
-		if(!document.querySelector("#usercred_wrapper").classList.contains('hidden') && document.getElementById('check-cred') != null && document.getElementById('check-cred').disabled == false){
+    if (e.key === 'Enter' && document.querySelector("#usercred-wrapper") != null){
+		if(!document.querySelector("#usercred-wrapper").classList.contains('hidden') && document.getElementById('check-cred') != null && document.getElementById('check-cred').disabled == false){
 			verifyCreds();
 		}else if(!document.querySelector("#submit-login-wrapper").classList.contains('hidden')){
 			requestLogin();
@@ -227,7 +250,7 @@ function openLoginModal(){
 
 	//reset form
 	modal.querySelectorAll('.authenticator-wrapper:not(.hidden)').forEach(el=>el.classList.add('hidden'));
-	modal.querySelector('#usercred_wrapper').classList.remove('hidden');
+	modal.querySelector('#usercred-wrapper').classList.remove('hidden');
 
 	modal.classList.remove('hidden');
 

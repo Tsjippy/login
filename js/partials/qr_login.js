@@ -7,7 +7,7 @@ let checkCount			= 5;
 
 // Show qr code and start polling for login info
 export function showLoginQrCode(){
-	document.getElementById('usercred_wrapper').classList.add('hidden');
+	document.getElementById('usercred-wrapper').classList.add('hidden');
 
 	showMessage('Fetching QR code...');
 
@@ -92,7 +92,7 @@ export function hideQrCode(){
 
 	showMessage('');
 
-	document.getElementById('usercred_wrapper').classList.remove('hidden');
+	document.getElementById('usercred-wrapper').classList.remove('hidden');
 
 	document.getElementById(`qrcode-wrapper`).innerHTML = '';
 }

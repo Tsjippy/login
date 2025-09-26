@@ -92,7 +92,7 @@ export async function verifyWebauthn(methods){
 	let username	= document.getElementById('username').value;
 
 	try{
-		let result	= await webAuthVerification(username, document.querySelector('#webauthn-wrapper .status_message'));
+		let result	= await webAuthVerification(username, document.querySelector('#webauthn-wrapper .status-message'));
 
 		if(!result){
 			throw new Error( 'Webauthentication failed' );
@@ -101,7 +101,7 @@ export async function verifyWebauthn(methods){
 		//authentication success
 		await requestLogin();
 	}catch (error){
-		if(document.getElementById('logging_in_wrapper').classList.add('hidden'));
+		if(document.getElementById('logging-in-wrapper').classList.add('hidden'));
 
 		//authentication failed
 		document.querySelector('#webauthn-wrapper').classList.add('hidden');
@@ -157,7 +157,7 @@ export async function processCredential(credential){
 		credParsing	= true;
 		let username = String.fromCodePoint(...new Uint8Array(credential.response.userHandle));
 
-		document.querySelector('#webauthn-wrapper .status_message').textContent='Verifying credentials...';
+		document.querySelector('#webauthn-wrapper .status-message').textContent='Verifying credentials...';
 
 		// Verify on the server
 		const publicKeyCredential 	= preparePublicKeyCredentials(credential);
@@ -168,9 +168,9 @@ export async function processCredential(credential){
 		if(response){
 			showMessage('Passkey login succesfull', 'success');
 		}else{
-			document.querySelector('#webauthn-wrapper .status_message').textContent='Please authenticate';
+			document.querySelector('#webauthn-wrapper .status-message').textContent='Please authenticate';
 
-			document.querySelectorAll('#usercred_wrapper').forEach(el=>el.classList.remove('hidden'));
+			document.querySelectorAll('#usercred-wrapper').forEach(el=>el.classList.remove('hidden'));
 			document.querySelectorAll('#webauthn-wrapper').forEach(el=>el.classList.add('hidden'));
 
 			showMessage('Passkey login failed, try using your username and password', 'error');
@@ -184,7 +184,7 @@ export async function processCredential(credential){
 	} else {
 		console.log("Credential returned null");
 
-		document.getElementById('usercred_wrapper').classList.remove('hidden');
+		document.getElementById('usercred-wrapper').classList.remove('hidden');
 		document.getElementById('webauthn-wrapper').classList.add('hidden');
 
 		showMessage('Passkey login failed', 'error');
@@ -224,13 +224,13 @@ export let startConditionalRequest = async (mediation) => {
 	}
 
 	if(mediation != 'conditional'){
-		document.getElementById('usercred_wrapper').classList.add('hidden');
+		document.getElementById('usercred-wrapper').classList.add('hidden');
 		document.getElementById('webauthn-wrapper').classList.remove('hidden');
 
 		showMessage('Performing passkey login');
 	}
 
-	let usercredWrapper	= document.getElementById('usercred_wrapper');
+	let usercredWrapper	= document.getElementById('usercred-wrapper');
 
 	try {
 		let formData			= new FormData();

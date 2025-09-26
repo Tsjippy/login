@@ -146,7 +146,7 @@ export async function requestLogin(){
 	});
 	
 	//show login message
-	document.getElementById('logging_in_wrapper').classList.remove('hidden');
+	document.getElementById('logging-in-wrapper').classList.remove('hidden');
 
 	let form 		= document.getElementById('loginform');
 	let formData	= new FormData(form);
@@ -183,7 +183,7 @@ export async function requestLogin(){
 			// close all iframes
 			window.parent.document.querySelectorAll('iframe').forEach(el=>el.remove());
 		}else{
-			document.querySelector('#logging_in_wrapper .status_message').textContent='Succesfully logged in, redirecting...';
+			document.querySelector('#logging-in-wrapper .status-message').textContent='Succesfully logged in, redirecting...';
 
 			if(response.redirect == ''){
 				// refresh the page
@@ -196,7 +196,7 @@ export async function requestLogin(){
 
 		return true;
 	}else{
-		document.getElementById('logging_in_wrapper').classList.add('hidden');
+		document.getElementById('logging-in-wrapper').classList.add('hidden');
 
 		document.querySelector('.current-method').classList.remove('hidden');
 

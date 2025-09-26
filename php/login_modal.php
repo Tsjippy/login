@@ -51,7 +51,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
             <form id="loginform" action="login" method="post">
                 <input type='hidden' name='action' value='request_login'>
 
-                <div id='usercred_wrapper'>
+                <div id='usercred-wrapper'>
                     <label style="width: 100%;">
                         Username<br>
                         <input id="username" type="text" class='wide' name="username" value="<?php echo $username;?>" autofocus autocomplete="username webauthn" style='width: calc(100% - 40px);display:inline-block;'>
@@ -77,16 +77,15 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                     
                     <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
                     <button type='button' id='check-cred' class='button'>Login</button>
-                    <?php echo SIM\loaderImage(50, '', true);?>
                 </div>
 
-                <div id='logging_in_wrapper' class='hidden'>
-                    <h4 class='status_message'>Logging in...</h4>
+                <div id='logging-in-wrapper' class='hidden'>
+                    <h4 class='status-message'>Logging in...</h4>
                     <?php echo SIM\LOADERIMAGE;?>
                 </div>
 
                 <div id='webauthn-wrapper' class='authenticator-wrapper hidden'>
-                    <h4 class='status_message'>Please authenticate...</h4>
+                    <h4 class='status-message'>Please authenticate...</h4>
                     <?php echo SIM\LOADERIMAGE;?>
                 </div>
 
