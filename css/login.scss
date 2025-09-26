@@ -1,6 +1,6 @@
 @use '../../../plugins/sim-plugin/includes/css/scss/global' as *;
 
-#login_wrapper {
+#login-wrapper {
     margin: 0;
     padding: 0;
 
@@ -25,7 +25,7 @@
         margin-top: 15px;
         position: relative;
     
-        .toggle_pwd_view {
+        .toggle-pwd-view {
             background: transparent;
             border: 1px solid transparent;
             box-shadow: none;
@@ -51,23 +51,23 @@
         }
     }
 
-    #check_cred_wrapper{
+    #check-cred-wrapper{
         width: 100%;
         margin-top: 20px;
         display: flex;
 
         @media (max-width: $mobilewidth){
-            #rememberme_label{
+            #remember-me-label{
                 width: 100%;
                 display: block;
             }
 
-            #check_cred{
+            #check-cred{
                 margin-top: 20px;
             }
         }
 
-        #check_cred{
+        #check-cred{
             margin-left: auto;
             margin-right: 0px;
         }
@@ -83,11 +83,11 @@
         display: block;
     }
 
-    #webauthn_wrapper{
+    #webauthn-wrapper{
         margin-bottom:20px;
     }
 
-    #authenticator_wrapper, #email_wrapper{
+    #authenticator-wrapper, #email_wrapper{
         margin-bottom:20px;
     }
 
@@ -95,7 +95,7 @@
         margin-top: 20px;
     }
 
-    #login_button{
+    #login-button{
         margin-left: auto;
     }
 }

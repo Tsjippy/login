@@ -140,7 +140,7 @@ export function showMessage(message, type=''){
 //show loader
 export async function requestLogin(){
 	//hide everything
-	document.querySelectorAll('.authenticator_wrapper:not(.hidden)').forEach(el=>{
+	document.querySelectorAll('.authenticator-wrapper:not(.hidden)').forEach(el=>{
 		el.classList.add('hidden');
 		el.classList.add('current-method');
 	});

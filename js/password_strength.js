@@ -79,7 +79,7 @@ async function submitPasswordChange(event){
 	var form	= event.target.closest('form');
 
 	// show loader
-	form.querySelector('.submit_wrapper .loader_wrapper').classList.remove('hidden');
+	form.querySelector('.submit-wrapper .loader-wrapper').classList.remove('hidden');
 
 	var formData	= new FormData(form);
 
@@ -95,7 +95,7 @@ async function submitPasswordChange(event){
 	}
 
 	// hide loader
-	form.querySelector('.submit_wrapper .loader_wrapper').classList.add('hidden');
+	form.querySelector('.submit-wrapper .loader-wrapper').classList.add('hidden');
 }
 					
 document.addEventListener("DOMContentLoaded", function() {
@@ -104,5 +104,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	document.querySelectorAll('[name="update_password"]').forEach(el=>el.addEventListener("click",submitPasswordChange));
 
-	document.querySelectorAll('.toggle_pwd_view').forEach(el=>el.addEventListener("click", togglePassworView));
+	document.querySelectorAll('.toggle-pwd-view').forEach(el=>el.addEventListener("click", togglePassworView));
 });

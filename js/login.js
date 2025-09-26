@@ -28,7 +28,7 @@ async function verifyCreds(){
 
 	// Check if the fields are filled
 	if(username != '' && password != ''){
-		document.querySelector('#usercred_wrapper .loader_wrapper').classList.remove('hidden');
+		document.querySelector('#usercred_wrapper .loader-wrapper').classList.remove('hidden');
 	}else{
 		showMessage('Please give an username and password!', 'warning');
 		return;
@@ -39,14 +39,14 @@ async function verifyCreds(){
 
 	let formData	= new FormData(document.getElementById('loginform'));
 
-	let response	= await FormSubmit.fetchRestApi('login/check_cred', formData);
+	let response	= await FormSubmit.fetchRestApi('login/check-cred', formData);
 
  	if(response){
 		if(response == 'false') {
 			showMessage('Invalid login, try again', 'error');
 			
 			// hide loader
-			document.querySelector('#usercred_wrapper .loader_wrapper').classList.add('hidden');
+			document.querySelector('#usercred_wrapper .loader-wrapper').classList.add('hidden');
 		} else {
 			addMethods(response);
 		}
@@ -125,7 +125,7 @@ async function requestAccount(target){
 	let form 		= target.closest('form');
 
 	// Show loader
-	form.querySelector('.loader_wrapper').classList.remove('hidden');
+	form.querySelector('.loader-wrapper').classList.remove('hidden');
 
 	let formData	= new FormData(form);
 
@@ -139,11 +139,11 @@ async function requestAccount(target){
 	form.reset();
 
 	// Hide loader
-	form.querySelector('.loader_wrapper').classList.add('hidden');
+	form.querySelector('.loader-wrapper').classList.add('hidden');
 }
 
 function addMethods(result){
-	document.querySelector('#usercred_wrapper .loader_wrapper').classList.add('hidden');
+	document.querySelector('#usercred_wrapper .loader-wrapper').classList.add('hidden');
 	
 	if(!result){
 		//incorrect creds add message, but only once
@@ -186,9 +186,9 @@ function addMethods(result){
 
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && document.querySelector("#usercred_wrapper") != null){
-		if(!document.querySelector("#usercred_wrapper").classList.contains('hidden') && document.getElementById('check_cred') != null && document.getElementById('check_cred').disabled == false){
+		if(!document.querySelector("#usercred_wrapper").classList.contains('hidden') && document.getElementById('check-cred') != null && document.getElementById('check-cred').disabled == false){
 			verifyCreds();
-		}else if(!document.querySelector("#submit_login_wrapper").classList.contains('hidden')){
+		}else if(!document.querySelector("#submit-login-wrapper").classList.contains('hidden')){
 			requestLogin();
 		}
 	}
@@ -226,7 +226,7 @@ function openLoginModal(){
 	modal.style.display = 'block';
 
 	//reset form
-	modal.querySelectorAll('.authenticator_wrapper:not(.hidden)').forEach(el=>el.classList.add('hidden'));
+	modal.querySelectorAll('.authenticator-wrapper:not(.hidden)').forEach(el=>el.classList.add('hidden'));
 	modal.querySelector('#usercred_wrapper').classList.remove('hidden');
 
 	modal.classList.remove('hidden');
@@ -259,13 +259,13 @@ document.addEventListener("click", async function(event){
 			openLoginModal();
 		//}
 
-	}else if(target.id == 'check_cred'){
+	}else if(target.id == 'check-cred'){
 		// Check if a valid username and password is submitted
 		verifyCreds();
-	}else if(target.id == "login_button"){
+	}else if(target.id == "login-button"){
 		// Submit the login form when averything is ok
 		requestLogin();
-	}else if(target.closest('.toggle_pwd_view') != null){
+	}else if(target.closest('.toggle-pwd-view') != null){
 		togglePassworView(event);
 	}else if(target.id == 'password-reset-form' || target.id == "lost_pwd_link"){
 		resetPassword(target);

@@ -39,7 +39,7 @@ function passwordResetForm($user){
 					New Password<br>
 					<input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off" required/>
 				</label>
-				<button type="button" class='toggle_pwd_view' data-toggle="0" title="Show password">
+				<button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
 					<img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
 				</button>
 				<br>
@@ -51,7 +51,7 @@ function passwordResetForm($user){
 					Confirm New Password<br>
 					<input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off" required/>
 				</label>
-				<button type="button" class='toggle_pwd_view' data-toggle="0" title="Show password">
+				<button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
 					<img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
 				</button>
 				<br>

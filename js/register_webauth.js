@@ -29,7 +29,7 @@ async function registerBiometric(){
 
         document.querySelector('body').insertAdjacentHTML('afterEnd', modalHtml);
         
-        let message		= document.querySelector('#loader_wrapper .message');
+        let message		= document.querySelector('#loader-wrapper .message');
 
 		// Get biometric challenge
 		let formData			= new FormData();

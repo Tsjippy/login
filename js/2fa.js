@@ -2,7 +2,7 @@ console.log("2fa.js loaded");
 
 async function saveTwofaSettings(target){
 	// Show loader
-	let loader	= target.closest('.submit_wrapper').querySelector('.loader_wrapper');
+	let loader	= target.closest('.submit-wrapper').querySelector('.loader-wrapper');
 	loader.classList.remove('hidden');
 
 	let form		= target.closest('form');
@@ -21,7 +21,7 @@ async function saveTwofaSettings(target){
 			Main.displayMessage(response, 'success');
 
 			//Show submit button
-			target.closest('form').querySelector('.form_submit').classList.add('hidden');
+			target.closest('form').querySelector('.form-submit').classList.add('hidden');
 		}
 	}
 
@@ -44,7 +44,7 @@ function showTwofaSetup(target) {
 
 	if(target.value == 'authenticator'){
 		//Show submit button
-		target.closest('form').querySelector('.form_submit').classList.remove('hidden');
+		target.closest('form').querySelector('.form-submit').classList.remove('hidden');
 	}
 }
 
@@ -91,7 +91,7 @@ async function sendValidationEmail(target){
 		target.classList.add('hidden');
 
 		//Show submit button
-		target.closest('form').querySelector('.form_submit').classList.remove('hidden');
+		target.closest('form').querySelector('.form-submit').classList.remove('hidden');
 
 		document.getElementById('email-code-validation').focus();
 	}
@@ -99,7 +99,7 @@ async function sendValidationEmail(target){
 
 document.addEventListener("DOMContentLoaded",function() {
 	//hide the webauthn table if not possible
-	var el = document.querySelector('#webauthn_wrapper.hidden');
+	var el = document.querySelector('#webauthn-wrapper.hidden');
 	if(el != null){
 		el.classList.remove('hidden');
 	}	

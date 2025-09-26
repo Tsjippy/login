@@ -47,12 +47,12 @@ if(!is_user_logged_in() && !auth_redirect()){
             text-align: center;
         }
 
-        main, .loader_wrapper{
+        main, .loader-wrapper{
             margin-top: 20px;
         }
     </style>
     <body>
-        <div class='loader_wrapper'>
+        <div class='loader-wrapper'>
 			<?php echo SIM\LOADERIMAGE;?>
 			
 			<span id='message' class='message' style='display: block;'>Waiting for biometric</span>

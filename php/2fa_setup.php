@@ -7,7 +7,7 @@ function twoFaSettingsForm($userId=''){
 	//we need to approve a qr code login
 	if(!empty($_GET['token']) && !empty($_GET['key'])){
 		?>
-		<div class='loader_wrapper'>
+		<div class='loader-wrapper'>
 			<?php echo SIM\LOADERIMAGE;?>
 			
 			<span id='message' class='message'>Waiting for biometric</span>
@@ -142,7 +142,7 @@ function twoFaSettingsForm($userId=''){
 		?>
 	</form>
 
-	<div id='webauthn_wrapper' class='hidden'>
+	<div id='webauthn-wrapper' class='hidden'>
 		<?php
 		
 		echo authTable($publicKeyCredentialId);

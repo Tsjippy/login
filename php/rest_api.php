@@ -15,7 +15,7 @@ use WP_Error;
 // Allow rest api urls for non-logged in users
 add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addLoginUrls');
 function addLoginUrls($urls){
-    $urls[] = RESTAPIPREFIX.'/login/check_cred';
+    $urls[] = RESTAPIPREFIX.'/login/check-cred';
     $urls[] = RESTAPIPREFIX.'/login/request_login';
     $urls[] = RESTAPIPREFIX.'/login/request_pwd_reset';
     $urls[] = RESTAPIPREFIX.'/login/update_password';
@@ -29,7 +29,7 @@ function loginRestApi() {
     // check credentials
 	register_rest_route(
 		RESTAPIPREFIX.'/login',
-		'/check_cred',
+		'/check-cred',
 		array(
 			'methods' 				=> 'POST,GET',
 			'callback' 				=> __NAMESPACE__.'\checkCredentials',

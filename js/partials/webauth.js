@@ -87,12 +87,12 @@ export async function webAuthVerification(username, messageEl=null){
 // Send request to start webauthn
 export async function verifyWebauthn(methods){	
 	//show webauthn messages
-	document.getElementById('webauthn_wrapper').classList.remove('hidden');
+	document.getElementById('webauthn-wrapper').classList.remove('hidden');
 
 	let username	= document.getElementById('username').value;
 
 	try{
-		let result	= await webAuthVerification(username, document.querySelector('#webauthn_wrapper .status_message'));
+		let result	= await webAuthVerification(username, document.querySelector('#webauthn-wrapper .status_message'));
 
 		if(!result){
 			throw new Error( 'Webauthentication failed' );
@@ -104,7 +104,7 @@ export async function verifyWebauthn(methods){
 		if(document.getElementById('logging_in_wrapper').classList.add('hidden'));
 
 		//authentication failed
-		document.querySelector('#webauthn_wrapper').classList.add('hidden');
+		document.querySelector('#webauthn-wrapper').classList.add('hidden');
 
 		let response	= await FormSubmit.fetchRestApi('login/mark_bio_as_failed', '', false);
 		
@@ -157,7 +157,7 @@ export async function processCredential(credential){
 		credParsing	= true;
 		let username = String.fromCodePoint(...new Uint8Array(credential.response.userHandle));
 
-		document.querySelector('#webauthn_wrapper .status_message').textContent='Verifying credentials...';
+		document.querySelector('#webauthn-wrapper .status_message').textContent='Verifying credentials...';
 
 		// Verify on the server
 		const publicKeyCredential 	= preparePublicKeyCredentials(credential);
@@ -168,10 +168,10 @@ export async function processCredential(credential){
 		if(response){
 			showMessage('Passkey login succesfull', 'success');
 		}else{
-			document.querySelector('#webauthn_wrapper .status_message').textContent='Please authenticate';
+			document.querySelector('#webauthn-wrapper .status_message').textContent='Please authenticate';
 
 			document.querySelectorAll('#usercred_wrapper').forEach(el=>el.classList.remove('hidden'));
-			document.querySelectorAll('#webauthn_wrapper').forEach(el=>el.classList.add('hidden'));
+			document.querySelectorAll('#webauthn-wrapper').forEach(el=>el.classList.add('hidden'));
 
 			showMessage('Passkey login failed, try using your username and password', 'error');
 
@@ -185,7 +185,7 @@ export async function processCredential(credential){
 		console.log("Credential returned null");
 
 		document.getElementById('usercred_wrapper').classList.remove('hidden');
-		document.getElementById('webauthn_wrapper').classList.add('hidden');
+		document.getElementById('webauthn-wrapper').classList.add('hidden');
 
 		showMessage('Passkey login failed', 'error');
 
@@ -225,7 +225,7 @@ export let startConditionalRequest = async (mediation) => {
 
 	if(mediation != 'conditional'){
 		document.getElementById('usercred_wrapper').classList.add('hidden');
-		document.getElementById('webauthn_wrapper').classList.remove('hidden');
+		document.getElementById('webauthn-wrapper').classList.remove('hidden');
 
 		showMessage('Performing passkey login');
 	}
@@ -256,7 +256,7 @@ export let startConditionalRequest = async (mediation) => {
 
 		if(mediation == 'conditional'){	
 			usercredWrapper.classList.add('hidden');
-			document.getElementById('webauthn_wrapper').classList.remove('hidden');
+			document.getElementById('webauthn-wrapper').classList.remove('hidden');
 	
 			showMessage('Performing passkey login');
 		}
@@ -275,7 +275,7 @@ export let startConditionalRequest = async (mediation) => {
 		// only do when login modal is open
 		if(usercredWrapper != null){
 			usercredWrapper.classList.remove('hidden');
-			document.getElementById('webauthn_wrapper').classList.add('hidden');
+			document.getElementById('webauthn-wrapper').classList.add('hidden');
 
 			showMessage('Passkey login failed, try using your username and password', 'error');
 		}
@@ -323,7 +323,7 @@ export function showTwoFaFields(methods){
 	}
 
 	//enable login button
-	document.querySelector("#login_button").disabled			= '';
+	document.querySelector("#login-button").disabled			= '';
 	//show login button
-	document.querySelector('#submit_login_wrapper').classList.remove('hidden');
+	document.querySelector('#submit-login-wrapper').classList.remove('hidden');
 }

@@ -38,7 +38,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
             echo '<span class="close">×</span>';
         }
         ?>
-        <div id='login_wrapper'>
+        <div id='login-wrapper'>
             <h3>
                 Login form
             </h3>
@@ -63,12 +63,12 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                             Password
                             <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn">
                         </label>
-                        <button type="button" class='toggle_pwd_view' data-toggle="0" title="Show password">
+                        <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
                             <img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
                         </button>
                     </div>
-                    <div id='check_cred_wrapper'>
-                        <label id='rememberme_label'>
+                    <div id='check-cred-wrapper'>
+                        <label id='remember-me-label'>
                             <input name="rememberme" type="checkbox" id="rememberme" value="forever" checked>
                             Remember Me
                         </label>
@@ -76,7 +76,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                     <?php do_action( 'login_form' );?>
                     
                     <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
-                    <button type='button' id='check_cred' class='button'>Login</button>
+                    <button type='button' id='check-cred' class='button'>Login</button>
                     <?php echo SIM\loaderImage(50, '', true);?>
                 </div>
 
@@ -85,28 +85,28 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                     <?php echo SIM\LOADERIMAGE;?>
                 </div>
 
-                <div id='webauthn_wrapper' class='authenticator_wrapper hidden'>
+                <div id='webauthn-wrapper' class='authenticator-wrapper hidden'>
                     <h4 class='status_message'>Please authenticate...</h4>
                     <?php echo SIM\LOADERIMAGE;?>
                 </div>
 
-                <div id='authenticator_wrapper' class='authenticator_wrapper hidden'>
+                <div id='authenticator-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the two-factor authentication (2FA) verification code below to login.
                         <input type="tel" name="authcode"  class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
-                <div id='email_wrapper' class='authenticator_wrapper hidden'>
+                <div id='email_wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the code sent to your e-mail below to login.
                         <input type="tel" name="email_code"  class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
-                <div id='submit_login_wrapper' class='hidden'>
-                    <div class='submit_wrapper'>
-                        <button type='button' class='button' id='login_button' disabled>Login</button>
+                <div id='submit-login-wrapper' class='hidden'>
+                    <div class='submit-wrapper'>
+                        <button type='button' class='button' id='login-button' disabled>Login</button>
                         <?php echo SIM\loaderImage(50, '', true);?>
                     </div>
                 </div>

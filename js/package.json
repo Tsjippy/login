@@ -9,7 +9,8 @@
     "logout": "webpack  --watch --entry ./logout.js --output-path . --output-filename logout.min.js --progress --mode=production --devtool source-map",
     "password": "webpack --watch --entry ./password_strength.js --output-path . --output-filename password_strength.min.js --progress --mode=production --devtool source-map",
     "qr": "webpack --watch --entry ./qr_code_login.js --output-path . --output-filename qr_code_login.min.js --progress --mode=production --devtool source-map",
-    "register": "webpack --watch --entry ./register_webauth.js --output-path . --output-filename register_webauth.min.js --progress --mode=production --devtool source-map"
+    "register": "webpack --watch --entry ./register_webauth.js --output-path . --output-filename register_webauth.min.js --progress --mode=production --devtool source-map",
+    "all": "run-p login 2fa logout password qr register"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",

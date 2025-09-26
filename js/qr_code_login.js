@@ -21,5 +21,5 @@ document.addEventListener("DOMContentLoaded", async function() {
         }, 1000);
     }
 
-    document.querySelectorAll('.loader_wrapper').forEach(el=>el.classList.add('hidden'));
+    document.querySelectorAll('.loader-wrapper').forEach(el=>el.classList.add('hidden'));
 });
