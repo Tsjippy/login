@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- code refactoring to js class
 
 ### Fixed
 
 ### Updated
+
+## [8.3.6] - 2025-10-02
+
+
+### Changed
+- code refactoring to js class
 
 ## [8.3.5] - 2025-09-26
 
