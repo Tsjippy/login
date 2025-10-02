@@ -377,10 +377,9 @@ function storeBiometric(){
         }
 
         // Store as a 2fa option
-        $methods    = (array)get_user_meta($user->ID, '2fa_methods', true);
+        $methods    = get_user_meta($user->ID, '2fa_methods');
         if(!in_array('webauthn', $methods)){
-            $methods[]  = 'webauthn';
-            update_user_meta($user->ID, '2fa_methods', $methods);
+            add_user_meta($user->ID, '2fa_methods', 'webauthn');
         }
 
         // Success
@@ -643,11 +642,11 @@ function checkBioPassword($check, $password, $storedHash, $userId ){
 
 // Save 2fa options
 function saveTwoFaSettings(){
-    $userId = get_current_user_id();
+    $userId         = get_current_user_id();
 
-    $newMethods    = $_POST['2fa_methods'];
+    $newMethods     = $_POST['2fa-methods'];
 
-    $oldMethods    = (array)get_user_meta($userId,'2fa_methods', true);
+    $oldMethods     = get_user_meta($userId, '2fa_methods');
 
     $twofa          = new TwoFactorAuth();
 
@@ -678,6 +677,8 @@ function saveTwoFaSettings(){
             return new WP_Error('Invalid 2fa code', "Your code is expired");
         }
 
+        add_user_meta($userId, '2fa_methods', 'authenticator');
+
         $message    = "Succesfully enabled authenticator as a second factor";
     }
 
@@ -697,15 +698,9 @@ function saveTwoFaSettings(){
         }else{
             return new WP_Error('login', 'Invalid e-mail code');
         }
-    }
 
-    //make sure we keep webauthn enabled
-    if(in_array('webauthn',$oldMethods)){
-        $newMethods[]  = 'webauthn';
+        add_user_meta($userId, '2fa_methods', 'email');
     }
-
-    //store all methods. We will not come here if one of the failed
-    update_user_meta($userId, '2fa_methods', $newMethods);
 
     return $message;
 }

@@ -195,13 +195,11 @@ function checkCredentials(){
     //validate credentials
     if($user && wp_check_password($password, $user->data->user_pass, $user->ID)){
         //get 2fa methods for this user
-        $methods  = (array) get_user_meta($user->ID, '2fa_methods', true);
+        $methods  = get_user_meta($user->ID, '2fa_methods');
 
         if(!in_array('webauthn', $methods)){
             storeInTransient('webauthn', 'failed');
         }
-
-        SIM\cleanUpNestedArray($methods);
 
         //return the methods
         if(!empty($methods)){

@@ -144,7 +144,7 @@ function authenticate( $user) {
         return $user;
     }
     
-    $methods    = get_user_meta($user->ID, '2fa_methods', true);
+    $methods    = get_user_meta($user->ID, '2fa_methods');
     if(!empty($methods)){
         if(!isset($_SESSION)){
             session_start();
@@ -236,8 +236,7 @@ function redirectTo2fa(){
     $user		= wp_get_current_user();
 
     //If 2fa not enabled and we are not on the account page
-    $methods	= get_user_meta($user->ID, '2fa_methods', true);
-    SIM\cleanUpNestedArray($methods);
+    $methods	= get_user_meta($user->ID, '2fa_methods');
 
     if(!isset($_SESSION)){
         session_start();

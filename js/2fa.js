@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded",function() {
 document.addEventListener('click', ev =>{
 	var target = ev.target;
 
-	if(target.name == '2fa_methods[]'){
+	if(target.name == '2fa-methods[]'){
 		showTwofaSetup(target);
 	}
 

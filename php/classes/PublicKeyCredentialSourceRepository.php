@@ -95,16 +95,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
             delete_user_meta($this->userId, "2fa_webautn_cred");
             delete_user_meta($this->userId, "2fa_webautn_cred_meta");
             delete_user_meta($this->userId, "2fa_webautn_key");
-    
-            $methods    = get_user_meta($this->userId, "2fa_methods",true);
-            unset($methods[array_search('webauthn', $methods)]);
-            SIM\cleanUpNestedArray($methods);
-
-            if(empty($methods)){
-                delete_user_meta($this->userId, "2fa_methods");
-            }else{
-                update_user_meta($this->userId, "2fa_methods", $methods);
-            }
+            delete_user_meta($this->userId, "2fa_methods", 'webauthn');
         }else{
             update_user_meta($this->userId, "2fa_webautn_cred", base64_encode(serialize($data)));
 

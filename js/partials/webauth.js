@@ -1,8 +1,7 @@
 import {
     preparePublicKeyCredentials,
     preparePublicKeyOptions,
-	showMessage,
-	requestLogin
+	showMessage
 } from './shared.js';
 
 let credParsing			        = false;
@@ -84,70 +83,6 @@ export async function webAuthVerification(username, messageEl=null){
 	}
 }
 
-// Send request to start webauthn
-export async function verifyWebauthn(methods){	
-	//show webauthn messages
-	document.getElementById('webauthn-wrapper').classList.remove('hidden');
-
-	let username	= document.getElementById('username').value;
-
-	try{
-		let result	= await webAuthVerification(username, document.querySelector('#webauthn-wrapper .status-message'));
-
-		if(!result){
-			throw new Error( 'Webauthentication failed' );
-		}
-
-		//authentication success
-		await requestLogin();
-	}catch (error){
-		if(document.getElementById('logging-in-wrapper').classList.add('hidden'));
-
-		//authentication failed
-		document.querySelector('#webauthn-wrapper').classList.add('hidden');
-
-		let response	= await FormSubmit.fetchRestApi('login/mark_bio_as_failed', '', false);
-		
-		console.log(response);
-
-		if(methods.length == 1){
-			showMessage('Authentication failed, please setup an additional login factor.', 'error');
-			requestLogin();
-		}else{
-			console.error(error);
-			var message;
-			if(error['message'] == "No authenticator available"){
-				message = "No biometric login for this device found. <br>Give verification code.";
-			}else{
-				message = 'Web authentication failed, please give verification code.';
-			}
-			showMessage(message, 'error');
-
-			//Show other 2fa fields
-			showTwoFaFields(methods);
-		}
-	}
-}
-
-// Request email code for 2fa login
-export async function requestEmailCode(){
-	//add new one
-	let loader				= Main.showLoader(null, false, 50, '', true);
-	showMessage(`Sending e-mail... ${loader}`);
-
-	let username	= document.getElementById('username').value;
-	let formData	= new FormData();
-	formData.append('username',username);
-
-	let response	= await FormSubmit.fetchRestApi('login/request_email_code', formData, false);
-	
-	if(response){
-		showMessage(response, 'success');
-	}else{
-		showMessage(`Sending e-mail failed`, 'error');
-	}
-}
-
 export async function processCredential(credential){
 	if(credParsing){
 		return;
@@ -155,9 +90,8 @@ export async function processCredential(credential){
 
 	if (credential) {
 		credParsing	= true;
-		let username = String.fromCodePoint(...new Uint8Array(credential.response.userHandle));
 
-		document.querySelector('#webauthn-wrapper .status-message').textContent='Verifying credentials...';
+		sim.login.loadingScreen('Verifying credentials...');
 
 		// Verify on the server
 		const publicKeyCredential 	= preparePublicKeyCredentials(credential);
@@ -168,10 +102,7 @@ export async function processCredential(credential){
 		if(response){
 			showMessage('Passkey login succesfull', 'success');
 		}else{
-			document.querySelector('#webauthn-wrapper .status-message').textContent='Please authenticate';
-
-			document.querySelectorAll('#usercred-wrapper').forEach(el=>el.classList.remove('hidden'));
-			document.querySelectorAll('#webauthn-wrapper').forEach(el=>el.classList.add('hidden'));
+			sim.login.reset();
 
 			showMessage('Passkey login failed, try using your username and password', 'error');
 
@@ -179,13 +110,12 @@ export async function processCredential(credential){
 		}
 
 		//authentication success
-		return await requestLogin();
+		return await sim.login.requestLogin();
 
 	} else {
 		console.log("Credential returned null");
 
-		document.getElementById('usercred-wrapper').classList.remove('hidden');
-		document.getElementById('webauthn-wrapper').classList.add('hidden');
+		sim.login.resetForm();
 
 		showMessage('Passkey login failed', 'error');
 
@@ -224,13 +154,8 @@ export let startConditionalRequest = async (mediation) => {
 	}
 
 	if(mediation != 'conditional'){
-		document.getElementById('usercred-wrapper').classList.add('hidden');
-		document.getElementById('webauthn-wrapper').classList.remove('hidden');
-
-		showMessage('Performing passkey login');
+		sim.login.loadingScreen('Performing passkey login');
 	}
-
-	let usercredWrapper	= document.getElementById('usercred-wrapper');
 
 	try {
 		let formData			= new FormData();
@@ -255,10 +180,7 @@ export let startConditionalRequest = async (mediation) => {
 		});
 
 		if(mediation == 'conditional'){	
-			usercredWrapper.classList.add('hidden');
-			document.getElementById('webauthn-wrapper').classList.remove('hidden');
-	
-			showMessage('Performing passkey login');
+			sim.login.loadingScreen('Performing passkey login');
 		}
 		
 		return await processCredential(credential);
@@ -273,9 +195,8 @@ export let startConditionalRequest = async (mediation) => {
 		}
 
 		// only do when login modal is open
-		if(usercredWrapper != null){
-			usercredWrapper.classList.remove('hidden');
-			document.getElementById('webauthn-wrapper').classList.add('hidden');
+		if(sim.login != null){
+			sim.login.resetForm();
 
 			showMessage('Passkey login failed, try using your username and password', 'error');
 		}
@@ -301,29 +222,4 @@ export async function checkWebauthnAvailable(){
 	}
 
 	return webauthnSupported;
-}
-
-// Display the form for the 2fa email or authenticator code
-export function showTwoFaFields(methods){
-	if(methods.includes('email')){
-		requestEmailCode();
-	}
-
-	//show 2fa fields
-	for(const element of methods){
-		if(element == 'webauthn'){
-			//do not show webauthn
-			continue;
-		}
-		var wrapper	= document.getElementById(element+'_wrapper');
-		if(wrapper != null){
-			wrapper.classList.remove('hidden');
-			wrapper.querySelectorAll('input').forEach(el=>window.setTimeout(() => el.focus(), 0));
-		}
-	}
-
-	//enable login button
-	document.querySelector("#login-button").disabled			= '';
-	//show login button
-	document.querySelector('#submit-login-wrapper').classList.remove('hidden');
 }

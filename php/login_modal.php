@@ -50,8 +50,12 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
 
             <form id="loginform" action="login" method="post">
                 <input type='hidden' name='action' value='request_login'>
+                
+                <div id='message-wrapper' class='hidden'>
+                    <h4 class='status-message'></h4>
+                </div>
 
-                <div id='usercred-wrapper'>
+                <div id='credentials-wrapper'>
                     <label style="width: 100%;">
                         Username<br>
                         <input id="username" type="text" class='wide' name="username" value="<?php echo $username;?>" autofocus autocomplete="username webauthn" style='width: calc(100% - 40px);display:inline-block;'>
@@ -79,16 +83,6 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                     <button type='button' id='check-cred' class='button'>Login</button>
                 </div>
 
-                <div id='logging-in-wrapper' class='hidden'>
-                    <h4 class='status-message'>Logging in...</h4>
-                    <?php echo SIM\LOADERIMAGE;?>
-                </div>
-
-                <div id='webauthn-wrapper' class='authenticator-wrapper hidden'>
-                    <h4 class='status-message'>Please authenticate...</h4>
-                    <?php echo SIM\LOADERIMAGE;?>
-                </div>
-
                 <div id='authenticator-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the two-factor authentication (2FA) verification code below to login.
@@ -96,20 +90,20 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                     </label>
                 </div>
 
-                <div id='email_wrapper' class='authenticator-wrapper hidden'>
+                <div id='email-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the code sent to your e-mail below to login.
                         <input type="tel" name="email_code"  class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
-                <div id='submit-login-wrapper' class='hidden'>
+                <div id='login-button-wrapper' class='hidden'>
                     <div class='submit-wrapper'>
                         <button type='button' class='button' id='login-button' disabled>Login</button>
-                        <?php echo SIM\loaderImage(50, '', true);?>
                     </div>
                 </div>
             </form>
+
             <form id="password-reset-form">
                 <div class='form-elements hidden' style='margin-bottom: 10px;'>
                     <?php echo do_action('resetpass_form');?>

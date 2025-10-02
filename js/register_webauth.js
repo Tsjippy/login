@@ -20,7 +20,7 @@ async function registerBiometric(){
         let loaderHtml = Main.showLoader(null, false, 50, 'Preparing biometric registration...', true);
 
         let modalHtml   = `
-            <div id='register_biometrics_modal' class='modal'>
+            <div id='register-biometrics-modal' class='modal'>
                 <div class="modal-content" style='width:500px;'>
                     <h4>Please take a few seconds to setup your login token</h4>
                     ${loaderHtml}
@@ -29,7 +29,7 @@ async function registerBiometric(){
 
         document.querySelector('body').insertAdjacentHTML('afterEnd', modalHtml);
         
-        let message		= document.querySelector('#loader-wrapper .message');
+        let message		= document.querySelector('#register-biometrics-modal .loader-text');
 
 		// Get biometric challenge
 		let formData			= new FormData();
