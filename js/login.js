@@ -358,9 +358,9 @@ const login = class{
 	 */
 	async requestEmailCode(){
 		// Show the email screen
-		showScreen(this.email);
+		this.showScreen(this.email);
 
-		let loader				= Main.showLoader(null, false, 50, '', true);
+		let loader				= Main.showLoader(null, false, 20, '', true);
 		showMessage(`Sending e-mail... ${loader}`);
 
 		let formData	= new FormData();
@@ -370,13 +370,9 @@ const login = class{
 		
 		if(response){
 			showMessage(response, 'success');
-
-			this.requestLogin();
 		}else{
 			showMessage(`Sending e-mail failed`, 'error');
 		}
-
-		this.reset();
 	}
 
 	//request password reset e-mail
