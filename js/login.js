@@ -94,14 +94,16 @@ const login = class{
 		this.email			= document.getElementById('email-wrapper');
 		this.login			= document.getElementById('login-button-wrapper');
 		this.passwordReset 	= document.getElementById('password-reset-form');
-		
-		this.curScreen		= this.creds;
 
 		if(this.msgScreen.querySelector('.loader') == null){
 			Main.showLoader(this.msgScreen.querySelector('.status-message'), false, 75);
 		}
 		
-		this.showScreen(this.curScreen);
+		this.reset();
+
+		this.showScreen(this.creds);
+		
+		this.curScreen		= this.creds;
 	}
 
 	/**
@@ -121,6 +123,10 @@ const login = class{
 	 * Resets the screen to the original login screen
 	 */
 	reset(){
+		if(this.curScreen == undefined){
+			return;
+		}
+
 		this.curScreen.classList.remove('hidden');
 		this.msgScreen.classList.add('hidden');
 
@@ -131,8 +137,10 @@ const login = class{
 	 * Shows a particular screen
 	 */
 	showScreen(screen){
-		this.curScreen.classList.add('hidden');
-		this.msgScreen.classList.add('hidden');
+		if(this.curScreen != undefined){
+			this.curScreen.classList.add('hidden');
+			this.msgScreen.classList.add('hidden');
+		}
 
 		screen.classList.remove('hidden');
 
@@ -369,7 +377,7 @@ const login = class{
 		let response	= await FormSubmit.fetchRestApi('login/request_email_code', formData, false);
 		
 		if(response){
-			showMessage(response, 'success');
+			showMessage(response);
 		}else{
 			showMessage(`Sending e-mail failed`, 'error');
 		}
