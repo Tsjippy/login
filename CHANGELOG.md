@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- e-mail login
 
 ### Updated
+
+## [8.3.7] - 2025-10-02
+
+
+### Fixed
+- e-mail login
 
 ## [8.3.6] - 2025-10-02
 
