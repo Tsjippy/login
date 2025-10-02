@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- reset login form
 
 ### Updated
 
