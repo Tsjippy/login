@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- code refactoring to js class
 
 ### Fixed
 
