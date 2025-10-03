@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- reset login form
 
 ### Updated
+
+## [8.3.8] - 2025-10-03
+
+
+### Fixed
+- reset login form
 
 ## [8.3.7] - 2025-10-02
 
