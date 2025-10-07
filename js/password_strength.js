@@ -89,7 +89,7 @@ async function submitPasswordChange(event){
 		Main.displayMessage(response.message);
 
 		// redirect to login again if resetting own password
-		if(!location.href.includes('?userid=')){
+		if(!location.href.includes('?user-id=')){
 			location.href	= response.redirect;
 		}
 	}

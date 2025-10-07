@@ -103,7 +103,7 @@ function loginRestApi() {
 			'callback' 				=> __NAMESPACE__.'\processPasswordUpdate',
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-                'userid'		=> array(
+                'user-id'		=> array(
 					'required'	=> true,
                     'validate_callback' => function($userId){
 						return is_numeric($userId);
@@ -365,11 +365,11 @@ function requestPasswordReset(){
 
 //Save a new password
 function processPasswordUpdate(){
-	$userId	= $_POST['userid'];
+	$userId	= $_POST['user-id'];
 
 	$user   = get_userdata($userId);
 	if(!$user){
-        return new WP_Error('userid error','Invalid user id given');
+        return new WP_Error('user-id error','Invalid user id given');
     }
 
 	if($_POST['pass1'] != $_POST['pass2']){
@@ -396,8 +396,8 @@ function processPasswordUpdate(){
 
 // Request user account.
 function requestUserAccount(){
-	$first_name	= $_POST['first_name'];
-	$last_name	= $_POST['last_name'];
+	$firstName	= $_POST['first-name'];
+	$lastName	= $_POST['last-name'];
 	$email	    = $_POST['email'];
 	$pass1	    = $_POST['pass1'];
 	$pass2	    = $_POST['pass2'];
@@ -406,16 +406,16 @@ function requestUserAccount(){
         return new WP_Error('Password error', "Passwords do not match, try again.");
     }
 
-	$username	= SIM\getAvailableUsername($first_name, $last_name);
+	$username	= SIM\getAvailableUsername($firstName, $lastName);
 
 	// Creating account
 	//Build the user
 	$userdata = array(
 		'user_login'    => $username,
-		'last_name'     => $last_name,
-		'first_name'    => $first_name,
+		'last_name'     => $lastName,
+		'first_name'    => $firstName,
 		'user_email'    => $email,
-		'display_name'  => "$first_name $last_name",
+		'display_name'  => "$firstName $lastName",
 	);
 
     if(!empty($pass1)){

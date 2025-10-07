@@ -29,7 +29,7 @@ function passwordResetForm($user){
 
 	<form class="pwd-reset">
 		<div class="login-info">
-			<input type="hidden" name="userid"					value="<?php echo $user->ID; ?>">
+			<input type="hidden" name="user-id"					value="<?php echo $user->ID; ?>">
 			
 			<p style="margin-top:30px;">
 				<?php echo $message;?>

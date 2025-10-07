@@ -19,6 +19,8 @@ console.log("Login.js loaded");
 
 const login = class{
 	constructor() {
+		this.init();
+
 		let params = new Proxy(new URLSearchParams(window.location.search), {
 			get: (searchParams, prop) => searchParams.get(prop),
 		});
@@ -82,12 +84,8 @@ const login = class{
 		return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 	};
 
-	/**
-	 * Clear all inputs and shows the first screen
-	 */
-	resetForm(){
+	init(){
 		this.form			= document.getElementById('loginform');
-
 		this.msgScreen		= document.getElementById('message-wrapper');
 		this.creds			= document.getElementById('credentials-wrapper');
 		this.twofa			= document.getElementById('authenticator-wrapper');
@@ -95,6 +93,13 @@ const login = class{
 		this.login			= document.getElementById('login-button-wrapper');
 		this.passwordReset 	= document.getElementById('password-reset-form');
 
+		this.curScreen		= this.creds;
+	}
+
+	/**
+	 * Clear all inputs and shows the first screen
+	 */
+	resetForm(){
 		if(this.msgScreen.querySelector('.loader') == null){
 			Main.showLoader(this.msgScreen.querySelector('.status-message'), false, 75);
 		}

@@ -10,7 +10,7 @@ function userInfoPage($html, $showCurrentUserData, $user){
     */
     if($showCurrentUserData){
         //Add tab button
-        $html['tabs']['Two factor']	= '<li class="tablink" id="show_2fa_info" data-target="twofa_info">Two factor</li>';
+        $html['tabs']['Two factor']	= '<li class="tablink" id="show-2fa_info" data-target="twofa_info">Two factor</li>';
         
         //Content
         $twofaHtml = '<div id="twofa_info" class="tabcontent hidden">';
