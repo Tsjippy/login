@@ -30,7 +30,7 @@ async function saveTwofaSettings(target){
 
 function showTwofaSetup(target) {
 	//hide all options
-	document.querySelectorAll('.twofa_option').forEach(el=>el.classList.add('hidden'));
+	document.querySelectorAll('.twofa-option').forEach(el=>el.classList.add('hidden'));
 
 	// Show setup for this method
 	var wrapper	= document.getElementById('setup-'+target.value);
@@ -112,7 +112,7 @@ document.addEventListener('click', ev =>{
 		showTwofaSetup(target);
 	}
 
-	if(target.matches('.remove_webauthn')){
+	if(target.matches('.remove-webauthn')){
 		removeWebAuthenticator(target);
 	}
 

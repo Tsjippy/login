@@ -89,7 +89,7 @@ function verifyEmailCode(){
     }
     $emailCode = $_SESSION['2fa_email_key'];
 
-    if($emailCode == $_POST['email_code']){
+    if($emailCode == $_POST['email-code']){
         unset($_SESSION['2fa_email_key']);
 
         session_write_close();

@@ -654,7 +654,7 @@ function saveTwoFaSettings(){
 
     //we just enabled the authenticator
     if(in_array('authenticator', $newMethods) && !in_array('authenticator', $oldMethods)){
-        $secret     = $_POST['auth_secret'];
+        $secret     = $_POST['auth-secret'];
         $secretkey  = $_POST['secretkey'];
         $hash       = get_user_meta($userId,'2fa_hash',true);
 

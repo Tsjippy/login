@@ -23,7 +23,7 @@ function menuItems($items, $args) {
             $class  = 'button';
         }
 
-        $visibilities   = SIM\getModuleOption(MODULE_SLUG, 'visibiltylogoutmenu', false);
+        $visibilities   = SIM\getModuleOption(MODULE_SLUG, 'visibilty-logout-menu', false);
 
         if(in_array($args->menu->term_id, array_keys($visibilities))){
             if($visibilities[$args->menu->term_id] == 'mobile'){
@@ -54,7 +54,7 @@ function menuItems($items, $args) {
             $class  = 'button';
         }
 
-        $visibilities   = SIM\getModuleOption(MODULE_SLUG, 'visibiltyloginmenu', false);
+        $visibilities   = SIM\getModuleOption(MODULE_SLUG, 'visibilty-login-menu', false);
 
         if(in_array($args->menu->term_id, array_keys($visibilities))){
             if($visibilities[$args->menu->term_id] == 'mobile'){

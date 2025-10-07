@@ -28,7 +28,7 @@ function passwordResetForm($user){
 	?>
 
 	<form class="pwd-reset">
-		<div class="login_info">
+		<div class="login-info">
 			<input type="hidden" name="userid"					value="<?php echo $user->ID; ?>">
 			
 			<p style="margin-top:30px;">
@@ -59,7 +59,7 @@ function passwordResetForm($user){
 			</div>
 			<?php echo do_action('resetpass_form');?>
 		</div>
-		<?php echo SIM\addSaveButton('update_password', 'Change password');?>
+		<?php echo SIM\addSaveButton('update-password', 'Change password');?>
 	</form>
 	
 	<?php
@@ -111,12 +111,12 @@ function requestAccount(){
 		
 		<label>
 			<h4>First name<span class="required">*</span></h4>
-			<input type="text" class='wide'  name="first_name" value="" required>
+			<input type="text" class='wide'  name="first-name" value="" required>
 		</label>
 		
 		<label>
 			<h4>Last name<span class="required">*</span></h4>
-			<input type="text" class='wide' name="last_name" required>
+			<input type="text" class='wide' name="last-name" required>
 		</label>
 
 		<label>

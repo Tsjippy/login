@@ -28,8 +28,8 @@ function loadAssets(){
 	wp_register_script('sim_2fa_script', SIM\pathToUrl(MODULE_PATH.'js/2fa.min.js'), array('sim_table_script'), MODULE_VERSION, true);
 
     if(is_numeric(get_the_ID())){
-        $passwordResetPage  = SIM\getModuleOption(MODULE_SLUG, 'password_reset_page');
-        $registerPage       = SIM\getModuleOption(MODULE_SLUG, 'register_page');
+        $passwordResetPage  = SIM\getModuleOption(MODULE_SLUG, 'password-reset-page');
+        $registerPage       = SIM\getModuleOption(MODULE_SLUG, 'register-page');
         if(get_the_ID() == $passwordResetPage || get_the_ID() == $registerPage){
             wp_enqueue_style('sim_pw_reset_style');
 

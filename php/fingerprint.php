@@ -224,7 +224,7 @@ function authTable($authId=''){
     ob_start();
 	if(!empty($webauthnList)){
 		?>
-		<div id='webautn_devices_wrapper'>
+		<div id='webautn-devices-wrapper'>
             <h4>Biometric authenticators overview</h4>
 			<table class='sim-table'>
 				<thead>
@@ -249,7 +249,7 @@ function authTable($authId=''){
                         }
 
                         if($key == $authId){
-                            echo "<tr class='current_device'>";
+                            echo "<tr class='current-device'>";
                         }else{
                             echo "<tr>";
                         }
@@ -260,7 +260,7 @@ function authTable($authId=''){
 							<td><?php echo $added;?></td>
 							<td><?php echo $lastUsed;?></td>
 							<td>
-								<button type='button' class='button small remove_webauthn' title='Remove this method' data-key='<?php echo $key;?>'>-</button>
+								<button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $key;?>'>-</button>
 							</td>
 						</tr>
 						<?php

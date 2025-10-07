@@ -78,17 +78,17 @@ function twoFaSettingsForm($userId=''){
 			}
 			?>
 			<label>
-				<input type="radio" class="twofa_option_checkbox" name="2fa-methods[]" value="authenticator" <?php if(array_search('authenticator', $twoFaMethods) !== false){echo "checked";}?>> 
-				<span class="optionlabel">Authenticator app</span>
+				<input type="radio" class="twofa-option-checkbox" name="2fa-methods[]" value="authenticator" <?php if(array_search('authenticator', $twoFaMethods) !== false){echo "checked";}?>> 
+				<span class="option-label">Authenticator app</span>
 			</label>
 			<br>
 			<label>
-				<input type="radio" class="twofa_option_checkbox" name="2fa-methods[]" value="email" <?php if(array_search('email', $twoFaMethods) !== false){echo "checked";}?>> 
-				<span class="optionlabel">E-mail</span>
+				<input type="radio" class="twofa-option-checkbox" name="2fa-methods[]" value="email" <?php if(array_search('email', $twoFaMethods) !== false){echo "checked";}?>> 
+				<span class="option-label">E-mail</span>
 			</label>
 			<br>
 		</div>
-		<div id='setup-authenticator' class='twofa_option hidden'>
+		<div id='setup-authenticator' class='twofa-option hidden'>
 			<p>
 				You need an authenticator app as a second login factor.<br>
 				Both "Google Authenticator" and "Microsoft Authenticator" are good options.<br>
@@ -118,11 +118,11 @@ function twoFaSettingsForm($userId=''){
 			</div>
 			<label>
 				Insert the created code here.<br>
-				<input type='text' name='auth_secret' required>
+				<input type='text' name='auth-secret' required>
 			</label>
 			<p>Not sure what to do? Check the <a href="<?php echo SITEURL;?>'/manuals/">manuals!</a></p>
 		</div>
-		<div id='setup-email' class='twofa_option hidden'>
+		<div id='setup-email' class='twofa-option hidden'>
 			<input type='hidden' id='username' value='<?php echo $userId;?>'>
 			<p>
 				Click the button below to enable e-mail verification <br>
@@ -133,7 +133,7 @@ function twoFaSettingsForm($userId=''){
 			</p>
 			<label id='email-code-validation' class='hidden'>
 				Insert the code e-mailed to you here.<br>
-				<input type='text' name='email_code' required>
+				<input type='text' name='email-code' required>
 			</label>
 		</div>
 		<?php

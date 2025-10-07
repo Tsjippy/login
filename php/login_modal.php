@@ -93,7 +93,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                 <div id='email-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the code sent to your e-mail below to login.
-                        <input type="tel" name="email_code"  class='wide' size="20" pattern="[0-9]*" required>
+                        <input type="tel" name="email-code"  class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 

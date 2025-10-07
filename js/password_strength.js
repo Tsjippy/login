@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	document.querySelectorAll('.changepass').forEach(el=>el.addEventListener("keyup", checkPassStrength));
 
-	document.querySelectorAll('[name="update_password"]').forEach(el=>el.addEventListener("click",submitPasswordChange));
+	document.querySelectorAll('[name="update-password"]').forEach(el=>el.addEventListener("click", submitPasswordChange));
 
 	document.querySelectorAll('.toggle-pwd-view').forEach(el=>el.addEventListener("click", togglePassworView));
 });

@@ -33,12 +33,12 @@ function moduleDescription($description, $moduleSlug){
 	}
 
 	$links		= [];
-	$url		= SIM\ADMIN\getDefaultPageLink($moduleSlug, 'password_reset_page');
+	$url		= SIM\ADMIN\getDefaultPageLink($moduleSlug, 'password-reset-page');
 	if(!empty($url)){
 		$links[]	= "<a href='$url'>Change password</a><br>";
 	}
 
-	$url		= SIM\ADMIN\getDefaultPageLink($moduleSlug, 'register_page');
+	$url		= SIM\ADMIN\getDefaultPageLink($moduleSlug, 'register-page');
 	if(!empty($url)){
 		$links[]	= "<a href='$url'>Request user account</a><br>";
 	}
@@ -74,12 +74,12 @@ function moduleOptions($optionsHtml, $settings){
 		Once that account is approved they will be able to login.<br>
 	</p>
 	<label>
-		<input type="checkbox" name="user_registration" value="enabled" <?php if($settings['user_registration']){echo 'checked';}?>>
+		<input type="checkbox" name="user-registration" value="enabled" <?php if($settings['user-registration']){echo 'checked';}?>>
 		Enable user registration
 	</label>
 	<?php 
-	if($settings['user_registration']){
-		$url	= getDefaultPageLink(MODULE_SLUG, 'register_page');
+	if($settings['user-registration']){
+		$url	= getDefaultPageLink(MODULE_SLUG, 'register-page');
 		?>
 		<a href="<?php echo $url;?>" target="_blank">View registration page</a>
 		<?php
@@ -94,12 +94,12 @@ function moduleOptions($optionsHtml, $settings){
 		<?php
 		$menus	= wp_get_nav_menus();
 
-		if(!isset($settings['visibiltyloginmenu'])){
-			$settings['visibiltyloginmenu']	= [];
+		if(!isset($settings['visibilty-login-menu'])){
+			$settings['visibilty-login-menu']	= [];
 		}
 
-		if(!isset($settings['visibiltylogoutmenu'])){
-			$settings['visibiltylogoutmenu']	= [];
+		if(!isset($settings['visibilty-logout-menu'])){
+			$settings['visibilty-logout-menu']	= [];
 		}
 
 		foreach($menus as $menu){
@@ -108,8 +108,8 @@ function moduleOptions($optionsHtml, $settings){
 				$checked	= 'checked';
 			}
 
-			if(!isset($settings['visibiltyloginmenu'][$menu->term_id])){
-				$settings['visibiltyloginmenu'][$menu->term_id]	= '';
+			if(!isset($settings['visibilty-login-menu'][$menu->term_id])){
+				$settings['visibilty-login-menu'][$menu->term_id]	= '';
 			}
 			echo "<tr>";
 				echo "<td>";
@@ -120,29 +120,29 @@ function moduleOptions($optionsHtml, $settings){
 				echo "</td>";
 
 				$checked	= '';
-				if($settings['visibiltyloginmenu'][$menu->term_id] == ''){
+				if($settings['visibilty-login-menu'][$menu->term_id] == ''){
 					$checked	= 'checked';
 				}
 				echo "<td>";
-					echo "<input type='radio' id='$menu->term_id' name='visibiltyloginmenu[$menu->term_id]' value='' $checked>";
+					echo "<input type='radio' id='$menu->term_id' name='visibilty-login-menu[$menu->term_id]' value='' $checked>";
 					echo "<label>Always</label>";
 				echo "</td>";
 
 				$checked	= '';
-				if($settings['visibiltyloginmenu'][$menu->term_id] == 'mobile'){
+				if($settings['visibilty-login-menu'][$menu->term_id] == 'mobile'){
 					$checked	= 'checked';
 				}
 				echo "<td>";
-					echo "<input type='radio' id='$menu->term_id' name='visibiltyloginmenu[$menu->term_id]' value='mobile' $checked>";
+					echo "<input type='radio' id='$menu->term_id' name='visibilty-login-menu[$menu->term_id]' value='mobile' $checked>";
 					echo "<label>Mobile only</label>";
 				echo "</td>";
 
 				$checked	= '';
-				if($settings['visibiltyloginmenu'][$menu->term_id] == 'desktop'){
+				if($settings['visibilty-login-menu'][$menu->term_id] == 'desktop'){
 					$checked	= 'checked';
 				}
 				echo "<td>";
-					echo "<input type='radio' id='$menu->term_id' name='visibiltyloginmenu[$menu->term_id]' value='desktop' $checked>";
+					echo "<input type='radio' id='$menu->term_id' name='visibilty-login-menu[$menu->term_id]' value='desktop' $checked>";
 					echo "<label>Desktop only </label>";
 				echo "</td>";
 			echo "</tr>";
@@ -168,29 +168,29 @@ function moduleOptions($optionsHtml, $settings){
 				echo "</td>";
 
 				$checked	= '';
-				if($settings['visibiltylogoutmenu'][$menu->term_id] == ''){
+				if($settings['visibilty-logout-menu'][$menu->term_id] == ''){
 					$checked	= 'checked';
 				}
 				echo "<td>";
-					echo "<input type='radio' id='$menu->term_id' name='visibiltylogoutmenu[$menu->term_id]' value='' $checked>";
+					echo "<input type='radio' id='$menu->term_id' name='visibilty-logout-menu[$menu->term_id]' value='' $checked>";
 					echo "<label>Always</label>";
 				echo "</td>";
 
 				$checked	= '';
-				if($settings['visibiltylogoutmenu'][$menu->term_id] == 'mobile'){
+				if($settings['visibilty-logout-menu'][$menu->term_id] == 'mobile'){
 					$checked	= 'checked';
 				}
 				echo "<td>";
-					echo "<input type='radio' id='$menu->term_id' name='visibiltylogoutmenu[$menu->term_id]' value='mobile' $checked>";
+					echo "<input type='radio' id='$menu->term_id' name='visibilty-logout-menu[$menu->term_id]' value='mobile' $checked>";
 					echo "<label>Mobile only</label>";
 				echo "</td>";
 
 				$checked	= '';
-				if($settings['visibiltylogoutmenu'][$menu->term_id] == 'desktop'){
+				if($settings['visibilty-logout-menu'][$menu->term_id] == 'desktop'){
 					$checked	= 'checked';
 				}
 				echo "<td>";
-					echo "<input type='radio' id='$menu->term_id' name='visibiltylogoutmenu[$menu->term_id]' value='desktop' $checked>";
+					echo "<input type='radio' id='$menu->term_id' name='visibilty-logout-menu[$menu->term_id]' value='desktop' $checked>";
 					echo "<label>Desktop only </label>";
 				echo "</td>";
 			echo "</tr>";
@@ -263,23 +263,23 @@ function moduleUpdated($newOptions, $oldOptions){
 	$publicCat	= get_cat_ID('Public');
 
 	// Create password reset page
-	$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, 'password_reset_page', 'Change password', '[change_password]', $oldOptions, ['post_category' => [$publicCat]]);
+	$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, 'password-reset-page', 'Change password', '[change_password]', $oldOptions, ['post_category' => [$publicCat]]);
 
 	// Add registration page
-	if(isset($newOptions['user_registration'])){
-		$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, 'register_page', 'Request user account', '[request_account]', $oldOptions, ['post_category' => [$publicCat]]);
+	if(isset($newOptions['user-registration'])){
+		$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, 'register-page', 'Request user account', '[request_account]', $oldOptions, ['post_category' => [$publicCat]]);
 	}
 
 	// Add 2fa page
 	$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, '2fa_page', 'Two Factor Authentication', '[twofa_setup]', $oldOptions);
 
 	// Remove registration page
-	if(isset($oldOptions['register_page']) && !isset($newOptions['user_registration'])){
-		foreach($oldOptions['register_page'] as $page){
+	if(isset($oldOptions['register-page']) && !isset($newOptions['user-registration'])){
+		foreach($oldOptions['register-page'] as $page){
 			// Remove the auto created page
 			wp_delete_post($page, true);
 		}
-		unset($newOptions['register_page']);
+		unset($newOptions['register-page']);
 	}
 
 	return $newOptions;
@@ -289,9 +289,9 @@ function moduleUpdated($newOptions, $oldOptions){
 add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
 function postStates( $states, $post ) {
 
-    if(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'password_reset_page', false)) ) {
+    if(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'password-reset-page', false)) ) {
         $states[] = __('Password reset page');
-    }elseif(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'register_page', false))) {
+    }elseif(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'register-page', false))) {
         $states[] = __('User register page');
     }elseif(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, '2fa_page', false)) ) {
         $states[] = __('Two Factor Setup page');
@@ -304,12 +304,12 @@ add_action('sim_module_login_deactivated', __NAMESPACE__.'\moduleDeActivated');
 function moduleDeActivated($options){
 	$removePages	= [];
 
-	if(is_array($options['password_reset_page'])){
-		$removePages	= array_merge($removePages, $options['password_reset_page']);
+	if(is_array($options['password-reset-page'])){
+		$removePages	= array_merge($removePages, $options['password-reset-page']);
 	}
 
-	if(is_array($options['register_page'])){
-		$removePages	= array_merge($removePages, $options['register_page']);
+	if(is_array($options['register-page'])){
+		$removePages	= array_merge($removePages, $options['register-page']);
 	}
 
 	if(is_array($options['2fa_page'])){
