@@ -63,7 +63,7 @@ const login = class{
 				this.requestLogin();
 			}else if(target.closest('.toggle-pwd-view') != null){
 				togglePassworView(event);
-			}else if(target.id == 'password-reset-form' || target.id == "lost_pwd_link"){
+			}else if(target.id == 'password-reset-form' || target.id == "lost-pwd-link"){
 				this.resetPassword(target);
 			}else if(target.id == 'retry_webauthn'){
 				this.showMessage('');
@@ -392,7 +392,7 @@ const login = class{
 	async resetPassword(target){		
 		let form 			= target.closest('form');
 
-		let button			= form.querySelector('#lost_pwd_link');
+		let button			= form.querySelector('#lost-pwd-link');
 
 		let extraElements	= form.querySelector('div.form-elements');
 
@@ -479,7 +479,7 @@ const login = class{
 		//prevent page scrolling
 		document.querySelector('body').style.overflowY = 'hidden';
 
-		this.modal	= document.getElementById('login_modal');
+		this.modal	= document.getElementById('login-modal');
 		this.modal.style.display = 'block';
 
 		this.modal.classList.remove('hidden');
