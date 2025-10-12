@@ -188,7 +188,7 @@ const login = class{
 		let response	= await FormSubmit.fetchRestApi('login/check-cred', formData);
 
 		if(response){
-			if(response != 'false' && response != false){
+			if(response  && response != false){
 				response	= this.addMethods(response);
 			}else{
 				response 	= false;

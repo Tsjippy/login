@@ -78,9 +78,6 @@ function updateIndicator(indicator){
 async function submitPasswordChange(event){
 	var form	= event.target.closest('form');
 
-	// show loader
-	form.querySelector('.submit-wrapper .loader-wrapper').classList.remove('hidden');
-
 	var formData	= new FormData(form);
 
 	var response	= await FormSubmit.fetchRestApi('login/update_password', formData);

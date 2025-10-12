@@ -62,7 +62,7 @@ function loginModal($message='', $required=false, $username=''){
     if(isset($GLOBALS['loginadded'])){
         return;
     }
-    $GLOBALS['loginadded']  = 'true';
+    $GLOBALS['loginadded']  = true;
 
     require(__DIR__ . '/login_modal.php');
 }
