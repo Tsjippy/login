@@ -255,7 +255,7 @@ function redirectTo2fa(){
             )
         )
     ){
-        $url		= SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, '2fa_page');
+        $url		= SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, '2fa-page');
 
         //SIM\printArray($url);
 

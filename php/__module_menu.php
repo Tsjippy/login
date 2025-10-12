@@ -43,7 +43,7 @@ function moduleDescription($description, $moduleSlug){
 		$links[]	= "<a href='$url'>Request user account</a><br>";
 	}
 
-	$url		= SIM\ADMIN\getDefaultPageLink($moduleSlug, '2fa_page');
+	$url		= SIM\ADMIN\getDefaultPageLink($moduleSlug, '2fa-page');
 	if(!empty($url)){
 		$links[]	= "<a href='$url'>Two Factor Authentication</a><br>";
 	}
@@ -271,7 +271,7 @@ function moduleUpdated($newOptions, $oldOptions){
 	}
 
 	// Add 2fa page
-	$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, '2fa_page', 'Two Factor Authentication', '[twofa_setup]', $oldOptions);
+	$newOptions	= SIM\ADMIN\createDefaultPage($newOptions, '2fa-page', 'Two Factor Authentication', '[twofa_setup]', $oldOptions);
 
 	// Remove registration page
 	if(isset($oldOptions['register-page']) && !isset($newOptions['user-registration'])){
@@ -293,7 +293,7 @@ function postStates( $states, $post ) {
         $states[] = __('Password reset page');
     }elseif(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'register-page', false))) {
         $states[] = __('User register page');
-    }elseif(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, '2fa_page', false)) ) {
+    }elseif(in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, '2fa-page', false)) ) {
         $states[] = __('Two Factor Setup page');
     }
 
@@ -312,8 +312,8 @@ function moduleDeActivated($options){
 		$removePages	= array_merge($removePages, $options['register-page']);
 	}
 
-	if(is_array($options['2fa_page'])){
-		$removePages	= array_merge($removePages, $options['2fa_page']);
+	if(is_array($options['2fa-page'])){
+		$removePages	= array_merge($removePages, $options['2fa-page']);
 	}
 
 	// Remove the auto created pages
