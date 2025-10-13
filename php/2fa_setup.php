@@ -57,7 +57,7 @@ function twoFaSettingsForm($userId=''){
 	}
 	?>
 	<form id="2fa-setup-wrapper">
-		<input type='hidden' name='secretkey' value='<?php echo $secondFactor->secretKey;?>'>
+		<input type='hidden' class='no-reset' name='secretkey' value='<?php echo $secondFactor->secretKey;?>'>
 
 		<div id='2fa-options-wrapper' style='margin-bottom:20px;'>
 			<h4>Second login factor</h4>
@@ -123,7 +123,7 @@ function twoFaSettingsForm($userId=''){
 			<p>Not sure what to do? Check the <a href="<?php echo SITEURL;?>'/manuals/">manuals!</a></p>
 		</div>
 		<div id='setup-email' class='twofa-option hidden'>
-			<input type='hidden' id='username' value='<?php echo $userId;?>'>
+			<input type='hidden' class='no-reset' id='username' value='<?php echo $userId;?>'>
 			<p>
 				Click the button below to enable e-mail verification <br>
 				You will receive an e-mail on <code><?php echo get_userdata($userId)->user_email;?></code>.<br>

@@ -29,7 +29,7 @@ function passwordResetForm($user){
 
 	<form class="pwd-reset">
 		<div class="login-info">
-			<input type="hidden" name="user-id"					value="<?php echo $user->ID; ?>">
+			<input type="hidden" class="no-reset" name="user-id"					value="<?php echo $user->ID; ?>">
 			
 			<p style="margin-top:30px;">
 				<?php echo $message;?>
@@ -107,7 +107,7 @@ function requestAccount(){
 	<form class='request-account'>
 		<p>Please fill in the form to create an user account</p>
 		
-		<input type="hidden" name="action" value="requestuseraccount">
+		<input type="hidden" class="no-reset" name="action" value="requestuseraccount">
 		
 		<label>
 			<h4>First name<span class="required">*</span></h4>

@@ -49,7 +49,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
             <div id='qrcode-wrapper' style='margin-top: -30px;min-height: 30px;'><span></span></div>
 
             <form id="loginform" action="login" method="post">
-                <input type='hidden' name='action' value='request_login'>
+                <input type='hidden' class='no-reset' name='action' value='request_login'>
                 
                 <div id='message-wrapper' class='hidden'>
                     <h4 class='status-message'></h4>
