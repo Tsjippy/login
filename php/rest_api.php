@@ -128,10 +128,10 @@ function loginRestApi() {
 			'callback' 				=> __NAMESPACE__.'\requestUserAccount',
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-                'first_name'		=> array(
+                'first-name'		=> array(
 					'required'	=> true
 				),
-                'last_name'		=> array(
+                'last-name'		=> array(
 					'required'	=> true
 				),
                 'email'		=> array(
