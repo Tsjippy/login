@@ -10,6 +10,7 @@
 
 ### Fixed
 - bugs
+- rest api call
 
 ### Updated
 
