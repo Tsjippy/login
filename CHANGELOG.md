@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- always show loader
 
 ### Updated
 
