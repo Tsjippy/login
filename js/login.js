@@ -94,16 +94,16 @@ const login = class{
 		this.passwordReset 	= document.getElementById('password-reset-form');
 
 		this.curScreen		= this.creds;
+		
+		if(this.msgScreen.querySelector('.loader') == null){
+			Main.showLoader(this.msgScreen.querySelector('.status-message'), false, 75);
+		}
 	}
 
 	/**
 	 * Clear all inputs and shows the first screen
 	 */
-	resetForm(){
-		if(this.msgScreen.querySelector('.loader') == null){
-			Main.showLoader(this.msgScreen.querySelector('.status-message'), false, 75);
-		}
-		
+	resetForm(){		
 		this.reset();
 
 		this.showScreen(this.creds);
