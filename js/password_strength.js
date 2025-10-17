@@ -1,4 +1,4 @@
-import { togglePassworView } from './login.js';
+import { togglePassworView } from './partials/shared.js';
 
 console.log('Password strength.js loaded');
 

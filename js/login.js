@@ -1,6 +1,7 @@
 import {
 	closeMobileMenu,
-	showMessage
+	showMessage,
+	togglePassworView
 } from './partials/shared.js';
 
 import {
@@ -505,27 +506,6 @@ const login = class{
 		}
 	};
 }
-
-export function togglePassworView(ev){
-	var target	= ev.target;
-
-	if(ev.target.tagName == 'IMG'){
-		target	= ev.target.parentNode;
-	}
-
-	if(target.dataset.toggle == '0'){
-		target.title								= 'Hide password';
-		target.dataset.toggle						= '1';
-		target.innerHTML							= target.innerHTML.replace('invisible', 'visible');
-		target.closest('.password').querySelector('input[type="password"]').type	= 'text';
-	}else{
-		target.title								= 'Show password';
-		target.dataset.toggle						= '0';
-		target.innerHTML							= target.innerHTML.replace('visible', 'invisible');
-		target.closest('.password').querySelector('input[type="text"]').type	= 'password';
-	}
-}
-
 
 // SHow the login button
 document.addEventListener('DOMContentLoaded', () => {

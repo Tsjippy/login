@@ -136,3 +136,23 @@ export function showMessage(message, type=''){
 		el.classList.add('error');
 	}
 }
+
+export function togglePassworView(ev){
+	var target	= ev.target;
+
+	if(ev.target.tagName == 'IMG'){
+		target	= ev.target.parentNode;
+	}
+
+	if(target.dataset.toggle == '0'){
+		target.title								= 'Hide password';
+		target.dataset.toggle						= '1';
+		target.innerHTML							= target.innerHTML.replace('invisible', 'visible');
+		target.closest('.password').querySelector('input[type="password"]').type	= 'text';
+	}else{
+		target.title								= 'Show password';
+		target.dataset.toggle						= '0';
+		target.innerHTML							= target.innerHTML.replace('visible', 'invisible');
+		target.closest('.password').querySelector('input[type="text"]').type	= 'password';
+	}
+}
