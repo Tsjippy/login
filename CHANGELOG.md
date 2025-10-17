@@ -7,6 +7,7 @@
 
 ### Fixed
 - always show loader
+- to not import directly from login.js
 
 ### Updated
 
