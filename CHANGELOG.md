@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- always show loader
-- to not import directly from login.js
 
 ### Updated
+
+## [8.4.0] - 2025-10-17
+
+
+### Fixed
+- always show loader
+- to not import directly from login.js
 
 ## [8.3.9] - 2025-10-13
 
