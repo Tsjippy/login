@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- register webauth padding
 
 ### Updated
+
+## [8.4.1] - 2025-10-23
+
+
+### Fixed
+- register webauth padding
 
 ## [8.4.0] - 2025-10-17
 
