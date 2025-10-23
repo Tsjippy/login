@@ -21,7 +21,7 @@ async function registerBiometric(){
 
         let modalHtml   = `
             <div id='register-biometrics-modal' class='modal'>
-                <div class="modal-content" style='width:500px;margin-bottom:10px'>
+                <div class="modal-content" style='width:500px;padding-bottom:20px'>
                     <h4>Please take a few seconds to setup your login token</h4>
                     ${loaderHtml}
                 </div>
