@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- register webauth padding
 
 ### Updated
 
