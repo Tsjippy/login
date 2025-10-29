@@ -5,7 +5,7 @@ use SIM;
 add_action('sim_login_module_update', __NAMESPACE__.'\pluginUpdate');
 function pluginUpdate($oldVersion){
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    require_once ABSPATH . 'wp-admin/install-helper.php';
+    
 
     SIM\printArray($oldVersion);
 
