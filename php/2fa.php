@@ -162,15 +162,7 @@ function authenticate( $user) {
             //succesfull webauthentication done before
         }elseif(in_array('authenticator', $methods)){
             $twofa      = new TwoFactorAuth();
-            $secretKey  = get_user_meta($user->ID, '2fa_key', true);
-            /*$hash     = get_user_meta($user->ID,'2fa_hash',true);
-             if(!password_verify($secretKey,$hash)){
-                $user = new \WP_Error(
-                    '2fa error',
-                    '2fa key has changed!<br>Please contact your site admin.' 
-                );
-            } */
-        
+            $secretKey  = get_user_meta($user->ID, '2fa_key', true);        
             $authcode   = $_POST['authcode'];
             $last2fa    = get_user_meta($user->ID,'2fa_last',true);
             $timeslice  = '';
