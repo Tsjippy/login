@@ -5,6 +5,7 @@
 
 ### Changed
 - use upgrade.php not install-helper.php
+- only load 2 factor qr if needed
 
 ### Fixed
 
