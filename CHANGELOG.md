@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- use upgrade.php not install-helper.php
-- only load 2 factor qr if needed
 
 ### Fixed
 
 ### Updated
+
+## [8.4.2] - 2025-10-30
+
+
+### Changed
+- use upgrade.php not install-helper.php
+- only load 2 factor qr if needed
 
 ## [8.4.1] - 2025-10-23
 
