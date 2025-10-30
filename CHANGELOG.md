@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- use upgrade.php not install-helper.php
 
 ### Fixed
 
