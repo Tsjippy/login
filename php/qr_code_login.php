@@ -53,7 +53,7 @@ if(!is_user_logged_in() && !auth_redirect()){
     </style>
     <body>
         <div class='loader-wrapper'>
-			<?php echo SIM\LOADERIMAGE;?>
+			<div class="loader-image-trigger"></div>
 			
 			<span id='message' class='message' style='display: block;'>Waiting for biometric</span>
 		</div>

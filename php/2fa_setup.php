@@ -8,7 +8,7 @@ function twoFaSettingsForm($userId=''){
 	if(!empty($_GET['token']) && !empty($_GET['key'])){
 		?>
 		<div class='loader-wrapper'>
-			<?php echo SIM\LOADERIMAGE;?>
+			<div class="loader-image-trigger"></div>
 			
 			<span id='message' class='message'>Waiting for biometric</span>
 		</div>
