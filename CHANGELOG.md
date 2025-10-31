@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- render loader image using js
 
 ### Fixed
 
 ### Updated
+
+## [8.4.3] - 2025-10-31
+
+
+### Changed
+- render loader image using js
 
 ## [8.4.2] - 2025-10-30
 
