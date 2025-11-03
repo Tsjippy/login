@@ -5,6 +5,7 @@
 
 ### Changed
 - stop listening to events if we have a match
+- removed error and success layout
 
 ### Fixed
 
