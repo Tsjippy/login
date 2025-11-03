@@ -100,11 +100,11 @@ export async function processCredential(credential){
 		let response				= await FormSubmit.fetchRestApi('login/auth_finish', formData, false);
 
 		if(response){
-			showMessage('Passkey login succesfull', 'success');
+			showMessage('Passkey login succesfull');
 		}else{
 			sim.login.reset();
 
-			showMessage('Passkey login failed, try using your username and password', 'error');
+			showMessage('Passkey login failed, try using your username and password');
 
 			return false;
 		}
@@ -117,7 +117,7 @@ export async function processCredential(credential){
 
 		sim.login.resetForm();
 
-		showMessage('Passkey login failed', 'error');
+		showMessage('Passkey login failed');
 
 		return false;
 	}
@@ -198,7 +198,7 @@ export let startConditionalRequest = async (mediation) => {
 		if(sim.login != null){
 			sim.login.resetForm();
 
-			showMessage('Passkey login failed, try using your username and password', 'error');
+			showMessage('Passkey login failed, try using your username and password');
 		}
 
 		console.log(error);

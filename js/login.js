@@ -183,7 +183,7 @@ const login = class{
 
 			this.loadingScreen( 'Verifying Credentials');
 		}else{
-			showMessage('Please give an username and password!', 'warning');
+			showMessage('Please give an username and password!');
 			return;
 		}	
 
@@ -204,7 +204,7 @@ const login = class{
 			if(!response) {
 				this.reset();
 
-				showMessage('Invalid login, try again', 'error');
+				showMessage('Invalid login, try again');
 			}
 		}else{
 			this.reset();
@@ -231,7 +231,7 @@ const login = class{
 					//correct creds and webauthn enabled
 					this.verifyWebauthn(result);
 				}else if(result.length == 1){
-					showMessage('You do not have a valid second login method for this device, please add one.', 'warning');
+					showMessage('You do not have a valid second login method for this device, please add one.');
 					this.requestLogin();
 				}else{
 					this.showTwoFaFields(result);
@@ -269,7 +269,7 @@ const login = class{
 			console.log(response);
 	
 			if(methods.length == 1){
-				showMessage('Authentication failed, please setup an additional login factor.', 'error');
+				showMessage('Authentication failed, please setup an additional login factor.');
 				this.requestLogin();
 			}else{
 				console.error(error);
@@ -279,7 +279,7 @@ const login = class{
 				}else{
 					message = 'Web authentication failed, please give verification code.';
 				}
-				showMessage(message, 'error');
+				showMessage(message);
 	
 				//Show other 2fa fields
 				this.showTwoFaFields(methods);
@@ -391,7 +391,7 @@ const login = class{
 		if(response){
 			showMessage(response);
 		}else{
-			showMessage(`Sending e-mail failed`, 'error');
+			showMessage(`Sending e-mail failed`);
 		}
 	}
 
