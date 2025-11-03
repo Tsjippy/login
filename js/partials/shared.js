@@ -138,6 +138,8 @@ export function showMessage(message, type=''){
 }
 
 export function togglePassworView(ev){
+	ev.stopImmediatePropagation();
+	
 	var target	= ev.target;
 
 	if(ev.target.tagName == 'IMG'){

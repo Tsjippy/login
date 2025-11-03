@@ -76,6 +76,8 @@ function updateIndicator(indicator){
 }
 
 async function submitPasswordChange(event){
+	event.stopImmediatePropagation();
+
 	var form	= event.target.closest('form');
 
 	var formData	= new FormData(form);

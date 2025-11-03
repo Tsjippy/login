@@ -41,6 +41,8 @@ const login = class{
 	eventListeners(){
 		document.addEventListener('keypress', (e) => {
 			if (e.key === 'Enter' && this.creds != null){
+				e.stopImmediatePropagation();
+
 				if(this.curScreen == this.creds && document.getElementById('check-cred').disabled == false){
 					this.verifyCreds();
 				}else if(this.curScreen == this.email || this.curScreen == this.twofa){
@@ -77,7 +79,11 @@ const login = class{
 				showLoginQrCode();
 			}else if(target.matches('.close-qr')){
 				hideQrCode();
+			}else{
+				return;
 			}
+
+			event.stopImmediatePropagation();
 		});
 	};
 
