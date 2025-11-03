@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- always load assets
 
 ### Updated
 
