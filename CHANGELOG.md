@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- css bug
 
 ### Updated
+
+## [8.4.6] - 2025-11-03
+
+
+### Fixed
+- css bug
 
 ## [8.4.5] - 2025-11-03
 
