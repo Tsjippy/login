@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- always load assets
 
 ### Updated
+
+## [8.4.5] - 2025-11-03
+
+
+### Fixed
+- always load assets
 
 ## [8.4.4] - 2025-11-03
 
