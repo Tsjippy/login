@@ -63,7 +63,6 @@ export async function webAuthVerification(username, messageEl=null){
 
 		if(messageEl != null){
 			messageEl.textContent	= 'Verification successfull';
-			messageEl.classList.add('success');
 		}else{
 			Main.displayMessage('Verification successfull');
 		}
@@ -74,7 +73,6 @@ export async function webAuthVerification(username, messageEl=null){
 
 		if(messageEl != null){
 			messageEl.textContent	= error;
-			messageEl.classList.add('error');
 		}else{
 			Main.displayMessage(error, 'error');
 		}

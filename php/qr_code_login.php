@@ -24,29 +24,6 @@ if(!is_user_logged_in() && !auth_redirect()){
             text-align: center;
         }
 
-        .success{
-            border: 3px solid yellowgreen;
-            text-align: center;
-            padding: 5px;
-            color: darkgreen;
-        }
-
-        .warning{
-            background-color: #d8a354;
-            color: black;
-            padding: 10px;
-            margin: 10px 0 20px 0;
-            text-align: center;
-        }
-
-        .error{
-            border: 3px solid #8a1a0e;
-            color: #bd2919;
-            padding: 10px;
-            margin: 10px 0 20px 0;
-            text-align: center;
-        }
-
         main, .loader-wrapper{
             margin-top: 20px;
         }

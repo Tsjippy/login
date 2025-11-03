@@ -314,8 +314,7 @@ const login = class{
 
 			return false;
 		}
-
-		console.log(response);
+		
 		// We are logging in from an iframe
 		if(window.self !== window.top){
 
