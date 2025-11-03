@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- stop listening to events if we have a match
-- removed error and success layout
 
 ### Fixed
 
 ### Updated
+
+## [8.4.4] - 2025-11-03
+
+
+### Changed
+- stop listening to events if we have a match
+- removed error and success layout
 
 ## [8.4.3] - 2025-10-31
 
