@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- support for the content filter module
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.4.7] - 2025-11-04
+
+
+### Added
+- support for the content filter module
 
 ## [8.4.6] - 2025-11-03
 
