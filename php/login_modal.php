@@ -7,13 +7,15 @@ $standAlone = false;
 if ( !defined( 'ABSPATH' ) ) {
     require_once(__DIR__ . '/wordpress_loader.php');
     loadWordpress('Login');
-
-    $username   = '';
     
     $required   = true;
     $standAlone = true;
 }elseif($required === null){
     return;
+}
+
+if(!is_string($username)){
+    $username   = '';
 }
 
 if($standAlone && is_user_logged_in()){
