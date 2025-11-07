@@ -20,7 +20,7 @@ async function registerBiometric(){
         let loaderHtml = Main.showLoader(null, false, 50, 'Preparing biometric registration...', true);
 
         let modalHtml   = `
-            <div id='register-biometrics-modal' class='modal'>
+            <div id='register-biometrics-modal' class='modal hidden'>
                 <div class="modal-content" style='width:500px;padding-bottom:20px'>
                     <h4>Please take a few seconds to setup your login token</h4>
                     ${loaderHtml}
@@ -42,6 +42,9 @@ async function registerBiometric(){
 
 		// Update the message
 		message.textContent  	= 'Please authenticate...';
+
+		// Show the modal
+		document.getElementById(`register-biometrics-modal`).classList.remove('hidden');
 
 		// Ask user to verify
 		let credentials 		= await navigator.credentials.create({publicKey});
