@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- show register modal when ready
 
 ### Fixed
 
