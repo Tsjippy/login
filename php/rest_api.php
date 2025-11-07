@@ -210,7 +210,7 @@ function checkCredentials(){
         }
     }
 
-    return 'false';
+    return new WP_Error('login', 'Invalid credentials!');
 }
 
 // function to update the $_COOKIE variable without refreshing the page
