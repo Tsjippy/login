@@ -157,7 +157,8 @@ function authenticate( $user) {
         
         //we did a succesfull webauthn or are on localhost
         if(
-            $_SERVER['HTTP_HOST'] == 'localhost' || 
+            $_SERVER['HTTP_HOST'] == 'localhost'  || 
+            str_contains($_SERVER['HTTP_HOST'], '.local') || 
             in_array('webauthn', $methods) && $_SESSION['webauthn'] == 'success'){
             //succesfull webauthentication done before
         }elseif(in_array('authenticator', $methods)){

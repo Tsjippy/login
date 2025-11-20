@@ -342,7 +342,7 @@ function storeBiometric(){
         // Allow to bypass scheme verification when under localhost
         //$currentDomain = 'localhost';
         $currentDomain = $_SERVER['HTTP_HOST'];
-        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1"){
+        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1" || str_contains($_SERVER['HTTP_HOST'], '.local')){
             $server->setSecuredRelyingPartyId([$currentDomain]);
         }
 
@@ -567,7 +567,7 @@ function finishAuthentication(){
 
         // Allow to bypass scheme verification when under localhost
         $currentDomain = $_SERVER['HTTP_HOST'];
-        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1"){
+        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1" || str_contains($_SERVER['HTTP_HOST'], '.local')){
             $server->setSecuredRelyingPartyId([$currentDomain]);
         }
 

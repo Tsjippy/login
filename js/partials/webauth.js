@@ -7,13 +7,15 @@ import {
 let credParsing			        = false;
 let abortController;
 
-window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
-	result => {
-	  if (!result) {
-		console.log("No platform authenticator found. If your OS does not come with one, try using devtools to set one up.");
-	  }
-	}
-);
+if(window.PublicKeyCredential != null){
+	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
+		result => {
+		if (!result) {
+			console.log("No platform authenticator found. If your OS does not come with one, try using devtools to set one up.");
+		}
+		}
+	);
+}
 
 /**
  * 
