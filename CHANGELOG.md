@@ -7,6 +7,7 @@
 - show register modal when ready
 
 ### Fixed
+- error message when invalid credentials
 
 ### Updated
 
