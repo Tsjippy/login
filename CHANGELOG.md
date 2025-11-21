@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [8.4.8] - 2025-11-21
+
+
+### Added
 - support for Local
 
 ### Changed
@@ -9,8 +20,6 @@
 
 ### Fixed
 - error message when invalid credentials
-
-### Updated
 
 ## [8.4.7] - 2025-11-04
 
