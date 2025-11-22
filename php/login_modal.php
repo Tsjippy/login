@@ -103,7 +103,7 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
 
                 <div id='login-button-wrapper' class='hidden'>
                     <div class='submit-wrapper'>
-                        <button type='button' class='button' id='login-button' disabled>Login</button>
+                        <button type='button' class='button' id='login-button'>Login</button>
                     </div>
                 </div>
             </form>
