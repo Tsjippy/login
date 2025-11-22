@@ -7,6 +7,7 @@
 - composer updated
 
 ### Fixed
+- login problems
 
 ### Updated
 
