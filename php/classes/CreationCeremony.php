@@ -31,22 +31,11 @@ class CreationCeremony extends WebAuthCeremony{
         ];
         
          // Set authenticator type
-        $authenticatorType   = AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_PLATFORM;
-        //$authenticatorType = AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_CROSS_PLATFORM;
-        //$authenticatorType = AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_NO_PREFERENCE;
-
-        // Set user verification
-        //$userVerification = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
-        $userVerification   = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED;
-
-        $residentKey        = AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED;
-
-        $authenticatorSelectionCriteria = new AuthenticatorSelectionCriteria();
-
-        $authenticatorSelectionCriteria->setAuthenticatorAttachment($authenticatorType);
-        $authenticatorSelectionCriteria->setRequireResidentKey(true);
-        $authenticatorSelectionCriteria->setUserVerification($userVerification);
-        $authenticatorSelectionCriteria->setResidentKey($residentKey);
+        $authenticatorSelectionCriteria = AuthenticatorSelectionCriteria::create(
+            authenticatorAttachment: AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_PLATFORM,
+            userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
+            residentKey:AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
+        );
         
         $publicKeyCredentialCreationOptions =
             PublicKeyCredentialCreationOptions::create(
