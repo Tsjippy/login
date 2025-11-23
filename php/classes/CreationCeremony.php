@@ -57,8 +57,11 @@ class CreationCeremony extends WebAuthCeremony{
             $this->ceremonyRequestManager
         );
         
-        if (!$publicKeyCredential->response instanceof AuthenticatorAttestationResponse) {
+        $this->loadPublicKey($response);
+        
+        if (!$this->publicKeyCredential->response instanceof AuthenticatorAttestationResponse) {
             //e.g. process here with a redirection to the public key creation page. 
+            return nee WP_Error('sim-login', 'Invalid response try again');
         }
         
         $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
@@ -68,6 +71,6 @@ class CreationCeremony extends WebAuthCeremony{
         );
         
         // store in db
-        
+        save_user_meta($this->user->ID, 'publicKeyCredentialSource', $publicKeyCredentialSource);
     }
 }
