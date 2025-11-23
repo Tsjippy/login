@@ -5,6 +5,8 @@ namespace SIM\LOGIN;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
+use Webauthn\AuthenticatorAttestationResponse;
+
 
 /**
 * Register a webauthn method
@@ -53,5 +55,18 @@ class CreationCeremony extends WebAuthCeremony{
         $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
             $this->ceremonyRequestManager
         );
+        
+        if (!$publicKeyCredential->response instanceof AuthenticatorAttestationResponse) {
+            //e.g. process here with a redirection to the public key creation page. 
+        }
+        
+        $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
+            $authenticatorAttestationResponse,
+            $publicKeyCredentialCreationOptions,
+            'my-application.com'
+        );
+        
+        // store in db
+        
     }
 }
