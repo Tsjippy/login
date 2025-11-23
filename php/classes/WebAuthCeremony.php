@@ -4,6 +4,9 @@ namespace SIM\LOGIN;
 
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\Denormalizer\WebauthnSerializerFactory;
 
 /**
 * Register a webauthn method
@@ -11,9 +14,18 @@ use Webauthn\PublicKeyCredentialUserEntity;
 class WebAuthCeremony{
     public $verificationType;
     public $rpEntity;
+    public $manager;
+    public $serializer;
     
     public function __construct(){
         $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
+        
+        // The manager will receive data to load and select the appropriate 
+        $this->manager = AttestationStatementSupportManager::create();
+        $this->manager->add(NoneAttestationStatementSupport::create());
+        
+        $factory = new WebauthnSerializerFactory($attestationStatementSupportManager);
+        $this->serializer = $factory->create();
     }
     
     /**
