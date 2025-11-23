@@ -88,7 +88,7 @@ class WebAuthCeremony{
      *
      * @return  string  the string
      */
-    public function generateRandomString($length = 10){
+    public function getChallenge($length = 10){
         // Use cryptographically secure pseudo-random generator in PHP 7+
         if(function_exists('random_bytes')){
             $bytes = random_bytes(round($length/2));
