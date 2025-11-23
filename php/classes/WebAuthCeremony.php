@@ -7,6 +7,8 @@ use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\Denormalizer\WebauthnSerializerFactory;
+use Webauthn\PublicKeyCredential;
+use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
 
 /**
 * Register a webauthn method
@@ -16,6 +18,8 @@ class WebAuthCeremony{
     public $rpEntity;
     public $manager;
     public $serializer;
+    public $publicKeyCredential;
+    public $factory
     
     public function __construct(){
         $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
@@ -26,6 +30,9 @@ class WebAuthCeremony{
         
         $factory = new WebauthnSerializerFactory($attestationStatementSupportManager);
         $this->serializer = $factory->create();
+        
+        
+        $this->factory = new CeremonyStepManagerFactory();
     }
     
     /**
@@ -110,6 +117,15 @@ class WebAuthCeremony{
             $webauthnKey,
             $user->display_name,
             getProfilePicture($user->ID)
+        );
+    }
+    
+    public function loadPublicKey($data){
+        // $data corresponds to the JSON object showed above
+        $this->publicKeyCredential = $serializer->deserialize(
+            $data,
+            PublicKeyCredential::class,
+            'json'
         );
     }
 }
