@@ -20,8 +20,11 @@ class WebAuthCeremony{
     public $serializer;
     public $publicKeyCredential;
     public $factory
+    public $user;
     
     public function __construct(){
+        $this->user = wp_get_current_user();
+        
         $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
         
         // The manager will receive data to load and select the appropriate 
