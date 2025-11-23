@@ -2,7 +2,6 @@
 
 namespace SIM\LOGIN;
 
-use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 
 
@@ -20,6 +19,8 @@ class RequestCeremony{
     }
     
     public function verifyResponse(){
-        
+        $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
+            $this->ceremonyRequestManager
+        );
     }
 }
