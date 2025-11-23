@@ -47,6 +47,7 @@ class CreationCeremony extends WebAuthCeremony{
         );
         
         // store in session
+        $_SESSION['publicKeyCredentialCreationOptions'] = $publicKeyCredentialCreationOptions;
         
         return $jsonObject;
     }
@@ -62,7 +63,7 @@ class CreationCeremony extends WebAuthCeremony{
         
         $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
             $authenticatorAttestationResponse,
-            $publicKeyCredentialCreationOptions,
+            $_SESSION['publicKeyCredentialCreationOptions'],
             'my-application.com'
         );
         
