@@ -52,7 +52,7 @@ class CreationCeremony extends WebAuthCeremony{
         return $jsonObject;
     }
     
-    public function verifyResponse(){
+    public function verifyResponse($response){
         $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
             $this->ceremonyRequestManager
         );
@@ -62,9 +62,9 @@ class CreationCeremony extends WebAuthCeremony{
         }
         
         $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
-            $authenticatorAttestationResponse,
+            $response,
             $_SESSION['publicKeyCredentialCreationOptions'],
-            'my-application.com'
+            $_SERVER['SERVER_NAME']
         );
         
         // store in db
