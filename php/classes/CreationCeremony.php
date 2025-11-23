@@ -5,10 +5,13 @@ namespace LOGIN;
 /**
 * Register a webauthn method
 */
-class CreationCeremony{
+class CreationCeremony extends WebAuthCeremony{
     public $verificationType;
+    public $ceremonyRequestManager;
     
     public function __construct(){
+        $this->ceremonyRequestManager = $this->factory->creationCeremony();
+
         $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
     }
     
