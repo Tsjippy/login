@@ -3,6 +3,7 @@
 namespace SIM\LOGIN;
 
 use Webauthn\PublicKeyCredentialRpEntity;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 /**
 * Register a webauthn method
@@ -82,5 +83,21 @@ class WebAuthCeremony{
             }
             return $randomString;
         }
+    }
+    
+    // Get user ID or create one
+    public function getUserIdentity(){
+        $webauthnKey = get_user_meta($user->ID, '2fa_webauthn_key', true);
+        if(!$webauthnKey){
+            $webauthnKey = hash("sha256", $user->user_login."-".$user->display_name."-".generateRandomString(10));
+            update_user_meta($user->ID, '2fa_webauthn_key', $webauthnKey);
+        }
+
+        $userEntity = new PublicKeyCredentialUserEntity(
+            $user->user_login,
+            $webauthnKey,
+            $user->display_name,
+            getProfilePicture($user->ID)
+        );
     }
 }
