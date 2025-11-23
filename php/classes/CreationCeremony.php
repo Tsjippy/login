@@ -1,6 +1,8 @@
 <?php
 
-namespace LOGIN;
+namespace SIM\LOGIN;
+
+use Webauthn\AuthenticatorAttestationResponseValidator;
 
 /**
 * Register a webauthn method
@@ -19,6 +21,8 @@ class CreationCeremony extends WebAuthCeremony{
     }
     
     public function verifyResponse(){
-        
+        $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
+            $this->ceremonyRequestManager
+        );
     }
 }
