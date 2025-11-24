@@ -19,8 +19,9 @@ class WebAuthCeremony{
     public $manager;
     public $serializer;
     public $publicKeyCredential;
-    public $factory
+    public $factory;
     public $user;
+    public $credentials;
     
     public function __construct(){
         $this->user = wp_get_current_user();
@@ -130,5 +131,26 @@ class WebAuthCeremony{
             PublicKeyCredential::class,
             'json'
         );
+    }
+    
+    /**
+    * Get all credentials
+    */
+    protected function getCredentials(): array {
+        if(isset($this->credentials){
+            return $this->credentials;
+        }
+        
+        $this->credentials = [];
+        
+        $userCred  = get_user_meta($this->user->ID, "2fa_webautn_cred");
+        foreach($userCreds as $userCred){
+            try{
+                 $this->credentials[] = unserialize(base64_decode($userCred));
+            }catch(\Throwable $exception) {
+                continue;
+            }
+        }
+        return $this->credentials;
     }
 }
