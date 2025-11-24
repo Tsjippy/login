@@ -8,11 +8,6 @@ use WP_Error;
 
 //https://webauthn-doc.spomky-labs.com/
 
-//check for interface
-if(!interface_exists('Webauthn\PublicKeyCredentialSourceRepository')){
-    return new \WP_Error('biometric', "Webauthn\PublicKeyCredentialSourceRepository interface does not exist. Please run 'composer require web-auth/webauthn-lib'");
-}
-
 function getProfilePicture($userId){
     $attachmentId  = get_user_meta($userId,'profile_picture',true);
     $image          = null;

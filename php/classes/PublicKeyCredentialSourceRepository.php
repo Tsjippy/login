@@ -2,14 +2,13 @@
 namespace SIM\LOGIN;
 use SIM;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialSourceRepository as PublicKeyCredentialSourceRepositoryInterface;
 use Webauthn\PublicKeyCredentialSource;
 use DeviceDetector\Parser\OperatingSystem as OS_info;
 
 /**
  * Store all publickeys and pubilckey metas
  */
-class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRepositoryInterface {
+class PublicKeyCredentialSourceRepository {
     public $user;
     public $userId;
 
