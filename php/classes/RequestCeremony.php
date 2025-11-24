@@ -6,7 +6,8 @@ use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSource;
-        
+use Webauthn\AuthenticatorAssertionResponse;
+
         
 
 /**
@@ -34,7 +35,7 @@ class RequestCeremony extends WebAuthCeremony{
             PublicKeyCredentialRequestOptions::create(
                 random_bytes(32), // Challenge
                 allowCredentials: $allowedCredentials,
-                userVerification: $this->requestOption
+                userVerification: $this->verificationType
             )
         ;
     }
@@ -43,5 +44,33 @@ class RequestCeremony extends WebAuthCeremony{
         $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
             $this->ceremonyRequestManager
         );
+        
+        $this->loadPublicKey($data );
+        
+        if (!$publicKeyCredential->response instanceof AuthenticatorAssertionResponse) {
+            //e.g. process here with a redirection to the public key login/MFA page. 
+        }
+        
+        $publicKeyCredentialSource = $publicKeyCredentialSourceRepository->findOneByCredentialId(
+            $publicKeyCredential->rawId
+        );
+        
+        if ($publicKeyCredentialSource === null) {
+           // Throw an exception if the credential is not found.
+           // It can also be rejected depending on your security policy (e.g. disabled by the user because of loss)
+        }
+        
+        $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
+            $publicKeyCredentialSource,
+            $authenticatorAssertionResponse,
+            $publicKeyCredentialRequestOptions,
+            $this->domain,
+            $userEntity?->id // Should be `null` if the user entity is not known before this step
+        );
+        
+        // Optional, but highly recommended, you can save the credential source as it may be modified
+        // during the verification process (counter may be higher).
+        $publicKeyCredentialSourceRepository->saveCredential($publicKeyCredentialSource);
+        
     }
 }
