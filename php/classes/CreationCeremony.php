@@ -76,7 +76,7 @@ class CreationCeremony extends WebAuthCeremony{
         $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
             $response,
             $_SESSION['publicKeyCredentialCreationOptions'],
-            $_SERVER['SERVER_NAME']
+            $this->domain
         );
         
         // store in db
