@@ -151,6 +151,26 @@ class WebAuthCeremony{
                 continue;
             }
         }
+        
         return $this->credentials;
+    }
+    
+    /**
+    * Get all credentials for this OS
+    */
+    public function getOSCredentials() {
+        $credentials = [];
+
+        //check if the platform matches
+        $metadata   = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
+        $os         = $this->getOsInfo()['name'];
+
+        foreach($this->getCredentials() as $key => $data){
+            if( $os == $metadata[$key]['os_info']['name']){
+                $credentials[] = $data;
+            }
+        }
+
+        return $credentials;
     }
 }
