@@ -8,7 +8,6 @@ use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use DeviceDetector\Parser\OperatingSystem as OS_info;
 
 /**
 * Register a webauthn method
