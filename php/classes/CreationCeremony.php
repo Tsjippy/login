@@ -84,34 +84,22 @@ class CreationCeremony extends WebAuthCeremony{
         $this->storeCredential( $publicKeyCredentialSource);
     }
     
-    protected function storeCredential(array $data, string $key): void {
-        if($key !== ''){
-            // Save credentials's meta separately
-            $source = $data[$key]->getUserHandle();
-            
-            $meta = unserialize(get_user_meta($this->userId, "2fa_webautn_cred_meta", true));
-            if(!$meta){
-                $meta    = [];
-            }
-
-            //already exists
-            if(is_array($meta[$key])){
-                //nothing updated
-                if($meta[$key]["user" ] == $source){
-                    return;
-                }
-                $meta[$key]["user" ]    = $source;
-            }else{
-                $meta[$key] = array(
-                    "identifier"    => getFromTransient("identifier"),
-                    "os_info"       => $this->getOsInfo(),
-                    "added"         => date('Y-m-d H:i:s', current_time('timestamp')),
-                    "user"          => $source,
-                    "last_used"     => "-"
-                );
-            }
-            update_user_meta($this->userId, "2fa_webautn_cred_meta", serialize($meta));
-        }
-        update_user_meta($this->userId, "2fa_webautn_cred", base64_encode(serialize($data)));
+    protected function storeCredential(array $data): void {
+        $keyMetas = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
+        $credentials = get_user_meta($this->user->ID, "2fa_webautn_cred");
+        
+        $source = $data->getUserHandle();
+        
+        $meta = array(
+            "identifier"    => getFromTransient("identifier"),
+            "os_info"       => $this->getOsInfo(),
+            "added"         => date('Y-m-d H:i:s', current_time('timestamp')),
+            "user"          => $source,
+            "last_used"     => "-"
+        );
+        
+        add_user_meta($this->user->ID, "2fa_webautn_cred_meta", $meta);
+        
+        add_user_meta($this->user-ID, "2fa_webautn_cred", base64_encode(serialize($data)));
     }
 }
