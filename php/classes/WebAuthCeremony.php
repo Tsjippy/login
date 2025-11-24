@@ -155,6 +155,13 @@ class WebAuthCeremony{
         return $this->credentials;
     }
     
+    protected function getOsInfo(){
+        $userAgent = $_SERVER['HTTP_USER_AGENT']; // change this to the useragent you want to parse
+    
+        $info = new OS_info($userAgent);
+        return $info->parse();
+    }
+    
     /**
     * Get all credentials for this OS
     */
