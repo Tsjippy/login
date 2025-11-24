@@ -28,7 +28,7 @@ class RequestCeremony extends WebAuthCeremony{
                 return $credential->getPublicKeyCredentialDescriptor();
             },
             $registeredAuthenticators
-        );
+        ); // should be null for login without username
 
         // Public Key Credential Request Options
         $publicKeyCredentialRequestOptions =
