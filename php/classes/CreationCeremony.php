@@ -29,6 +29,8 @@ class CreationCeremony extends WebAuthCeremony{
             ...
         ];
         
+        $excludedPublicKeyDescriptors = getOSCredentials();
+        
          // Set authenticator type
         $authenticatorSelectionCriteria = AuthenticatorSelectionCriteria::create(
             authenticatorAttachment: AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_PLATFORM,
@@ -70,7 +72,7 @@ class CreationCeremony extends WebAuthCeremony{
         
         if (!$this->publicKeyCredential->response instanceof AuthenticatorAttestationResponse) {
             //e.g. process here with a redirection to the public key creation page. 
-            return nee WP_Error('sim-login', 'Invalid response try again');
+            return new WP_Error('sim-login', 'Invalid response try again');
         }
         
         $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
@@ -83,7 +85,7 @@ class CreationCeremony extends WebAuthCeremony{
         $this->storeCredential( $publicKeyCredentialSource);
     }
     
-    protected function storeCredential(array $data): void {
+    protected function storeCredential( $data): void {
         $keyMetas = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
         $credentials = get_user_meta($this->user->ID, "2fa_webautn_cred");
         
