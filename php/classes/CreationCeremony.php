@@ -84,13 +84,6 @@ class CreationCeremony extends WebAuthCeremony{
         $this->storeCredential( $publicKeyCredentialSource);
     }
     
-    protected function getOsInfo(){
-        $userAgent = $_SERVER['HTTP_USER_AGENT']; // change this to the useragent you want to parse
-    
-        $info = new OS_info($userAgent);
-        return $info->parse();
-    }
-    
     protected function storeCredential(array $data): void {
         $keyMetas = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
         $credentials = get_user_meta($this->user->ID, "2fa_webautn_cred");
