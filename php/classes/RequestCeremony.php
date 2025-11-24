@@ -17,12 +17,18 @@ class RequestCeremony extends WebAuthCeremony{
     public $ceremonyRequestManager;
     
     public function __construct(){
-        $this->ceremonyRequestManager = $thos->factory->requestCeremony();
+        parent::__construct();
+        
+        $this->ceremonyRequestManager = $this->factory->requestCeremony();
     }
     
-    public function createOptions(){
+    public function createOptions($identifier){
+        // Store identifier in session for next step
+        $_SESSION['identifier'] = $identifier;
+
         // List of registered PublicKeyCredentialDescriptor classes associated to the user
         $registeredAuthenticators = $this->getOSCredentials();
+        
         $allowedCredentials = array_map(
             static function (PublicKeyCredentialSource $credential): PublicKeyCredentialDescriptor {
                 return $credential->getPublicKeyCredentialDescriptor();
@@ -31,7 +37,7 @@ class RequestCeremony extends WebAuthCeremony{
         ); // should be null for login without username
 
         // Public Key Credential Request Options
-        $publicKeyCredentialRequestOptions =
+        return $_SESSION['publicKeyCredentialRequestOptions'] =
             PublicKeyCredentialRequestOptions::create(
                 random_bytes(32), // Challenge
                 allowCredentials: $allowedCredentials,
@@ -40,37 +46,39 @@ class RequestCeremony extends WebAuthCeremony{
         ;
     }
     
-    public function verifyResponse(){
+    public function verifyResponse($response){
         $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
             $this->ceremonyRequestManager
         );
         
-        $this->loadPublicKey($data );
+        $this->loadPublicKey($response );
         
-        if (!$publicKeyCredential->response instanceof AuthenticatorAssertionResponse) {
+        if (!$this->publicKeyCredential->response instanceof AuthenticatorAssertionResponse) {
             //e.g. process here with a redirection to the public key login/MFA page. 
+            return;
         }
         
-        $publicKeyCredentialSource = $publicKeyCredentialSourceRepository->findOneByCredentialId(
-            $publicKeyCredential->rawId
+        $publicKeyCredentialSource = $this->getCredential(
+            $this->publicKeyCredential->rawId
         );
         
         if ($publicKeyCredentialSource === null) {
            // Throw an exception if the credential is not found.
            // It can also be rejected depending on your security policy (e.g. disabled by the user because of loss)
+           return;
         }
         
         $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
             $publicKeyCredentialSource,
-            $authenticatorAssertionResponse,
-            $publicKeyCredentialRequestOptions,
+            $response,
+            $_SESSION['publicKeyCredentialRequestOptions'],
             $this->domain,
-            $userEntity?->id // Should be `null` if the user entity is not known before this step
+            $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
         );
         
         // Optional, but highly recommended, you can save the credential source as it may be modified
         // during the verification process (counter may be higher).
-        $publicKeyCredentialSourceRepository->saveCredential($publicKeyCredentialSource);
+        //$this->saveCredential($publicKeyCredentialSource);
         
     }
 }

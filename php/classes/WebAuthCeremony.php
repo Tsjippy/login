@@ -9,6 +9,7 @@ use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\Denormalizer\WebauthnSerializerFactory;
 use Webauthn\PublicKeyCredential;
 use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
+use Webauthn\AuthenticatorSelectionCriteria;
 use DeviceDetector\Parser\OperatingSystem as OS_info;
 
 /**
@@ -24,22 +25,23 @@ class WebAuthCeremony{
     public $user;
     public $credentials;
     public $domain;
-    
+    public $userEntity;
+
     public function __construct(){
         $this->user = wp_get_current_user();
         
         $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
         
         // The manager will receive data to load and select the appropriate 
-        $this->manager = AttestationStatementSupportManager::create();
+        $this->manager          = AttestationStatementSupportManager::create();
         $this->manager->add(NoneAttestationStatementSupport::create());
         
-        $factory = new WebauthnSerializerFactory($attestationStatementSupportManager);
-        $this->serializer = $factory->create();
+        $factory                = new WebauthnSerializerFactory($this->manager);
+        $this->serializer       = $factory->create();
         
-        $this->factory = new CeremonyStepManagerFactory();
+        $this->factory          = new CeremonyStepManagerFactory();
         
-        $this->domain = $_SERVER['SERVER_NAME'];
+        $this->domain           = $_SERVER['SERVER_NAME'];
     }
     
     /**
@@ -48,6 +50,10 @@ class WebAuthCeremony{
      * @return  object the rprntity
      */
     public function getRpEntity(){
+        if(!empty($this->rpEntity)){
+            return $this->rpEntity;
+        }
+
         $logo       = null;
         $path       = get_attached_file(get_option( 'site_icon' ));
         $type       = pathinfo($path, PATHINFO_EXTENSION);
@@ -67,8 +73,11 @@ class WebAuthCeremony{
         );
     }
     
+    /**
+     * Get the profile picture for use in the request
+     */
     public function getProfilePicture($userId){
-        $attachmentId  = get_user_meta($userId,'profile_picture',true);
+        $attachmentId  = get_user_meta($userId, 'profile_picture', true);
         $image          = null;
     
         if(is_numeric($attachmentId)){
@@ -111,25 +120,35 @@ class WebAuthCeremony{
         }
     }
     
-    // Get user ID or create one
+    /**
+     *  Get user ID or create one
+     */ 
     public function getUserIdentity(){
-        $webauthnKey = get_user_meta($user->ID, '2fa_webauthn_key', true);
-        if(!$webauthnKey){
-            $webauthnKey = hash("sha256", $user->user_login."-".$user->display_name."-".generateRandomString(10));
-            update_user_meta($user->ID, '2fa_webauthn_key', $webauthnKey);
+        if(isset($this->userEntity)){
+            return $this->userEntity;
         }
 
-        $userEntity = new PublicKeyCredentialUserEntity(
-            $user->user_login,
+        $webauthnKey = get_user_meta($this->user->ID, '2fa_webauthn_key', true);
+
+        if(!$webauthnKey){
+            $webauthnKey = hash("sha256", $this->user->user_login."-".$this->user->display_name."-".generateRandomString(10));
+            update_user_meta($this->user->ID, '2fa_webauthn_key', $webauthnKey);
+        }
+
+        return $this->userEntity = new PublicKeyCredentialUserEntity(
+            $this->user->user_login,
             $webauthnKey,
-            $user->display_name,
-            getProfilePicture($user->ID)
+            $this->user->display_name,
+            $this->getProfilePicture($this->user->ID)
         );
     }
     
+    /**
+     * Unserializes a public key json and converts it to a PublicKeyCredential instance
+     */
     public function loadPublicKey($data){
         // $data corresponds to the JSON object showed above
-        $this->publicKeyCredential = $serializer->deserialize(
+        $this->publicKeyCredential = $this->serializer->deserialize(
             $data,
             PublicKeyCredential::class,
             'json'
@@ -140,16 +159,16 @@ class WebAuthCeremony{
     * Get all credentials
     */
     protected function getCredentials(): array {
-        if(isset($this->credentials){
+        if(isset($this->credentials)){
             return $this->credentials;
         }
         
         $this->credentials = [];
         
-        $userCred  = get_user_meta($this->user->ID, "2fa_webautn_cred");
+        $userCreds  = get_user_meta($this->user->ID, "2fa_webautn_cred");
         foreach($userCreds as $userCred){
             try{
-                 $this->credentials[] = unserialize(base64_decode($userCred));
+                $this->credentials[] = unserialize(base64_decode($userCred));
             }catch(\Throwable $exception) {
                 continue;
             }
@@ -157,7 +176,28 @@ class WebAuthCeremony{
         
         return $this->credentials;
     }
+
+    /**
+     * Get a specific credential by id
+     * 
+     * @param   string  $id     The credential id string
+     * 
+     * @return  object|false    The credential or false if no credential found
+     */
+    public function getCredential($id){
+        foreach($this->getCredentials() as $credential){
+            if($credential->rawId == $id){
+                return $credential;
+            }
+        }
+
+        // No credential found
+        return false;
+    }
     
+    /**
+     * Prses os info from user agent
+     */
     protected function getOsInfo(){
         $userAgent = $_SERVER['HTTP_USER_AGENT']; // change this to the useragent you want to parse
     
@@ -182,5 +222,23 @@ class WebAuthCeremony{
         }
 
         return $credentials;
+    }
+
+    /**
+     * Delete a credential
+     */
+    public function removeCredential($id){
+        // remove the credential
+        $this->getCredential($id);
+
+        // store id for keypasslogin without username
+        $usedIds    = get_option('sim-webauth-ids');
+        if(!$usedIds){
+            $usedIds    = [];
+        }
+        unset($usedIds[$_POST['key']]);
+        update_option('sim-webauth-ids', $usedIds);
+
+        return 'Succesfull removed the authenticator';
     }
 }

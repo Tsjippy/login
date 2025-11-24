@@ -106,7 +106,7 @@ class PublicKeyCredentialSourceRepository {
     }
 
     // Read credential database
-    protected function read(): array {
+    public function read(): array {
         $userCred  = get_user_meta($this->userId, "2fa_webautn_cred", true);
         if($userCred){
             try{

@@ -1,13 +1,17 @@
 <?php
 
 namespace SIM\LOGIN;
+use SIM;
 
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorSelectionCriteria;
-use Webauthn\PublicKeyCredentialCreationOptions;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Cose\Algorithms;
+use Webauthn\PublicKeyCredentialParameters;
 
 /**
 * Register a webauthn method
@@ -17,19 +21,22 @@ class CreationCeremony extends WebAuthCeremony{
     public $ceremonyRequestManager;
     
     public function __construct(){
-        $this->ceremonyRequestManager = $this->factory->creationCeremony();
+        parent::__construct();
 
-        $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
+        $this->ceremonyRequestManager = $this->factory->creationCeremony();
     }
     
+    /**
+     * Creates the options needed to start creating a webauthn credtial
+     */
     public function createOptions(){
-        $excludedPublicKeyDescriptors = [
+        /* $excludedPublicKeyDescriptors = [
             PublicKeyCredentialDescriptor::create('public-key', 'CREDENTIAL ID1'),
             PublicKeyCredentialDescriptor::create('public-key', 'CREDENTIAL ID2'),
             ...
-        ];
+        ]; */
         
-        $excludedPublicKeyDescriptors = getOSCredentials();
+        $excludedPublicKeyDescriptors = $this->getOSCredentials();
         
          // Set authenticator type
         $authenticatorSelectionCriteria = AuthenticatorSelectionCriteria::create(
@@ -37,62 +44,78 @@ class CreationCeremony extends WebAuthCeremony{
             userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
             residentKey:AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
         );
+
+        $publicKeyCredentialParametersList = [
+            PublicKeyCredentialParameters::create('public-key', Algorithms::COSE_ALGORITHM_ES256K), // More interesting algorithm
+            PublicKeyCredentialParameters::create('public-key', Algorithms::COSE_ALGORITHM_ES256),  //      ||
+            PublicKeyCredentialParameters::create('public-key', Algorithms::COSE_ALGORITHM_RS256),  //      || 
+            PublicKeyCredentialParameters::create('public-key', Algorithms::COSE_ALGORITHM_PS256),  //      \/
+            PublicKeyCredentialParameters::create('public-key', Algorithms::COSE_ALGORITHM_ED256),  // Less interesting algorithm
+        ];
         
         $publicKeyCredentialCreationOptions =
             PublicKeyCredentialCreationOptions::create(
-                $this->rpEntity,
-                $this->userEntity,
-                $this->getChalenge(),
-                excludeCredentials: $excludedPublicKeyDescriptors,
-                $authenticatorSelectionCriteria
+                $this->getRpEntity(),
+                $this->getUserIdentity(),
+                $this->getChallenge(),
+                pubKeyCredParams: $publicKeyCredentialParametersList,
+                //excludeCredentials: $excludedPublicKeyDescriptors,
+                authenticatorSelection: $authenticatorSelectionCriteria
             )
         ;
         
-        $jsonObject = $this->serializer->serialize(
-            $publicKeyCredentialCreationOptions,
-            'json',
-            [
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true, // Highly recommended!
-                JsonEncode::OPTIONS => JSON_THROW_ON_ERROR, // Optional
-            ]
-        );
-        
         // store in session
-        $_SESSION['publicKeyCredentialCreationOptions'] = $publicKeyCredentialCreationOptions;
+        storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
         
-        return $jsonObject;
+        return $publicKeyCredentialCreationOptions;
     }
     
-    public function verifyResponse($response){
+    /**
+     * Verifies a credential creation response
+     */
+    public function verifyResponse($response, $identifier){
         $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
             $this->ceremonyRequestManager
         );
-        
+
+        // Parse the response to PublicKeyCredential Instance
         $this->loadPublicKey($response);
         
+        // Check if the right class
         if (!$this->publicKeyCredential->response instanceof AuthenticatorAttestationResponse) {
             //e.g. process here with a redirection to the public key creation page. 
-            return new WP_Error('sim-login', 'Invalid response try again');
+            return new \WP_Error('sim-login', 'Invalid response try again');
+        }
+
+        // validate the response
+        try{
+            $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
+                $this->publicKeyCredential->response,
+                getFromTransient('publicKeyCredentialCreationOptions'),
+                $this->domain
+            );
+        }catch(\Exception $e){
+            SIM\printArray($e->getMessage());
+
+            return new \WP_Error('sim-login', $e->getMessage());
         }
         
-        $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
-            $response,
-            $_SESSION['publicKeyCredentialCreationOptions'],
-            $this->domain
-        );
-        
         // store in db
-        $this->storeCredential( $publicKeyCredentialSource);
+        $this->storeCredential( $publicKeyCredentialSource, $identifier);
     }
     
-    protected function storeCredential( $data): void {
+    protected function storeCredential( $data, $identifier): void {
         $keyMetas = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
         $credentials = get_user_meta($this->user->ID, "2fa_webautn_cred");
+
+        /**
+         * TODO: check for duplicate before adding
+         */
         
         $source = $data->getUserHandle();
         
         $meta = array(
-            "identifier"    => getFromTransient("identifier"),
+            "identifier"    => $identifier,
             "os_info"       => $this->getOsInfo(),
             "added"         => date('Y-m-d H:i:s', current_time('timestamp')),
             "user"          => $source,
@@ -101,6 +124,6 @@ class CreationCeremony extends WebAuthCeremony{
         
         add_user_meta($this->user->ID, "2fa_webautn_cred_meta", $meta);
         
-        add_user_meta($this->user-ID, "2fa_webautn_cred", base64_encode(serialize($data)));
+        add_user_meta($this->user->ID, "2fa_webautn_cred", base64_encode(serialize($data)));
     }
 }
