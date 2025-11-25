@@ -9,6 +9,27 @@ import DeviceDetector from "device-detector-js";
 
 console.log("Register webauthn is loaded");
 
+function base64urlEncode(buffer) {
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    return base64
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+}
+
+function base64urlDecode(base64url) {
+    const base64 = base64url
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+    const padding = '='.repeat((4 - base64.length % 4) % 4);
+    const binary = atob(base64 + padding);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
 async function register(){
 	const deviceDetector    = new DeviceDetector();
 
@@ -40,17 +61,64 @@ async function register(){
 	// Show the modal
 	document.getElementById(`register-biometrics-modal`).classList.remove('hidden');
 
+
+ // testing code
+ const publicKeyCredentialCreationOptions = {
+    ...optionsJSON,
+    challenge: base64urlDecode(optionsJSON.challenge),
+    user: {
+        ...optionsJSON.user,
+        id: base64urlDecode(optionsJSON.user.id)
+    },
+    excludeCredentials: optionsJSON.excludeCredentials?.map(cred => ({
+        ...cred,
+        id: base64urlDecode(cred.id)
+    }))
+};
+
+// 3. Call the WebAuthn API
+const credential = await navigator.credentials.create({
+    publicKey: publicKeyCredentialCreationOptions
+});
+
+// 4. Encode response for server
+const attestationResponse = {
+    id: credential.id,
+    rawId: base64urlEncode(credential.rawId),
+    type: credential.type,
+    response: {
+        clientDataJSON: base64urlEncode(credential.response.clientDataJSON),
+        attestationObject: base64urlEncode(credential.response.attestationObject)
+    }
+};
+
+let formData			= new FormData();
+	formData.append('identifier', identifier);
+	formData.append('publicKeyCredential', btoa(JSON.stringify(attestationResponse)));
+
+	let response				= await FormSubmit.fetchRestApi('login/store_fingerprint', formData);
+	if(!response){
+		return;
+	}
+	
+ // prod code
 	let attResp;
 	try {
 		// Pass the options to the authenticator and wait for a response
 		attResp = await startRegistration({ optionsJSON });
 	} catch (error) {
-		// Some basic error handling
-		if (error.name === 'InvalidStateError') {
-			console.log('Error: Authenticator was probably already registered by user');
-		} else {
-			console.error(error);
-		}
+    // Handle different error types
+    if (error.name === 'NotAllowedError') {
+        alert('Operation cancelled or timed out');
+    } else if (error.name === 'InvalidStateError') {
+        alert('Authenticator already registered');
+    } else if (error.name === 'NotSupportedError') {
+        alert('WebAuthn not supported in this browser');
+    } else if (error.name === 'AbortError') {
+        alert('Operation was aborted');
+    } else {
+        alert('Authentication failed: ' + error.message);
+    }
 
 		return;
 	}
