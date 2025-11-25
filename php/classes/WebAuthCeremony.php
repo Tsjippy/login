@@ -131,7 +131,7 @@ class WebAuthCeremony{
         $webauthnKey = get_user_meta($this->user->ID, '2fa_webauthn_key', true);
 
         if(!$webauthnKey){
-            $webauthnKey = hash("sha256", $this->user->user_login."-".$this->user->display_name."-".generateRandomString(10));
+            $webauthnKey = hash("sha256", $this->user->user_login."-".$this->user->display_name."-".$this->getChallenge(10));
             update_user_meta($this->user->ID, '2fa_webauthn_key', $webauthnKey);
         }
 
