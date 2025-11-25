@@ -6,6 +6,7 @@
 ### Changed
 - composer updated
 - webauthn update to 5.2
+- added cred metas retrieval
 
 ### Fixed
 - login problems
