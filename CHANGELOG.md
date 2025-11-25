@@ -9,6 +9,7 @@
 
 ### Fixed
 - login problems
+- get challenge
 
 ### Updated
 
