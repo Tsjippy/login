@@ -64,6 +64,40 @@ class CreationCeremony extends WebAuthCeremony{
             )
         ;
         
+        // test
+        $rpEntity = PublicKeyCredentialRpEntity::create(
+            'My Super Secured Application', //Name
+            'foo.example.com',              //ID
+            null                            //Icon
+        );
+        
+        // User Entity
+        $userEntity = PublicKeyCredentialUserEntity::create(
+            '@cypher-Angel-3000',                   //Name
+            '123e4567-e89b-12d3-a456-426655440000', //ID
+            'Mighty Mike',                          //Display name
+            null                                    //Icon
+        );
+        
+        // Challenge
+        $challenge = random_bytes(16);
+        
+        $publicKeyCredentialCreationOptions =
+            PublicKeyCredentialCreationOptions::create(
+                $rpEntity,
+                $userEntity,
+                $challenge
+            )
+        ;
+        $jsonObject = $serializer->serialize(
+            $publicKeyCredentialCreationOptions,
+            'json',
+            [
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true, // Highly recommended!
+                JsonEncode::OPTIONS => JSON_THROW_ON_ERROR, // Optional
+            ]
+        );
+        
         // store in session
         storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
         
