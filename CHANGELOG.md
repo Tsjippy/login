@@ -4,11 +4,25 @@
 ### Added
 
 ### Changed
+- composer updated
+- webauthn update to 5.2
+
+### Fixed
+- login problems
+
+### Updated
+
+## [8.4.8] - 2025-11-21
+
+
+### Added
+- support for Local
+
+### Changed
 - show register modal when ready
 
 ### Fixed
-
-### Updated
+- error message when invalid credentials
 
 ## [8.4.7] - 2025-11-04
 

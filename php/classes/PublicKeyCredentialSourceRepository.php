@@ -2,14 +2,13 @@
 namespace SIM\LOGIN;
 use SIM;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialSourceRepository as PublicKeyCredentialSourceRepositoryInterface;
 use Webauthn\PublicKeyCredentialSource;
 use DeviceDetector\Parser\OperatingSystem as OS_info;
 
 /**
  * Store all publickeys and pubilckey metas
  */
-class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRepositoryInterface {
+class PublicKeyCredentialSourceRepository {
     public $user;
     public $userId;
 
@@ -107,7 +106,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
     }
 
     // Read credential database
-    protected function read(): array {
+    public function read(): array {
         $userCred  = get_user_meta($this->userId, "2fa_webautn_cred", true);
         if($userCred){
             try{

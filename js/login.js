@@ -317,7 +317,6 @@ const login = class{
 		
 		// We are logging in from an iframe
 		if(window.self !== window.top){
-
 			// change message
 			console.log(window.parent.document.getElementById('iframe-loader'));
 			console.log(window.parent.document);
@@ -512,7 +511,7 @@ const login = class{
 	};
 }
 
-// SHow the login button
+// Show the login button
 document.addEventListener('DOMContentLoaded', () => {
 	//check if the current browser supports webauthn
 	checkWebauthnAvailable();

@@ -85,3 +85,56 @@ function loopEnd() {
 
 // Disable administration email verification
 add_filter( 'admin_email_check_interval', '__return_false' );
+
+ /**
+ * Temporary store a value
+ *
+ * @param   string  $key        The identifier
+ * @param   string|int|array|object     $value  The value
+ */
+function storeInTransient($key, $value){
+    #$value=serialize(base64_encode(serialize($value)));
+    #set_transient( $key, $value, 120 );
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    $_SESSION[$key] = $value;
+}
+
+/**
+ * Retrieves a temporary stored value
+ *
+ * @param   string  $key    The key the values was stored with
+ *
+ * @return  string|int|array|object             The value
+ */
+function getFromTransient($key){
+    #return unserialize(base64_decode(unserialize(get_transient( $key))));
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    $value  = $_SESSION[$key]; 
+
+    return $value;
+}
+
+/**
+ * Deletes a temporary stored value
+ *
+ * @param   string  $key    The key the values was stored with
+ *
+ * @return  string|int|array|object             The value
+ */
+function deleteFromTransient($key){
+    #delete_transient( $key);
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    unset( $_SESSION[$key]);
+
+    session_write_close();
+}
