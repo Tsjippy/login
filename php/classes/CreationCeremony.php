@@ -101,7 +101,7 @@ class CreationCeremony extends WebAuthCeremony{
         // store in session
         storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
         
-        return $publicKeyCredentialCreationOptions;
+        return json_decode($jsonObject);
     }
     
     /**
