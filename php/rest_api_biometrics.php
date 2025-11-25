@@ -50,7 +50,7 @@ function bioRestApi() {
 
                 // Check param
                 if(empty($credential)){
-                    return new WP_Error('Logged in error', "No credential id given");
+                    return new WP_Error('Logged in error', "No credential data supplied");
                 }
 
                 $creationCeremony    = new CreationCeremony();

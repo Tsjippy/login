@@ -24,6 +24,7 @@ class WebAuthCeremony{
     public $factory;
     public $user;
     public $credentials;
+    public $credentialMetas;
     public $domain;
     public $userEntity;
 
@@ -178,6 +179,47 @@ class WebAuthCeremony{
     }
 
     /**
+    * Get all credential meta
+    */
+    protected function getCredentialMetas(): array {
+        if(isset($this->credentialMetas)){
+            return $this->credentialMetas;
+        }
+        
+        $this->credentialMetas = [];
+        
+        $credMetas  = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
+        foreach($credMetas as $credMeta){
+            try{
+                $this->credentialMetas[] = unserialize(base64_decode($credMeta));
+            }catch(\Throwable $exception) {
+                continue;
+            }
+        }
+        
+        return $this->credentialMetas;
+    }
+
+    /**
+    * Get credential meta for a specific credential
+    * 
+    * @param    string  $credId     The id of the credential
+    *
+    * @return   array|false         The credential meta array
+    */
+    protected function getCredentialMetaById($credId): array|bool {
+        $this->getCredentialMetas();
+
+        foreach($this->credentialMetas as $credMeta){
+            if($credMeta['cred_id'] == $credId){
+                return $credMeta;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
      * Get a specific credential by id
      * 
      * @param   string  $id     The credential id string
@@ -212,11 +254,10 @@ class WebAuthCeremony{
         $credentials = [];
 
         //check if the platform matches
-        $metadata   = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
         $os         = $this->getOsInfo()['name'];
 
-        foreach($this->getCredentials() as $key => $data){
-            if( $os == $metadata[$key]['os_info']['name']){
+        foreach($this->getCredentials() as $data){
+            if( $os == $this->getCredentialMetaById($data->publicKeyCredentialId)['os_info']['name']){
                 $credentials[] = $data;
             }
         }

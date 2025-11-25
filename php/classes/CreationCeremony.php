@@ -12,6 +12,14 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Cose\Algorithms;
 use Webauthn\PublicKeyCredentialParameters;
+use Webauthn\PublicKeyCredentialRpEntity;
+use Webauthn\PublicKeyCredentialUserEntity;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\Denormalizer\WebauthnSerializerFactory;
+use Webauthn\PublicKeyCredential;
+use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
+use DeviceDetector\Parser\OperatingSystem as OS_info;
 
 /**
 * Register a webauthn method
@@ -30,13 +38,12 @@ class CreationCeremony extends WebAuthCeremony{
      * Creates the options needed to start creating a webauthn credtial
      */
     public function createOptions(){
-        /* $excludedPublicKeyDescriptors = [
-            PublicKeyCredentialDescriptor::create('public-key', 'CREDENTIAL ID1'),
-            PublicKeyCredentialDescriptor::create('public-key', 'CREDENTIAL ID2'),
-            ...
-        ]; */
+        $excludedPublicKeyDescriptors = [];
         
-        $excludedPublicKeyDescriptors = $this->getOSCredentials();
+        $existingCredentials = $this->getOSCredentials();
+        foreach($existingCredentials as $credential){
+            $excludedPublicKeyDescriptors[] = PublicKeyCredentialDescriptor::create('public-key', $credential->publicKeyCredentialId);
+        }
         
          // Set authenticator type
         $authenticatorSelectionCriteria = AuthenticatorSelectionCriteria::create(
@@ -59,37 +66,12 @@ class CreationCeremony extends WebAuthCeremony{
                 $this->getUserIdentity(),
                 $this->getChallenge(),
                 pubKeyCredParams: $publicKeyCredentialParametersList,
-                //excludeCredentials: $excludedPublicKeyDescriptors,
+                excludeCredentials: $excludedPublicKeyDescriptors,
                 authenticatorSelection: $authenticatorSelectionCriteria
             )
         ;
         
-        // test
-        $rpEntity = PublicKeyCredentialRpEntity::create(
-            'My Super Secured Application', //Name
-            'foo.example.com',              //ID
-            null                            //Icon
-        );
-        
-        // User Entity
-        $userEntity = PublicKeyCredentialUserEntity::create(
-            '@cypher-Angel-3000',                   //Name
-            '123e4567-e89b-12d3-a456-426655440000', //ID
-            'Mighty Mike',                          //Display name
-            null                                    //Icon
-        );
-        
-        // Challenge
-        $challenge = random_bytes(16);
-        
-        $publicKeyCredentialCreationOptions =
-            PublicKeyCredentialCreationOptions::create(
-                $rpEntity,
-                $userEntity,
-                $challenge
-            )
-        ;
-        $jsonObject = $serializer->serialize(
+        $jsonObject = $this->serializer->serialize(
             $publicKeyCredentialCreationOptions,
             'json',
             [
@@ -136,6 +118,8 @@ class CreationCeremony extends WebAuthCeremony{
         
         // store in db
         $this->storeCredential( $publicKeyCredentialSource, $identifier);
+
+        return "Succesfully Stored The Credential";
     }
     
     protected function storeCredential( $data, $identifier): void {
@@ -145,18 +129,16 @@ class CreationCeremony extends WebAuthCeremony{
         /**
          * TODO: check for duplicate before adding
          */
-        
-        $source = $data->getUserHandle();
-        
         $meta = array(
+            'cred_id'       => $data->publicKeyCredentialId,
             "identifier"    => $identifier,
             "os_info"       => $this->getOsInfo(),
             "added"         => date('Y-m-d H:i:s', current_time('timestamp')),
-            "user"          => $source,
+            "userHandle"    => $data->userHandle,
             "last_used"     => "-"
         );
         
-        add_user_meta($this->user->ID, "2fa_webautn_cred_meta", $meta);
+        add_user_meta($this->user->ID, "2fa_webautn_cred_meta", base64_encode(serialize($meta)));
         
         add_user_meta($this->user->ID, "2fa_webautn_cred", base64_encode(serialize($data)));
     }
