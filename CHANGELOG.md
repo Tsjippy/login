@@ -4,20 +4,28 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.4.9] - 2025-11-26
+
+
+### Changed
 - composer updated
 - webauthn update to 5.2
 - added cred metas retrieval
 - prepare for upgrade to version 9.0.0
 - webauthn version bump from 3.3 tot 5.2
 - implemented getFromTransient
+- removed admin_email_check_interval false return
 
 ### Fixed
 - login problems
 - get challenge
 - update flow
 - merging issues
-
-### Updated
 
 ## [8.4.8] - 2025-11-21
 
