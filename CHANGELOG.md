@@ -12,6 +12,7 @@
 ### Fixed
 - login problems
 - get challenge
+- update flow
 
 ### Updated
 
