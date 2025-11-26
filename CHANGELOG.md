@@ -8,6 +8,7 @@
 - webauthn update to 5.2
 - added cred metas retrieval
 - prepare for upgrade to version 9.0.0
+- webauthn version bump from 3.3 tot 5.2
 
 ### Fixed
 - login problems
