@@ -61,7 +61,7 @@ function pluginUpdate($oldVersion){
 
                 $meta['cred_id']    = $credId;
 
-                add_user_meta($user->ID, "2fa_webautn_cred_meta", base64_encode(serialize($cred)));
+                add_user_meta($user->ID, "2fa_webautn_cred_meta", base64_encode(serialize($meta)));
             }
         }
     }
