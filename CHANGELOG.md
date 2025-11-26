@@ -4,6 +4,23 @@
 ### Added
 
 ### Changed
+- composer updated
+- webauthn update to 5.2
+- added cred metas retrieval
+
+### Fixed
+- login problems
+- get challenge
+
+### Updated
+
+## [8.4.8] - 2025-11-21
+
+
+### Added
+- support for Local
+
+### Changed
 - show register modal when ready
 
 ### Fixed
