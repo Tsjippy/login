@@ -2,25 +2,59 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2021 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Webauthn;
 
-abstract class PublicKeyCredentialEntity
+use JsonSerializable;
+
+abstract class PublicKeyCredentialEntity implements JsonSerializable
 {
     /**
-     * @deprecated since 5.1.0 and will be removed in 6.0.0. This value is always null.
+     * @var string
      */
-    public ?string $icon = null;
+    protected $name;
 
-    public function __construct(
-        public readonly string $name,
-        ?string $icon = null
-    ) {
-        if ($icon !== null) {
-            trigger_deprecation(
-                'web-auth/webauthn-lib',
-                '5.1.0',
-                'The parameter "$icon" is deprecated since 5.1.0 and will be removed in 6.0.0. This value has no effect. Please set "null" instead.'
-            );
+    /**
+     * @var string|null
+     */
+    protected $icon;
+
+    public function __construct(string $name, ?string $icon)
+    {
+        $this->name = $name;
+        $this->icon = $icon;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function jsonSerialize(): array
+    {
+        $json = [
+            'name' => $this->name,
+        ];
+        if (null !== $this->icon) {
+            $json['icon'] = $this->icon;
         }
+
+        return $json;
     }
 }

@@ -31,11 +31,13 @@ function bioRestApi() {
         '/fingerprint_options',
         array(
             'methods'               => 'POST,GET',
-            'callback'              => function(){
-                $creationCeremony    = new CreationCeremony();
-                return $creationCeremony->createOptions();
-            },
-            'permission_callback'   => '__return_true'
+            'callback'              => __NAMESPACE__.'\biometricOptions',
+            'permission_callback'   => '__return_true',
+            'args'					=> array(
+				'identifier'		=> array(
+					'required'	=> true
+				),
+			)
 		)
 	);
 
@@ -45,23 +47,10 @@ function bioRestApi() {
         '/store_fingerprint',
         array(
             'methods'               => 'POST,GET',
-            'callback'              => function(){
-                $credential  = base64_decode(sanitize_text_field($_POST["publicKeyCredential"]));
-
-                // Check param
-                if(empty($credential)){
-                    return new WP_Error('Logged in error', "No credential data supplied");
-                }
-
-                $creationCeremony    = new CreationCeremony();
-                return $creationCeremony->verifyResponse($credential, sanitize_text_field($_POST['identifier']));
-            },
+            'callback'              => __NAMESPACE__.'\storeBiometric',
             'permission_callback'   => '__return_true',
             'args'					=> array(
 				'publicKeyCredential'		=> array(
-					'required'	=> true
-				),
-                'identifier'		=> array(
 					'required'	=> true
 				),
 			)
@@ -141,10 +130,7 @@ function bioRestApi() {
 		'/remove_web_authenticator',
 		array(
 			'methods' 				=> 'POST',
-			'callback' 				=> function(){  
-                $webAuthCeremony = new webAuthCeremony();
-                $webAuthCeremony->removeCredential(sanitize_text_field($_POST['key']));
-            },
+			'callback' 				=> __NAMESPACE__.'\removeWebAuthenticator',
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
                 'key'		=> array(
@@ -187,6 +173,225 @@ function requestEmailCode(){
         return new WP_Error('login', 'Sending e-mail failed');
     }else{
         return new WP_Error('login', 'Invalid username given');
+    }
+}
+
+function removeWebAuthenticator(){
+    $key        = sanitize_text_field($_POST['key']);
+    $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository(wp_get_current_user());
+    $publicKeyCredentialSourceRepository->removeCredential($key);
+
+    // store id for keypasslogin without username
+    $usedIds    = get_option('sim-webauth-ids');
+    if(!$usedIds){
+        $usedIds    = [];
+    }
+    unset($usedIds[$_POST['key']]);
+    update_option('sim-webauth-ids', $usedIds);
+
+    return 'Succesfull removed the authenticator';
+}
+
+// Bind an authenticator
+function biometricOptions(){
+    try{
+        $identifier = sanitize_text_field($_POST['identifier']);
+
+        $user       = wp_get_current_user();
+
+        $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository($user);
+
+        $server = new Server(
+            getRpEntity(),
+            $publicKeyCredentialSourceRepository,
+            null
+        );
+
+        // Get user ID or create one
+        $webauthnKey = get_user_meta($user->ID, '2fa_webauthn_key', true);
+        if(!$webauthnKey){
+            $webauthnKey = hash("sha256", $user->user_login."-".$user->display_name."-".generateRandomString(10));
+            update_user_meta($user->ID, '2fa_webauthn_key',$webauthnKey);
+        }
+
+        $userEntity = new PublicKeyCredentialUserEntity(
+            $user->user_login,
+            $webauthnKey,
+            $user->display_name,
+            getProfilePicture($user->ID)
+        );
+
+        $credentialSourceRepository = new PublicKeyCredentialSourceRepository($user);
+
+        $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
+
+        // Convert the Credential Sources into Public Key Credential Descriptors for excluding
+        $excludeCredentials = array_map(function (PublicKeyCredentialSource $credential) {
+            return $credential->getPublicKeyCredentialDescriptor(['internal']);
+        }, $credentialSources);
+
+        // Set authenticator type
+        $authenticatorType   = AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_PLATFORM;
+        //$authenticatorType = AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_CROSS_PLATFORM;
+        //$authenticatorType = AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_NO_PREFERENCE;
+
+        // Set user verification
+        //$userVerification = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
+        $userVerification   = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED;
+
+        $residentKey        = AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED;
+
+        // Create authenticator selection
+        /* $authenticatorSelectionCriteria = new AuthenticatorSelectionCriteria(
+            $authenticatorType,
+            true,
+            $userVerification,
+            $residentKey
+        ); */
+
+        $authenticatorSelectionCriteria = new AuthenticatorSelectionCriteria();
+
+        $authenticatorSelectionCriteria->setAuthenticatorAttachment($authenticatorType);
+        $authenticatorSelectionCriteria->setRequireResidentKey(true);
+        $authenticatorSelectionCriteria->setUserVerification($userVerification);
+        $authenticatorSelectionCriteria->setResidentKey($residentKey);
+
+        // Create a creation challenge
+        $publicKeyCredentialCreationOptions = $server->generatePublicKeyCredentialCreationOptions(
+            $userEntity,
+            PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
+            $excludeCredentials,
+            $authenticatorSelectionCriteria
+        );
+
+        storeInTransient('pkcco', $publicKeyCredentialCreationOptions);
+        storeInTransient('userEntity', $userEntity);
+        storeInTransient('username', $user->user_login);
+        storeInTransient('identifier', $identifier);
+
+        return $publicKeyCredentialCreationOptions;
+    }catch(\Exception $exception){
+        SIM\printArray("ajax_create: (ERROR)".$exception->getMessage());
+        SIM\printArray(generateCallTrace($exception));
+        return new WP_Error('Error',"Something went wrong 1.");
+    }catch(\Error $error){
+        SIM\printArray("ajax_create: (ERROR)".$error->getMessage());
+        SIM\printArray(generateCallTrace($error));
+        return new WP_Error('Error',"Something went wrong 2.");
+    }
+}
+
+// Verify and save the attestation
+function storeBiometric(){
+    try{
+        storeInTransient('webauthn', 'success');
+
+        $credentialId  = sanitize_text_field($_POST["publicKeyCredential"]);
+
+        // Check param
+        if(empty($credentialId)){
+            return new WP_Error('Logged in error', "No credential id given");
+        }
+
+        $user                                   = wp_get_current_user();
+        $username                               = $user->user_login;
+        $publicKeyCredentialCreationOptions     = getFromTransient('pkcco');
+
+        // May not get the challenge yet
+        if(empty($publicKeyCredentialCreationOptions)){
+            return new WP_Error('Logged in error', "No challenge given");
+        }
+
+        if(strtolower(getFromTransient('username')) !== strtolower($username)){
+            SIM\printArray($username);
+            SIM\printArray(getFromTransient('username'));
+            return new WP_Error('Logged in error', "Invalid username given");
+        }
+
+        // Check global unique credential ID
+        $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository($user);
+        if($publicKeyCredentialSourceRepository->findOneMetaByCredentialId($credentialId) !== null){
+            SIM\printArray("ajax_create_response: (ERROR)Credential ID not unique, ID => \"".base64_encode($credentialId)."\" , exit");
+            return new WP_Error('Logged in error', "Credential ID not unique");
+        }
+
+        // store id for keypasslogin without username
+        $usedIds    = get_option('sim-webauth-ids');
+        if(!$usedIds){
+            $usedIds    = [];
+        }
+        $usedIds[json_decode(stripslashes($_POST['publicKeyCredential']))->rawId]  = $user->ID;
+        update_option('sim-webauth-ids', $usedIds);
+
+        $psr17Factory = new Psr17Factory();
+        $creator = new ServerRequestCreator(
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory
+        );
+
+        $serverRequest = $creator->fromGlobals();
+
+        $server = new Server(
+            getRpEntity(),
+            $publicKeyCredentialSourceRepository,
+            null
+        );
+
+        // Allow to bypass scheme verification when under localhost
+        //$currentDomain = 'localhost';
+        $currentDomain = $_SERVER['HTTP_HOST'];
+        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1"){
+            $server->setSecuredRelyingPartyId([$currentDomain]);
+        }
+
+        // Verify
+        try {
+            $publicKeyCredentialSource = $server->loadAndCheckAttestationResponse(
+                stripslashes($_POST['publicKeyCredential']),
+                $publicKeyCredentialCreationOptions,
+                $serverRequest
+            );
+
+            //recreate the publicKeyCredentialSource to include the internal transport mode.
+            $publicKeyCredentialSource = new PublicKeyCredentialSource(
+                $publicKeyCredentialSource->getPublicKeyCredentialId(),
+                'public-key',
+                ['internal'],
+                $publicKeyCredentialSource->getAttestationType(),
+                $publicKeyCredentialSource->getTrustPath(),
+                $publicKeyCredentialSource->getAaguid(),
+                $publicKeyCredentialSource->getCredentialPublicKey(),
+                $publicKeyCredentialSource->getUserHandle(),
+                $publicKeyCredentialSource->getCounter(),
+                $publicKeyCredentialSource->getOtherUI()
+            );
+
+            $publicKeyCredentialSourceRepository->saveCredentialSource($publicKeyCredentialSource);
+        }catch(\Throwable $exception){
+            // Failed to verify
+            SIM\printArray("ajax_create_response: (ERROR)".$exception->getMessage());
+            SIM\printArray(generateCallTrace($exception));
+            return new \WP_Error('error', $exception->getMessage(), ['status'=> 500]);
+        }
+
+        // Store as a 2fa option
+        $methods    = get_user_meta($user->ID, '2fa_methods');
+        if(!in_array('webauthn', $methods)){
+            add_user_meta($user->ID, '2fa_methods', 'webauthn');
+        }
+
+        // Success
+        return authTable();
+    }catch(\Exception $exception){
+        SIM\printArray("ajax_create_response: (ERROR)".$exception->getMessage());
+        SIM\printArray(generateCallTrace($exception));
+        return new WP_Error('Logged in error', "Something went wrong 3.");
+    }catch(\Error $error){
+        SIM\printArray("ajax_create_response: (ERROR)".$error->getMessage());
+        SIM\printArray(generateCallTrace($error));
+        return new WP_Error('Logged in error', "Something went wrong 4.");
     }
 }
 
@@ -362,7 +567,7 @@ function finishAuthentication(){
 
         // Allow to bypass scheme verification when under localhost
         $currentDomain = $_SERVER['HTTP_HOST'];
-        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1" || str_contains($_SERVER['HTTP_HOST'], '.local')){
+        if($currentDomain === "localhost" || $currentDomain === "127.0.0.1"){
             $server->setSecuredRelyingPartyId([$currentDomain]);
         }
 

@@ -2,20 +2,30 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
-use function strlen;
-
-/**
- * @see \CBOR\Test\ByteStringObjectTest
- */
 final class ByteStringObject extends AbstractCBORObject implements Normalizable
 {
     private const MAJOR_TYPE = self::MAJOR_TYPE_BYTE_STRING;
 
-    private string $value;
+    /**
+     * @var string
+     */
+    private $value;
 
-    private ?string $length;
+    /**
+     * @var string|null
+     */
+    private $length;
 
     public function __construct(string $data)
     {
@@ -29,7 +39,9 @@ final class ByteStringObject extends AbstractCBORObject implements Normalizable
     public function __toString(): string
     {
         $result = parent::__toString();
-        $result .= $this->length ?? '';
+        if ($this->length !== null) {
+            $result .= $this->length;
+        }
 
         return $result . $this->value;
     }
@@ -46,10 +58,18 @@ final class ByteStringObject extends AbstractCBORObject implements Normalizable
 
     public function getLength(): int
     {
-        return strlen($this->value);
+        return mb_strlen($this->value, '8bit');
     }
 
     public function normalize(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @deprecated The method will be removed on v3.0. Please rely on the CBOR\Normalizable interface
+     */
+    public function getNormalizedData(bool $ignoreTags = false): string
     {
         return $this->value;
     }

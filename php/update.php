@@ -2,13 +2,6 @@
 namespace SIM\LOGIN;
 use SIM;
 
-
-use Symfony\Component\Serializer\Encoder\JsonEncode;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use Symfony\Component\Uid\Uuid;
-use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialSource;
-
 add_action('sim_login_module_update', __NAMESPACE__.'\pluginUpdate');
 function pluginUpdate($oldVersion){
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -32,35 +25,48 @@ function pluginUpdate($oldVersion){
         }
     }
 
-    if($oldVersion < '8.4.9'){
+    if($oldVersion < '9.0.0'){
         $users  = get_users([
-            'meta_key'      => '2fa_webautn_cred_meta',
+            'meta_key'      => '2fa_webautn_cred',
             'meta_compare'  => 'EXISTS'
         ]);
 
         foreach($users as $user){
-            $userKey   = get_user_meta($user->ID, '2fa_webauthn_key', true);
-            $userEntity = new PublicKeyCredentialUserEntity(
-                $user->user_login,
-                $userKey,
-                $user->display_name
-            );
+            /**
+             * Load old cred data
+             */
+            $userCred  = get_user_meta($user->ID, "2fa_webautn_cred", true);
+            delete_user_meta($user->ID, "2fa_webautn_cred");
 
-            $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository($user);
+            /**
+             * Add as seperate entries
+             */
+            foreach(unserialize(base64_decode($userCred)) as $cred){
+                $cred->removeAaguid();
+                add_user_meta($user->ID, "2fa_webautn_cred", base64_encode(serialize($cred)));
+            }
 
-            $list =  $publicKeyCredentialSourceRepository->getShowList($userEntity);
+            /**
+             * Load old cred meta data
+             */
+            $metas  = maybe_unserialize(get_user_meta($user->ID, "2fa_webautn_cred_meta", true));
+            delete_user_meta($user->ID, "2fa_webautn_cred_meta");
 
-            $cresd  = $publicKeyCredentialSourceRepository->read();
+            /**
+             * Add as seperate entries, rename user to userHandle
+             */
+            foreach($metas as $credId => $meta){
+                $meta['userHandle'] = $meta['user'];
+                unset($meta['user']);
 
-            $metadata   = maybe_unserialize(get_user_meta($user->ID, "2fa_webautn_cred_meta", true));
+                $meta['cred_id']    = $credId;
 
-            foreach($metadata as $id => $meta){
-                $publicKeyCredentialSourceRepository->findOneByCredentialId($id);
+                add_user_meta($user->ID, "2fa_webautn_cred_meta", base64_encode(serialize($cred)));
             }
         }
     }
 }
 
 add_action('init', function(){
-    //pluginUpdate('8.4.8');
+    //pluginUpdate('8.9.0');
 });

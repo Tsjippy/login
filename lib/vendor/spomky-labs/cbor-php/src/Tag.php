@@ -2,21 +2,38 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
-use CBOR\Tag\TagInterface;
 use InvalidArgumentException;
 
-abstract class Tag extends AbstractCBORObject implements TagInterface
+abstract class Tag extends AbstractCBORObject
 {
     private const MAJOR_TYPE = self::MAJOR_TYPE_TAG;
 
-    public function __construct(
-        int $additionalInformation,
-        protected ?string $data,
-        protected CBORObject $object
-    ) {
+    /**
+     * @var string|null
+     */
+    protected $data;
+
+    /**
+     * @var CBORObject
+     */
+    protected $object;
+
+    public function __construct(int $additionalInformation, ?string $data, CBORObject $object)
+    {
         parent::__construct(self::MAJOR_TYPE, $additionalInformation);
+        $this->data = $data;
+        $this->object = $object;
     }
 
     public function __toString(): string
@@ -33,6 +50,14 @@ abstract class Tag extends AbstractCBORObject implements TagInterface
     {
         return $this->data;
     }
+
+    abstract public static function getTagId(): int;
+
+    abstract public static function createFromLoadedData(
+        int $additionalInformation,
+        ?string $data,
+        CBORObject $object
+    ): self;
 
     public function getValue(): CBORObject
     {

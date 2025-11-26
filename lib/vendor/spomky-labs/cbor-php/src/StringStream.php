@@ -2,12 +2,19 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
 use InvalidArgumentException;
 use RuntimeException;
-use function sprintf;
-use function strlen;
 
 final class StringStream implements Stream
 {
@@ -55,21 +62,21 @@ final class StringStream implements Stream
             if ($newData === false) {
                 throw new RuntimeException('Unable to read the memory');
             }
-            if (strlen($newData) < $sizeToRead) {
+            if (mb_strlen($newData, '8bit') < $sizeToRead) {
                 throw new InvalidArgumentException(sprintf(
                     'Out of range. Expected: %d, read: %d.',
                     $length,
-                    strlen($data)
+                    mb_strlen($data, '8bit')
                 ));
             }
             $data .= $newData;
         }
 
-        if (strlen($data) !== $length) {
+        if (mb_strlen($data, '8bit') !== $length) {
             throw new InvalidArgumentException(sprintf(
                 'Out of range. Expected: %d, read: %d.',
                 $length,
-                strlen($data)
+                mb_strlen($data, '8bit')
             ));
         }
 

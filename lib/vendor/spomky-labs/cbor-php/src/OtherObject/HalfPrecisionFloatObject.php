@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR\OtherObject;
 
 use Brick\Math\BigInteger;
 use CBOR\Normalizable;
 use CBOR\OtherObject as Base;
 use CBOR\Utils;
-use InvalidArgumentException;
-use function strlen;
 use const INF;
+use InvalidArgumentException;
 use const NAN;
 
 final class HalfPrecisionFloatObject extends Base implements Normalizable
@@ -27,14 +35,25 @@ final class HalfPrecisionFloatObject extends Base implements Normalizable
 
     public static function create(string $value): self
     {
-        if (strlen($value) !== 2) {
+        if (mb_strlen($value, '8bit') !== 2) {
             throw new InvalidArgumentException('The value is not a valid half precision floating point');
         }
 
         return new self(self::OBJECT_HALF_PRECISION_FLOAT, $value);
     }
 
-    public function normalize(): float|int
+    /**
+     * @deprecated The method will be removed on v3.0. Please rely on the CBOR\Normalizable interface
+     */
+    public function getNormalizedData(bool $ignoreTags = false)
+    {
+        return $this->normalize();
+    }
+
+    /**
+     * @return float|int
+     */
+    public function normalize()
     {
         $exponent = $this->getExponent();
         $mantissa = $this->getMantissa();

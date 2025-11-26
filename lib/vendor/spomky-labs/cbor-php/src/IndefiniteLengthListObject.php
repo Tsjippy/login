@@ -2,21 +2,32 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
+use function array_key_exists;
 use ArrayAccess;
 use ArrayIterator;
+use function count;
+use Countable;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
-use function array_key_exists;
 
 /**
  * @phpstan-implements ArrayAccess<int, CBORObject>
  * @phpstan-implements IteratorAggregate<int, CBORObject>
  * @final
  */
-class IndefiniteLengthListObject extends AbstractCBORObject implements IteratorAggregate, Normalizable, ArrayAccess
+class IndefiniteLengthListObject extends AbstractCBORObject implements Countable, IteratorAggregate, Normalizable, ArrayAccess
 {
     private const MAJOR_TYPE = self::MAJOR_TYPE_LIST;
 
@@ -25,7 +36,7 @@ class IndefiniteLengthListObject extends AbstractCBORObject implements IteratorA
     /**
      * @var CBORObject[]
      */
-    private array $data = [];
+    private $data = [];
 
     public function __construct()
     {
@@ -42,14 +53,9 @@ class IndefiniteLengthListObject extends AbstractCBORObject implements IteratorA
         return $result . "\xFF";
     }
 
-    public static function create(CBORObject ...$items): self
+    public static function create(): self
     {
-        $object = new self();
-        foreach ($items as $item) {
-            $object->add($item);
-        }
-
-        return $object;
+        return new self();
     }
 
     /**
@@ -57,10 +63,21 @@ class IndefiniteLengthListObject extends AbstractCBORObject implements IteratorA
      */
     public function normalize(): array
     {
-        return array_map(
-            static fn (CBORObject $object) => $object instanceof Normalizable ? $object->normalize() : $object,
-            $this->data
-        );
+        return array_map(static function (CBORObject $object) {
+            return $object instanceof Normalizable ? $object->normalize() : $object;
+        }, $this->data);
+    }
+
+    /**
+     * @deprecated The method will be removed on v3.0. Please rely on the CBOR\Normalizable interface
+     *
+     * @return mixed[]
+     */
+    public function getNormalizedData(bool $ignoreTags = false): array
+    {
+        return array_map(static function (CBORObject $object) use ($ignoreTags) {
+            return $object->getNormalizedData($ignoreTags);
+        }, $this->data);
     }
 
     public function add(CBORObject $item): self
@@ -104,6 +121,14 @@ class IndefiniteLengthListObject extends AbstractCBORObject implements IteratorA
         $this->data[$index] = $object;
 
         return $this;
+    }
+
+    /**
+     * @deprecated The method will be removed on v3.0. No replacement
+     */
+    public function count(): int
+    {
+        return count($this->data);
     }
 
     /**

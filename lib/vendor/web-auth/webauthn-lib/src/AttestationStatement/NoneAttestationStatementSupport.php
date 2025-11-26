@@ -2,77 +2,41 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2021 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Webauthn\AttestationStatement;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Webauthn\AuthenticatorData;
-use Webauthn\Event\AttestationStatementLoaded;
-use Webauthn\Event\CanDispatchEvents;
-use Webauthn\Event\NullEventDispatcher;
-use Webauthn\Exception\AttestationStatementLoadingException;
-use Webauthn\TrustPath\EmptyTrustPath;
+use Assert\Assertion;
 use function count;
-use function is_array;
-use function is_string;
+use Webauthn\AuthenticatorData;
+use Webauthn\TrustPath\EmptyTrustPath;
 
-final class NoneAttestationStatementSupport implements AttestationStatementSupport, CanDispatchEvents
+final class NoneAttestationStatementSupport implements AttestationStatementSupport
 {
-    private EventDispatcherInterface $dispatcher;
-
-    public function __construct()
-    {
-        $this->dispatcher = new NullEventDispatcher();
-    }
-
-    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
-    {
-        $this->dispatcher = $eventDispatcher;
-    }
-
-    public static function create(): self
-    {
-        return new self();
-    }
-
     public function name(): string
     {
         return 'none';
     }
 
     /**
-     * @param array<string, mixed> $attestation
+     * @param mixed[] $attestation
      */
     public function load(array $attestation): AttestationStatement
     {
-        $format = $attestation['fmt'] ?? null;
-        $attestationStatement = $attestation['attStmt'] ?? [];
+        Assertion::noContent($attestation['attStmt'], 'Invalid attestation object');
 
-        (is_string($format) && $format !== '') || throw AttestationStatementLoadingException::create(
-            $attestation,
-            'Invalid attestation object'
-        );
-        (is_array(
-            $attestationStatement
-        ) && $attestationStatement === []) || throw AttestationStatementLoadingException::create(
-            $attestation,
-            'Invalid attestation object'
-        );
-
-        $attestationStatement = AttestationStatement::createNone(
-            $format,
-            $attestationStatement,
-            EmptyTrustPath::create()
-        );
-        $this->dispatcher->dispatch(AttestationStatementLoaded::create($attestationStatement));
-
-        return $attestationStatement;
+        return AttestationStatement::createNone($attestation['fmt'], $attestation['attStmt'], new EmptyTrustPath());
     }
 
-    public function isValid(
-        string $clientDataJSONHash,
-        AttestationStatement $attestationStatement,
-        AuthenticatorData $authenticatorData
-    ): bool {
-        return count($attestationStatement->attStmt) === 0;
+    public function isValid(string $clientDataJSONHash, AttestationStatement $attestationStatement, AuthenticatorData $authenticatorData): bool
+    {
+        return 0 === count($attestationStatement->getAttStmt());
     }
 }

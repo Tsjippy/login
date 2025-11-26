@@ -2,12 +2,21 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
 /**
- * @see \CBOR\Test\IndefiniteLengthTextStringObjectTest
+ * @final
  */
-final class IndefiniteLengthTextStringObject extends AbstractCBORObject implements Normalizable
+class IndefiniteLengthTextStringObject extends AbstractCBORObject implements Normalizable
 {
     private const MAJOR_TYPE = self::MAJOR_TYPE_TEXT_STRING;
 
@@ -16,7 +25,7 @@ final class IndefiniteLengthTextStringObject extends AbstractCBORObject implemen
     /**
      * @var TextStringObject[]
      */
-    private array $data = [];
+    private $data = [];
 
     public function __construct()
     {
@@ -33,14 +42,9 @@ final class IndefiniteLengthTextStringObject extends AbstractCBORObject implemen
         return $result . "\xFF";
     }
 
-    public static function create(string ...$chunks): self
+    public static function create(): self
     {
-        $object = new self();
-        foreach ($chunks as $chunk) {
-            $object->append($chunk);
-        }
-
-        return $object;
+        return new self();
     }
 
     public function add(TextStringObject $chunk): self
@@ -82,6 +86,19 @@ final class IndefiniteLengthTextStringObject extends AbstractCBORObject implemen
         $result = '';
         foreach ($this->data as $object) {
             $result .= $object->normalize();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @deprecated The method will be removed on v3.0. Please rely on the CBOR\Normalizable interface
+     */
+    public function getNormalizedData(bool $ignoreTags = false): string
+    {
+        $result = '';
+        foreach ($this->data as $object) {
+            $result .= $object->getNormalizedData($ignoreTags);
         }
 
         return $result;

@@ -2,16 +2,24 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2021 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Cose\Algorithm\Signature\ECDSA;
 
-use InvalidArgumentException;
 use function bin2hex;
 use function dechex;
-use function hex2bin;
 use function hexdec;
+use InvalidArgumentException;
+use function mb_strlen;
+use function mb_substr;
 use function str_pad;
-use function strlen;
-use function substr;
 use const STR_PAD_LEFT;
 
 /**
@@ -20,17 +28,11 @@ use const STR_PAD_LEFT;
 final class ECSignature
 {
     private const ASN1_SEQUENCE = '30';
-
     private const ASN1_INTEGER = '02';
-
     private const ASN1_MAX_SINGLE_BYTE = 128;
-
     private const ASN1_LENGTH_2BYTES = '81';
-
     private const ASN1_BIG_INTEGER_LIMIT = '7f';
-
     private const ASN1_NEGATIVE_INTEGER = '00';
-
     private const BYTE_SIZE = 2;
 
     public static function toAsn1(string $signature, int $length): string
@@ -41,8 +43,8 @@ final class ECSignature
             throw new InvalidArgumentException('Invalid signature length.');
         }
 
-        $pointR = self::preparePositiveInteger(substr($signature, 0, $length));
-        $pointS = self::preparePositiveInteger(substr($signature, $length, null));
+        $pointR = self::preparePositiveInteger(mb_substr($signature, 0, $length, '8bit'));
+        $pointS = self::preparePositiveInteger(mb_substr($signature, $length, null, '8bit'));
 
         $lengthR = self::octetLength($pointR);
         $lengthS = self::octetLength($pointS);
@@ -50,12 +52,17 @@ final class ECSignature
         $totalLength = $lengthR + $lengthS + self::BYTE_SIZE + self::BYTE_SIZE;
         $lengthPrefix = $totalLength > self::ASN1_MAX_SINGLE_BYTE ? self::ASN1_LENGTH_2BYTES : '';
 
-        return hex2bin(
+        $bin = hex2bin(
             self::ASN1_SEQUENCE
-            . $lengthPrefix . dechex($totalLength)
-            . self::ASN1_INTEGER . dechex($lengthR) . $pointR
-            . self::ASN1_INTEGER . dechex($lengthS) . $pointS
+            .$lengthPrefix.dechex($totalLength)
+            .self::ASN1_INTEGER.dechex($lengthR).$pointR
+            .self::ASN1_INTEGER.dechex($lengthS).$pointS
         );
+        if (false === $bin) {
+            throw new InvalidArgumentException('Unable to convert into ASN.1');
+        }
+
+        return $bin;
     }
 
     public static function fromAsn1(string $signature, int $length): string
@@ -63,37 +70,42 @@ final class ECSignature
         $message = bin2hex($signature);
         $position = 0;
 
-        if (self::readAsn1Content($message, $position, self::BYTE_SIZE) !== self::ASN1_SEQUENCE) {
+        if (self::ASN1_SEQUENCE !== self::readAsn1Content($message, $position, self::BYTE_SIZE)) {
             throw new InvalidArgumentException('Invalid data. Should start with a sequence.');
         }
 
         // @phpstan-ignore-next-line
-        if (self::readAsn1Content($message, $position, self::BYTE_SIZE) === self::ASN1_LENGTH_2BYTES) {
+        if (self::ASN1_LENGTH_2BYTES === self::readAsn1Content($message, $position, self::BYTE_SIZE)) {
             $position += self::BYTE_SIZE;
         }
 
         $pointR = self::retrievePositiveInteger(self::readAsn1Integer($message, $position));
         $pointS = self::retrievePositiveInteger(self::readAsn1Integer($message, $position));
 
-        return hex2bin(str_pad($pointR, $length, '0', STR_PAD_LEFT) . str_pad($pointS, $length, '0', STR_PAD_LEFT));
+        $bin = hex2bin(str_pad($pointR, $length, '0', STR_PAD_LEFT).str_pad($pointS, $length, '0', STR_PAD_LEFT));
+        if (false === $bin) {
+            throw new InvalidArgumentException('Unable to convert from ASN.1');
+        }
+
+        return $bin;
     }
 
     private static function octetLength(string $data): int
     {
-        return intdiv(strlen($data), self::BYTE_SIZE);
+        return intdiv(mb_strlen($data, '8bit'), self::BYTE_SIZE);
     }
 
     private static function preparePositiveInteger(string $data): string
     {
-        if (substr($data, 0, self::BYTE_SIZE) > self::ASN1_BIG_INTEGER_LIMIT) {
-            return self::ASN1_NEGATIVE_INTEGER . $data;
+        if (mb_substr($data, 0, self::BYTE_SIZE, '8bit') > self::ASN1_BIG_INTEGER_LIMIT) {
+            return self::ASN1_NEGATIVE_INTEGER.$data;
         }
 
         while (
-            str_starts_with($data, self::ASN1_NEGATIVE_INTEGER)
-            && substr($data, 2, self::BYTE_SIZE) <= self::ASN1_BIG_INTEGER_LIMIT
+            self::ASN1_NEGATIVE_INTEGER === mb_substr($data, 0, self::BYTE_SIZE, '8bit')
+            && mb_substr($data, 2, self::BYTE_SIZE, '8bit') <= self::ASN1_BIG_INTEGER_LIMIT
         ) {
-            $data = substr($data, 2, null);
+            $data = mb_substr($data, 2, null, '8bit');
         }
 
         return $data;
@@ -101,7 +113,7 @@ final class ECSignature
 
     private static function readAsn1Content(string $message, int &$position, int $length): string
     {
-        $content = substr($message, $position, $length);
+        $content = mb_substr($message, $position, $length, '8bit');
         $position += $length;
 
         return $content;
@@ -109,7 +121,7 @@ final class ECSignature
 
     private static function readAsn1Integer(string $message, int &$position): string
     {
-        if (self::readAsn1Content($message, $position, self::BYTE_SIZE) !== self::ASN1_INTEGER) {
+        if (self::ASN1_INTEGER !== self::readAsn1Content($message, $position, self::BYTE_SIZE)) {
             throw new InvalidArgumentException('Invalid data. Should contain an integer.');
         }
 
@@ -121,10 +133,10 @@ final class ECSignature
     private static function retrievePositiveInteger(string $data): string
     {
         while (
-            str_starts_with($data, self::ASN1_NEGATIVE_INTEGER)
-            && substr($data, 2, self::BYTE_SIZE) > self::ASN1_BIG_INTEGER_LIMIT
+            self::ASN1_NEGATIVE_INTEGER === mb_substr($data, 0, self::BYTE_SIZE, '8bit')
+            && mb_substr($data, 2, self::BYTE_SIZE, '8bit') > self::ASN1_BIG_INTEGER_LIMIT
         ) {
-            $data = substr($data, 2, null);
+            $data = mb_substr($data, 2, null, '8bit');
         }
 
         return $data;

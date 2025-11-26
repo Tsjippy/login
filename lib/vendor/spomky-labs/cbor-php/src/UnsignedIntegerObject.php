@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
 use Brick\Math\BigInteger;
@@ -12,11 +21,15 @@ final class UnsignedIntegerObject extends AbstractCBORObject implements Normaliz
 {
     private const MAJOR_TYPE = self::MAJOR_TYPE_UNSIGNED_INTEGER;
 
-    public function __construct(
-        int $additionalInformation,
-        private ?string $data
-    ) {
+    /**
+     * @var string|null
+     */
+    private $data;
+
+    public function __construct(int $additionalInformation, ?string $data)
+    {
         parent::__construct(self::MAJOR_TYPE, $additionalInformation);
+        $this->data = $data;
     }
 
     public function __toString(): string
@@ -58,22 +71,26 @@ final class UnsignedIntegerObject extends AbstractCBORObject implements Normaliz
         return self::MAJOR_TYPE;
     }
 
-    /**
-     * @return numeric-string
-     */
     public function getValue(): string
     {
         if ($this->data === null) {
             return (string) $this->additionalInformation;
         }
 
-        return BigInteger::fromBase(bin2hex($this->data), 16)->toBase(10);
+        $integer = BigInteger::fromBase(bin2hex($this->data), 16);
+
+        return $integer->toBase(10);
+    }
+
+    public function normalize(): string
+    {
+        return $this->getValue();
     }
 
     /**
-     * @return numeric-string
+     * @deprecated The method will be removed on v3.0. Please rely on the CBOR\Normalizable interface
      */
-    public function normalize(): string
+    public function getNormalizedData(bool $ignoreTags = false): string
     {
         return $this->getValue();
     }

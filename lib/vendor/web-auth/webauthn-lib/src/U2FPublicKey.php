@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Webauthn;
 
 use CBOR\ByteStringObject;
@@ -9,49 +7,40 @@ use CBOR\MapItem;
 use CBOR\MapObject;
 use CBOR\NegativeIntegerObject;
 use CBOR\UnsignedIntegerObject;
-use Cose\Algorithms;
-use Cose\Key\Ec2Key;
-use function strlen;
 
-/**
- * @internal
- */
-final readonly class U2FPublicKey
+class U2FPublicKey
 {
-    private const U2F_KEY_PREFIX = "\x04";
-
-    private const U2F_KEY_LENGTH = 65;
-
-    private const U2F_KEY_PART_SIZE = 32;
-
-    public static function isU2FKey(string $publicKey): bool
+    public static function isU2FKey($publicKey): bool
     {
-        return $publicKey[0] === self::U2F_KEY_PREFIX && strlen($publicKey) === self::U2F_KEY_LENGTH;
+        return $publicKey[0] === "\x04";
     }
 
-    public static function convertToCoseKey(string $publicKey): string
+    public static function createCOSEKey($publicKey): string
     {
-        return MapObject::create([
-            MapItem::create(
-                UnsignedIntegerObject::create(Ec2Key::TYPE),
-                UnsignedIntegerObject::create(Ec2Key::TYPE_EC2)
+
+        $mapObject = new MapObject([
+            1 => MapItem::create(
+                new UnsignedIntegerObject(1, null),
+                new UnsignedIntegerObject(2, null)
             ),
-            MapItem::create(
-                UnsignedIntegerObject::create(Ec2Key::ALG),
-                NegativeIntegerObject::create(Algorithms::COSE_ALGORITHM_ES256)
+            3 => MapItem::create(
+                new UnsignedIntegerObject(3, null),
+                new NegativeIntegerObject(6, null)
             ),
-            MapItem::create(
-                NegativeIntegerObject::create(Ec2Key::DATA_CURVE),
-                UnsignedIntegerObject::create(Ec2Key::CURVE_P256)
+            -1 => MapItem::create(
+                new NegativeIntegerObject(0, null),
+                new UnsignedIntegerObject(1, null)
             ),
-            MapItem::create(
-                NegativeIntegerObject::create(Ec2Key::DATA_X),
-                ByteStringObject::create(substr($publicKey, 1, self::U2F_KEY_PART_SIZE))
+            -2 => MapItem::create(
+                new NegativeIntegerObject(1, null),
+                new ByteStringObject(substr($publicKey, 1, 32))
             ),
-            MapItem::create(
-                NegativeIntegerObject::create(Ec2Key::DATA_Y),
-                ByteStringObject::create(substr($publicKey, 1 + self::U2F_KEY_PART_SIZE))
+            -3 => MapItem::create(
+                new NegativeIntegerObject(2, null),
+                new ByteStringObject(substr($publicKey, 33))
             ),
-        ])->__toString();
+        ]);
+
+        return $mapObject->__toString();
     }
 }

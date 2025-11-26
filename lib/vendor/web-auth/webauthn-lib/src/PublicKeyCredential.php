@@ -2,30 +2,61 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2021 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Webauthn;
+
+use function Safe\json_encode;
 
 /**
  * @see https://www.w3.org/TR/webauthn/#iface-pkcredential
  */
 class PublicKeyCredential extends Credential
 {
-    public function __construct(
-        string $type,
-        string $rawId,
-        public readonly AuthenticatorResponse $response
-    ) {
-        parent::__construct($type, $rawId);
+    /**
+     * @var string
+     */
+    protected $rawId;
+
+    /**
+     * @var AuthenticatorResponse
+     */
+    protected $response;
+
+    public function __construct(string $id, string $type, string $rawId, AuthenticatorResponse $response)
+    {
+        parent::__construct($id, $type);
+        $this->rawId = $rawId;
+        $this->response = $response;
     }
 
-    public static function create(string $type, string $rawId, AuthenticatorResponse $response): self
+    public function __toString()
     {
-        return new self($type, $rawId, $response);
+        return json_encode($this);
     }
 
-    public function getPublicKeyCredentialDescriptor(): PublicKeyCredentialDescriptor
+    public function getRawId(): string
     {
-        $transport = $this->response instanceof AuthenticatorAttestationResponse ? $this->response->transports : [];
+        return $this->rawId;
+    }
 
-        return PublicKeyCredentialDescriptor::create($this->type, $this->rawId, $transport);
+    public function getResponse(): AuthenticatorResponse
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param string[] $transport
+     */
+    public function getPublicKeyCredentialDescriptor(array $transport = []): PublicKeyCredentialDescriptor
+    {
+        return new PublicKeyCredentialDescriptor($this->getType(), $this->getRawId(), $transport);
     }
 }

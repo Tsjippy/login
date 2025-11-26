@@ -2,7 +2,6 @@
 namespace SIM\LOGIN;
 use SIM;
 use RobThree\Auth\TwoFactorAuth;
-use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -28,7 +27,7 @@ if(!class_exists('RobThree\Auth\TwoFactorAuth')){
 function setupTimeCode(){
     $user                           = wp_get_current_user();
     $userId                         = $user->ID;
-    $twofa                          = new TwoFactorAuth(new BaconQrCodeProvider());
+    $twofa                          = new TwoFactorAuth();
     $setupDetails                   = new stdClass();
     $setupDetails->secretKey        = $twofa->createSecret();
 
@@ -158,8 +157,7 @@ function authenticate( $user) {
         
         //we did a succesfull webauthn or are on localhost
         if(
-            $_SERVER['HTTP_HOST'] == 'localhost'  || 
-            str_contains($_SERVER['HTTP_HOST'], '.local') || 
+            $_SERVER['HTTP_HOST'] == 'localhost' || 
             in_array('webauthn', $methods) && $_SESSION['webauthn'] == 'success'){
             //succesfull webauthentication done before
         }elseif(in_array('authenticator', $methods)){

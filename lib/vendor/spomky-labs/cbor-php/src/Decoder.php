@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
 use CBOR\OtherObject\BreakObject;
@@ -33,30 +42,49 @@ use CBOR\Tag\TimestampTag;
 use CBOR\Tag\UnsignedBigIntegerTag;
 use CBOR\Tag\UriTag;
 use InvalidArgumentException;
-use RuntimeException;
 use function ord;
-use function sprintf;
+use RuntimeException;
 use const STR_PAD_LEFT;
 
 final class Decoder implements DecoderInterface
 {
-    private TagManagerInterface $tagObjectManager;
+    /**
+     * @var Tag\TagManagerInterface
+     */
+    private $tagManager;
 
-    private OtherObjectManagerInterface $otherTypeManager;
+    /**
+     * @var OtherObject\OtherObjectManagerInterface
+     */
+    private $otherObjectManager;
 
     public function __construct(
-        ?TagManagerInterface $tagObjectManager = null,
+        ?TagManagerInterface $tagManager = null,
         ?OtherObjectManagerInterface $otherTypeManager = null
     ) {
-        $this->tagObjectManager = $tagObjectManager ?? $this->generateTagManager();
-        $this->otherTypeManager = $otherTypeManager ?? $this->generateOtherObjectManager();
+        $this->tagManager = $tagManager ?? $this->generateTagManager();
+        $this->otherObjectManager = $otherTypeManager ?? $this->generateOtherObjectManager();
     }
 
     public static function create(
-        ?TagManagerInterface $tagObjectManager = null,
-        ?OtherObjectManagerInterface $otherTypeManager = null
+        ?TagManagerInterface $tagManager = null,
+        ?OtherObjectManagerInterface $otherObjectManager = null
     ): self {
-        return new self($tagObjectManager, $otherTypeManager);
+        return new self($tagManager, $otherObjectManager);
+    }
+
+    public function withTagManager(TagManagerInterface $tagManager): self
+    {
+        $this->tagManager = $tagManager;
+
+        return $this;
+    }
+
+    public function withOtherObjectManager(OtherObjectManagerInterface $otherObjectManager): self
+    {
+        $this->otherObjectManager = $otherObjectManager;
+
+        return $this;
     }
 
     public function decode(Stream $stream): CBORObject
@@ -124,9 +152,9 @@ final class Decoder implements DecoderInterface
 
                 return $object;
             case CBORObject::MAJOR_TYPE_TAG: //6
-                return $this->tagObjectManager->createObjectForValue($ai, $val, $this->process($stream, false));
+                return $this->tagManager->createObjectForValue($ai, $val, $this->process($stream, false));
             case CBORObject::MAJOR_TYPE_OTHER_TYPE: //7
-                return $this->otherTypeManager->createObjectForValue($ai, $val);
+                return $this->otherObjectManager->createObjectForValue($ai, $val);
             default:
                 throw new RuntimeException(sprintf(
                     'Unsupported major type "%s" (%d).',
@@ -199,28 +227,28 @@ final class Decoder implements DecoderInterface
 
     private function generateTagManager(): TagManagerInterface
     {
-        return TagManager::create([
-            DatetimeTag::class,
-            TimestampTag::class,
+        return TagManager::create()
+            ->add(DatetimeTag::class)
+            ->add(TimestampTag::class)
 
-            UnsignedBigIntegerTag::class,
-            NegativeBigIntegerTag::class,
+            ->add(UnsignedBigIntegerTag::class)
+            ->add(NegativeBigIntegerTag::class)
 
-            DecimalFractionTag::class,
-            BigFloatTag::class,
+            ->add(DecimalFractionTag::class)
+            ->add(BigFloatTag::class)
 
-            Base64UrlEncodingTag::class,
-            Base64EncodingTag::class,
-            Base16EncodingTag::class,
-            CBOREncodingTag::class,
+            ->add(Base64UrlEncodingTag::class)
+            ->add(Base64EncodingTag::class)
+            ->add(Base16EncodingTag::class)
+            ->add(CBOREncodingTag::class)
 
-            UriTag::class,
-            Base64UrlTag::class,
-            Base64Tag::class,
-            MimeTag::class,
+            ->add(UriTag::class)
+            ->add(Base64UrlTag::class)
+            ->add(Base64Tag::class)
+            ->add(MimeTag::class)
 
-            CBORTag::class,
-        ]);
+            ->add(CBORTag::class)
+        ;
     }
 
     private function generateOtherObjectManager(): OtherObjectManagerInterface
@@ -235,6 +263,6 @@ final class Decoder implements DecoderInterface
             ->add(HalfPrecisionFloatObject::class)
             ->add(SinglePrecisionFloatObject::class)
             ->add(DoublePrecisionFloatObject::class)
-        ;
+            ;
     }
 }

@@ -2,12 +2,21 @@
 
 declare(strict_types=1);
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2018-2020 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace CBOR;
 
 /**
- * @see \CBOR\Test\IndefiniteLengthByteStringObjectTest
+ * @final
  */
-final class IndefiniteLengthByteStringObject extends AbstractCBORObject implements Normalizable
+class IndefiniteLengthByteStringObject extends AbstractCBORObject implements Normalizable
 {
     private const MAJOR_TYPE = self::MAJOR_TYPE_BYTE_STRING;
 
@@ -16,7 +25,7 @@ final class IndefiniteLengthByteStringObject extends AbstractCBORObject implemen
     /**
      * @var ByteStringObject[]
      */
-    private array $chunks = [];
+    private $chunks = [];
 
     public function __construct()
     {
@@ -27,20 +36,15 @@ final class IndefiniteLengthByteStringObject extends AbstractCBORObject implemen
     {
         $result = parent::__toString();
         foreach ($this->chunks as $chunk) {
-            $result .= (string) $chunk;
+            $result .= $chunk->__toString();
         }
 
         return $result . "\xFF";
     }
 
-    public static function create(string ...$chunks): self
+    public static function create(): self
     {
-        $object = new self();
-        foreach ($chunks as $chunk) {
-            $object->append($chunk);
-        }
-
-        return $object;
+        return new self();
     }
 
     public function add(ByteStringObject $chunk): self
@@ -82,6 +86,19 @@ final class IndefiniteLengthByteStringObject extends AbstractCBORObject implemen
         $result = '';
         foreach ($this->chunks as $chunk) {
             $result .= $chunk->normalize();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @deprecated The method will be removed on v3.0. Please rely on the CBOR\Normalizable interface
+     */
+    public function getNormalizedData(bool $ignoreTags = false): string
+    {
+        $result = '';
+        foreach ($this->chunks as $chunk) {
+            $result .= $chunk->getNormalizedData($ignoreTags);
         }
 
         return $result;
