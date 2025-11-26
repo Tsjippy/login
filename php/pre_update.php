@@ -4,6 +4,7 @@ use SIM;
 
 add_action("sim-github-before-updating-module-login", __NAMESPACE__.'\preUpdate');
 function preUpdate($oldVersion){
+    SIM\printArray($oldVersion);
     if($oldVersion < '9.0.0'){
         $users  = get_users([
             'meta_key'      => '2fa_webautn_cred',
@@ -56,5 +57,7 @@ function preUpdate($oldVersion){
         }
 
         update_option('sim-webauth-user-handles', $userHandles);
+
+        SIM\printArray($userHandles);
     }
 }
