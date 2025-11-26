@@ -7,6 +7,7 @@
 - composer updated
 - webauthn update to 5.2
 - added cred metas retrieval
+- prepare for upgrade to version 9.0.0
 
 ### Fixed
 - login problems
