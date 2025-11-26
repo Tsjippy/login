@@ -4,6 +4,8 @@ import {
 	showMessage
 } from './shared.js';
 
+import { startAuthentication } from '@simplewebauthn/browser';
+
 let credParsing			        = false;
 let abortController;
 
@@ -16,111 +18,56 @@ window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 );
 
 /**
+ * Do a webauthn verification after loggin with username and password
  * 
  * @param {string} username The user name to authenticate
  * @param {*} messageEl the html onject to display messages in
  */
-export async function webAuthVerification(username, messageEl=null){
-	if(messageEl != null){
-		messageEl.classList.remove('success');
-		messageEl.classList.remove('error');
-	}
-
-	try{
-		// Get the challenge
-		let formData			= new FormData();
+export async function webAuthVerification(username){
+	try {
+		// 1. Fetch authentication options from server
+		let formData				= new FormData();
 		formData.append('username', username);
 
-		let response			= await FormSubmit.fetchRestApi('login/auth_start', formData);
-		if(!response){
+		const optionsJSON					= await FormSubmit.fetchRestApi('login/auth_start', formData);
+		if(!optionsJSON){
 			throw new Error('Fetching Server Challenge failed');
 		}
 
-		let publicKey			= preparePublicKeyOptions(response);
-
 		// Update message
-		if(messageEl != null){
-			messageEl.textContent	= 'Waiting for biometric';
-		}
+		sim.login.loadingScreen('Verifying credentials...');
 
-		// Verify on device
-		let credentials			= await navigator.credentials.get({	publicKey });
+		// 2. Start authentication (handles encoding automatically)
+		const assertionResponse 	= await startAuthentication({ ...optionsJSON, useBrowserAutofill: true });
 
-		// Update message
-		if(messageEl != null){
-			messageEl.textContent	= 'Verifying...';
-		}
-
-		// Verify on the server
-		const publicKeyCredential 	= preparePublicKeyCredentials(credentials);
+		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
 		formData					= new FormData(form);
-		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
-		response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
-		if(!response){
+		formData.append('publicKeyCredential', btoa(JSON.stringify(assertionResponse)));
+		let response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
+		if(!response || response.verified){
 			throw new Error('Verification failed');
 		}
 
-		if(messageEl != null){
-			messageEl.textContent	= 'Verification successfull';
-		}else{
-			Main.displayMessage('Verification successfull');
-		}
+		showMessage('Verification successfull');
 
 		return true;
-	}catch(error){
-		console.error(error);
+	} catch (error) {
+		console.error('Authentication failed:', error);
 
-		if(messageEl != null){
-			messageEl.textContent	= error;
-		}else{
-			Main.displayMessage(error, 'error');
-		}
+		showMessage(error);
 
 		return false;
 	}
 }
 
-export async function processCredential(credential){
-	if(credParsing){
-		return;
-	}
-
-	if (credential) {
-		credParsing	= true;
-
-		sim.login.loadingScreen('Verifying credentials...');
-
-		// Verify on the server
-		const publicKeyCredential 	= preparePublicKeyCredentials(credential);
-		let formData				= new FormData(document.getElementById('loginform'));
-		formData.append('publicKeyCredential', JSON.stringify(publicKeyCredential));
-		let response				= await FormSubmit.fetchRestApi('login/auth_finish', formData, false);
-
-		if(response){
-			showMessage('Passkey login succesfull');
-		}else{
-			sim.login.reset();
-
-			showMessage('Passkey login failed, try using your username and password');
-
-			return false;
-		}
-
-		//authentication success
-		return await sim.login.requestLogin();
-
-	} else {
-		console.log("Credential returned null");
-
-		sim.login.resetForm();
-
-		showMessage('Passkey login failed');
-
-		return false;
-	}
-}
-
+/**
+ * Start passkey login without username
+ * 
+ * @param {string} mediation the type of request
+ * 
+ * @returns 
+ */
 export let startConditionalRequest = async (mediation) => {
 	if (window.PublicKeyCredential && PublicKeyCredential.isConditionalMediationAvailable) {
 		console.log("Conditional UI is understood by the browser");
@@ -137,69 +84,18 @@ export let startConditionalRequest = async (mediation) => {
 		}
 	}
 
-	if(abortController != undefined){
-		console.log('Cancelling previous request');
-		abortController.abort('aborted');
-	}
-	
-	abortController	= new AbortController();
-		
-	abortController.onAbort	= function(ev){
-		console.log(ev);
-	}
-	abortController.signal.onAbort	= function(ev){
-		console.log(ev);
-	}
+	sim.login.loadingScreen('Performing passkey login');
 
-	if(mediation != 'conditional'){
-		sim.login.loadingScreen('Performing passkey login');
-	}
+	let webauthResult =  await webAuthVerification('');
 
-	try {
-		let formData			= new FormData();
-		formData.append('username', '');
+	if(webauthResult){
+		showMessage('Passkey login succesfull');
 
-		let response			= await FormSubmit.fetchRestApi('login/auth_start', formData);
-		if(!response){
-			throw new Error('auth_start failed');
-		}
+		return await sim.login.requestLogin();
+	}else{
+		sim.login.reset();
 
-		let publicKey			= preparePublicKeyOptions(response);
-
-		let credential = await navigator.credentials.get({
-			signal: abortController.signal,
-			publicKey: {
-				challenge: publicKey.challenge
-			},
-			//mediation: 'silent',
-			//mediation: 'conditional',
-			//mediation: 'required',
-			mediation: mediation
-		});
-
-		if(mediation == 'conditional'){	
-			sim.login.loadingScreen('Performing passkey login');
-		}
-		
-		return await processCredential(credential);
-	} catch (error) {
-		if (error == "aborted") {
-			console.log("request aborted");
-			return false;
-		}
-
-		if(error.message.includes('A request is already pending.')){
-			startConditionalRequest(mediation);
-		}
-
-		// only do when login modal is open
-		if(sim.login != null){
-			sim.login.resetForm();
-
-			showMessage('Passkey login failed, try using your username and password');
-		}
-
-		console.log(error);
+		showMessage('Passkey login failed, try using your username and password');
 
 		return false;
 	}

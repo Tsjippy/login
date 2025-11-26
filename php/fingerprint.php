@@ -206,9 +206,9 @@ function authenticatorList(){
         $user->display_name
     );
 
-    $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository($user);
+    //$publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository($user);
 
-    return $publicKeyCredentialSourceRepository->getShowList($userEntity);
+    //return $publicKeyCredentialSourceRepository->getShowList($userEntity);
 }
 
 /**

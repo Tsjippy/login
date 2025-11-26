@@ -11,6 +11,7 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use WP_Error;
+use ptlis\SerializedDataEditor\Editor;
 
 // Allow rest api urls for non-logged in users
 add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addBioUrls');
@@ -31,6 +32,13 @@ function bioRestApi() {
         '/fingerprint_options',
         array(
             'methods'               => 'POST,GET',
+<<<<<<< HEAD
+            'callback'              => function(){
+                $ceremony    = new CreationCeremony();
+                return $ceremony->createOptions();
+            },
+            'permission_callback'   => '__return_true'
+=======
             'callback'              => __NAMESPACE__.'\biometricOptions',
             'permission_callback'   => '__return_true',
             'args'					=> array(
@@ -38,6 +46,7 @@ function bioRestApi() {
 					'required'	=> true
 				),
 			)
+>>>>>>> aae95013b6ad27861a1e06f60bc0bd047a6a42f8
 		)
 	);
 
@@ -47,7 +56,21 @@ function bioRestApi() {
         '/store_fingerprint',
         array(
             'methods'               => 'POST,GET',
+<<<<<<< HEAD
+            'callback'              => function(){
+                $credential  = base64_decode(sanitize_text_field($_POST["publicKeyCredential"]));
+
+                // Check param
+                if(empty($credential)){
+                    return new WP_Error('Logged in error', "No credential data supplied");
+                }
+
+                $ceremony    = new CreationCeremony();
+                return $ceremony->verifyResponse($credential, sanitize_text_field($_POST['identifier']));
+            },
+=======
             'callback'              => __NAMESPACE__.'\storeBiometric',
+>>>>>>> aae95013b6ad27861a1e06f60bc0bd047a6a42f8
             'permission_callback'   => '__return_true',
             'args'					=> array(
 				'publicKeyCredential'		=> array(
@@ -63,7 +86,10 @@ function bioRestApi() {
         '/auth_start',
         array(
             'methods' => 'POST',
-            'callback' => __NAMESPACE__.'\startAuthentication',
+            'callback' => function(){
+                $ceremony    = new RequestCeremony();
+                return $ceremony->createOptions();
+            },
             'permission_callback' => '__return_true',
             'args'					=> array(
 				'username'		=> array(
@@ -79,7 +105,22 @@ function bioRestApi() {
         '/auth_finish',
         array(
             'methods' => 'POST,GET',
-            'callback' => __NAMESPACE__.'\finishAuthentication',
+            'callback' => function(){
+                $credential  = base64_decode(sanitize_text_field($_POST["publicKeyCredential"]));
+
+                // Check param
+                if(empty($credential)){
+                    return new WP_Error('Logged in error', "No credential data supplied");
+                }
+
+                $isPassKeyLogin = false;
+                if(empty($_POST['username'])){
+                    $isPassKeyLogin = true;
+                }
+
+                $ceremony       = new RequestCeremony();
+                return $ceremony->verifyResponse($credential, $isPassKeyLogin);
+            },
             'permission_callback' => '__return_true',
             'args'					=> array(
 				'publicKeyCredential'		=> array(
@@ -176,6 +217,8 @@ function requestEmailCode(){
     }
 }
 
+<<<<<<< HEAD
+=======
 function removeWebAuthenticator(){
     $key        = sanitize_text_field($_POST['key']);
     $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository(wp_get_current_user());
@@ -603,6 +646,7 @@ function finishAuthentication(){
     }
 }
 
+>>>>>>> aae95013b6ad27861a1e06f60bc0bd047a6a42f8
 add_filter( 'check_password', __NAMESPACE__.'\checkBioPassword', 10, 4);
 function checkBioPassword($check, $password, $storedHash, $userId ){
     if(empty($check) && empty($storedHash)){
