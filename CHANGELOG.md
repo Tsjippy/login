@@ -10,6 +10,7 @@
 - prepare for upgrade to version 9.0.0
 - webauthn version bump from 3.3 tot 5.2
 - implemented getFromTransient
+- removed admin_email_check_interval false return
 
 ### Fixed
 - login problems
