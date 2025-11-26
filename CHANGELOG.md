@@ -4,6 +4,15 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.4.9] - 2025-11-26
+
+
+### Changed
 - composer updated
 - webauthn update to 5.2
 - added cred metas retrieval
@@ -17,8 +26,6 @@
 - get challenge
 - update flow
 - merging issues
-
-### Updated
 
 ## [8.4.8] - 2025-11-21
 
