@@ -2,16 +2,8 @@
 namespace SIM\LOGIN;
 use SIM;
 use RobThree\Auth\TwoFactorAuth;
-use Webauthn\Server;
-use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialSource;
-use Webauthn\AuthenticatorSelectionCriteria;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7Server\ServerRequestCreator;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use WP_Error;
-use ptlis\SerializedDataEditor\Editor;
 
 // Allow rest api urls for non-logged in users
 add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addBioUrls');
@@ -174,7 +166,7 @@ function bioRestApi() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
-                storeInTransient('webauthn', 'failed');
+                SIM\storeInTransient('webauthn', 'failed');
 
                 return 'Marked as failed';
             },
@@ -204,17 +196,14 @@ function requestEmailCode(){
 }
 
 function removeWebAuthenticator(){
-    $key        = sanitize_text_field($_POST['key']);
-    $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository(wp_get_current_user());
-    $publicKeyCredentialSourceRepository->removeCredential($key);
-
+    $key        = sanitize_text_field($_POST['userHandle']);
     // store id for keypasslogin without username
-    $usedIds    = get_option('sim-webauth-ids');
+    $usedIds    = get_option('sim-webauth-user-handles', []);
     if(!$usedIds){
         $usedIds    = [];
     }
-    unset($usedIds[$_POST['key']]);
-    update_option('sim-webauth-ids', $usedIds);
+    unset($usedIds[$key]);
+    update_option('sim-webauth-user-handles', $usedIds);
 
     return 'Succesfull removed the authenticator';
 }
@@ -242,14 +231,9 @@ function checkBioPassword($check, $password, $storedHash, $userId ){
 		if ($hash[0] === '*')
 			$hash = crypt($password, $stored_hash);
 
-        //SIM\printArray(wp_hash_password( $password ));
-        //SIM\printArray($storedHash);
-        //SIM\printArray($hash);
-
         $check  = $hash === $storedHash;
         if($check){
             wp_set_password( $password, $userId );
-            //SIM\printArray($userId);
         }
     }
 
@@ -264,7 +248,7 @@ function saveTwoFaSettings(){
 
     $oldMethods     = get_user_meta($userId, '2fa_methods');
 
-    $twofa          = new TwoFactorAuth();
+    $twofa          = new TwoFactorAuth(new BaconQrCodeProvider());
 
     $message        = 'Nothing to update';
 

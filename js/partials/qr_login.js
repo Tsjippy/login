@@ -1,6 +1,4 @@
-import {
-	showMessage
-} from './shared.js';
+import { showMessage } from './shared.js';
 
 let intervalId;
 let checkCount			= 5;

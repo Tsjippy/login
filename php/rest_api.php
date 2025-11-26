@@ -1,15 +1,6 @@
 <?php
 namespace SIM\LOGIN;
 use SIM;
-use RobThree\Auth\TwoFactorAuth;
-use Webauthn\Server;
-use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialSource;
-use Webauthn\AuthenticatorSelectionCriteria;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7Server\ServerRequestCreator;
 use WP_Error;
 
 // Allow rest api urls for non-logged in users
@@ -198,7 +189,7 @@ function checkCredentials(){
         $methods  = get_user_meta($user->ID, '2fa_methods');
 
         if(!in_array('webauthn', $methods)){
-            storeInTransient('webauthn', 'failed');
+            SIM\storeInTransient('webauthn', 'failed');
         }
 
         //return the methods
@@ -470,18 +461,14 @@ function allowPasswordlessLogin( $user, $username, $password ) {
 
     session_start();
 
-    if(isset($_SESSION['allow_passwordless_login'])){
-        deleteFromTransient('allow_passwordless_login');
-        deleteFromTransient('pkcco');
-        deleteFromTransient('pkcco_auth');
-        deleteFromTransient('userEntity');
-        deleteFromTransient('user_info');
-        deleteFromTransient('webauthn');
-        deleteFromTransient('user');
+    if(SIM\getFromTransient('allow_passwordless_login')){
+        SIM\deleteFromTransient('allow_passwordless_login');
+        SIM\deleteFromTransient('webauthn');
+        SIM\deleteFromTransient('user');
 
         session_write_close();
 
-        $user   =  get_user_by( 'login', getFromTransient('username') );
+        $user   =  get_user_by( 'login', SIM\getFromTransient('username') );
 
         return $user;
     }

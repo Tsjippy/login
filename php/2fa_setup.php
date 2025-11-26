@@ -28,18 +28,6 @@ function twoFaSettingsForm($userId=''){
 	if(!is_numeric($userId)){
 		$userId = get_current_user_id();
 	}
-
-	if(!isset($_SESSION)){
-		session_start();
-	}
-
-	if(!empty($_SESSION["webautn_id"])){
-		$publicKeyCredentialId	= $_SESSION["webautn_id"];
-	}else{
-		$publicKeyCredentialId	= null;
-	}
-
-	session_write_close();
 	
 	ob_start();
 	$twoFaMethods	= get_user_meta($userId, '2fa_methods');
@@ -154,8 +142,8 @@ function twoFaSettingsForm($userId=''){
 
 	<div id='webauthn-wrapper' class='hidden'>
 		<?php
-		
-		echo authTable($publicKeyCredentialId);
+		$webAuthCeremony	= new WebAuthCeremony();
+		echo $webAuthCeremony->authTable($userId);
 		?>
 	</div>
 	<?php

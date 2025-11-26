@@ -1,8 +1,6 @@
 // Import the registration hook
 import { checkWebauthnAvailable } from './partials/webauth.js';
 
-import { preparePublicKeyOptions, preparePublicKeyCredentials } from './partials/shared.js';
-
 import { startRegistration } from '@simplewebauthn/browser'
 
 import DeviceDetector from "device-detector-js";
@@ -75,12 +73,15 @@ async function register(){
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-	if( checkWebauthnAvailable()){
-        try{
-		    await register();
-		    Main.hideModals();
-        }catch(error){
-            console.error(error);
-        }
-    }
+	if(window.webauth_register == undefined){
+		window.webauth_register	= 'running';
+		if( checkWebauthnAvailable()){
+			try{
+				await register();
+				Main.hideModals();
+			}catch(error){
+				console.error(error);
+			}
+		}
+	}
 });

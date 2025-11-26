@@ -66,14 +66,9 @@ function setupTimeCode(){
 function sendEmailCode($user){
     $emailCode  = mt_rand(1000000000,9999999999);
 
-    if(!isset($_SESSION)){
-        session_start();
-    }
-    $_SESSION['2fa_email_key']  = $emailCode;
+    SIM\storeInTransient('2fa_email_key', $emailCode);
 
-    session_write_close();
-
-    $twoFaEmail    = new TwoFaEmail($user, $emailCode);
+    $twoFaEmail = new TwoFaEmail($user, $emailCode);
 	$twoFaEmail->filterMail();
 						
 	return wp_mail( $user->user_email, $twoFaEmail->subject, $twoFaEmail->message);
@@ -85,15 +80,9 @@ function sendEmailCode($user){
  * @return  bool    true if valid code false otherwise
  */
 function verifyEmailCode(){
-    if(!isset($_SESSION)){
-        session_start();
-    }
-    $emailCode = $_SESSION['2fa_email_key'];
+    if(SIM\getFromTransient('2fa_email_key') == $_POST['email-code']){
+        SIM\deleteFromTransient('2fa_email_key');
 
-    if($emailCode == $_POST['email-code']){
-        unset($_SESSION['2fa_email_key']);
-
-        session_write_close();
         return true;
     }
     
@@ -147,20 +136,16 @@ function authenticate( $user) {
     
     $methods    = get_user_meta($user->ID, '2fa_methods');
     if(!empty($methods)){
-        if(!isset($_SESSION)){
-            session_start();
-        }
-
         // Remove webautn_id if webauthn was unsuccesfull
-        if(!empty($_SESSION['webautn_id']) && $_SESSION['webauthn'] != 'success'){
-            unset($_SESSION['webautn_id']);
+        if(SIM\getFromTransient('webautn_id') && SIM\getFromTransient('webauthn') != 'success'){
+            SIM\deleteFromTransient('webautn_id');
         }
         
         //we did a succesfull webauthn or are on localhost
         if(
             $_SERVER['HTTP_HOST'] == 'localhost'  || 
             str_contains($_SERVER['HTTP_HOST'], '.local') || 
-            in_array('webauthn', $methods) && $_SESSION['webauthn'] == 'success'){
+            in_array('webauthn', $methods) && SIM\getFromTransient('webauthn') == 'success'){
             //succesfull webauthentication done before
         }elseif(in_array('authenticator', $methods)){
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
@@ -207,15 +192,6 @@ function authenticate( $user) {
         send2faWarningEmail($user);
     }
 
-    if(isset($_SESSION)){
-        unset($_SESSION['pkcco_auth']);
-        unset($_SESSION['user_name_auth']);
-        unset($_SESSION['user_auth']);
-        unset($_SESSION['user_info']);
-    }
-
-    session_write_close();
-
     return $user;
 }
 
@@ -232,10 +208,6 @@ function redirectTo2fa(){
     //If 2fa not enabled and we are not on the account page
     $methods	= get_user_meta($user->ID, '2fa_methods');
 
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
     if (
         is_user_logged_in()                             &&	// we are logged in
         !str_contains($user->user_email,'.empty')       && 	// we have a valid email
@@ -243,7 +215,7 @@ function redirectTo2fa(){
         (
             !$methods                                   ||	// and we have no 2fa enabled or
             (
-                !isset($_SESSION['webauthn'])           &&  // the current login is not with webauth
+                !SIM\getFromTransient('webauthn')       &&  // the current login is not with webauth
                 count($methods) == 1                    &&	// and we only have one 2fa method
                 in_array('webauthn', $methods)				// and that method is webauthn
             )

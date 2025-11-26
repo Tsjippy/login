@@ -1,13 +1,6 @@
-import {
-    preparePublicKeyCredentials,
-    preparePublicKeyOptions,
-	showMessage
-} from './shared.js';
+import { showMessage } from './shared.js';
 
 import { startAuthentication } from '@simplewebauthn/browser';
-
-let credParsing			        = false;
-let abortController;
 
 window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 	result => {
@@ -29,7 +22,7 @@ export async function webAuthVerification(username){
 		let formData				= new FormData();
 		formData.append('username', username);
 
-		const optionsJSON					= await FormSubmit.fetchRestApi('login/auth_start', formData);
+		const optionsJSON			= await FormSubmit.fetchRestApi('login/auth_start', formData);
 		if(!optionsJSON){
 			throw new Error('Fetching Server Challenge failed');
 		}
@@ -37,13 +30,14 @@ export async function webAuthVerification(username){
 		// Update message
 		sim.login.loadingScreen('Verifying credentials...');
 
-		// 2. Start authentication (handles encoding automatically)
+		// 2. Start authentication
 		const assertionResponse 	= await startAuthentication({ ...optionsJSON, useBrowserAutofill: true });
 
 		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
 		formData					= new FormData(form);
 		formData.append('publicKeyCredential', btoa(JSON.stringify(assertionResponse)));
+		
 		let response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
 		if(!response || response.verified){
 			throw new Error('Verification failed');

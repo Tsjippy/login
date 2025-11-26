@@ -1,15 +1,6 @@
 <?php
 namespace SIM\LOGIN;
 use SIM;
-use RobThree\Auth\TwoFactorAuth;
-use Webauthn\Server;
-use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialSource;
-use Webauthn\AuthenticatorSelectionCriteria;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7Server\ServerRequestCreator;
 use WP_Error;
 
 // Allow rest api urls for non-logged in users
@@ -119,8 +110,8 @@ function isQrCodeScanned(){
         return new WP_Error('login', 'Invalid login!');
     }
 
-    storeInTransient("username", $username);
-    storeInTransient("allow_passwordless_login", true);
+    SIM\storeInTransient("username", $username);
+    SIM\storeInTransient("allow_passwordless_login", true);
 
     return userLogin();
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace SIM\LOGIN;
+use SIM;
 
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialDescriptor;
@@ -54,7 +55,7 @@ class RequestCeremony extends WebAuthCeremony{
             )
         ;
 
-        storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions);
+        SIM\storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions);
 
         $jsonObject = $this->serializer->serialize(
             $publicKeyCredentialRequestOptions,
@@ -76,22 +77,22 @@ class RequestCeremony extends WebAuthCeremony{
         $userId         = $usedIds[$this->publicKeyCredential->response->userHandle];
 
         if(empty($userId)){
-            storeInTransient('webauthn', 'failed');
+            SIM\storeInTransient('webauthn', 'failed');
             return new \WP_Error('webauthn',"Authenticator id not found");
         }
 
         $this->user           = get_userdata($userId);
 
         if(empty($this->user)){
-            storeInTransient('webauthn', 'failed');
+            SIM\storeInTransient('webauthn', 'failed');
 
             return new \WP_Error('webauthn',"User not found");
         }
 
         $userNameAuth   = $this->user->user_login;
 
-        storeInTransient("username", $userNameAuth);
-        storeInTransient("allow_passwordless_login", true);
+        SIM\storeInTransient("username", $userNameAuth);
+        SIM\storeInTransient("allow_passwordless_login", true);
     }
     
     public function verifyResponse($response, $isPassKeyLogin){
@@ -123,7 +124,7 @@ class RequestCeremony extends WebAuthCeremony{
         $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
             clone $prevCredential,
             $this->publicKeyCredential->response,
-            getFromTransient('publicKeyCredentialRequestOptions'),
+            SIM\getFromTransient('publicKeyCredentialRequestOptions'),
             $this->domain,
             $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
         );
@@ -134,6 +135,8 @@ class RequestCeremony extends WebAuthCeremony{
         
         // Update the credential to keep track of the count
         update_user_meta($this->user->ID, "2fa_webautn_cred", base64_encode(serialize($publicKeyCredentialSource)), base64_encode(serialize($prevCredential)));
+
+        SIM\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
         
         return "Verified";
     }

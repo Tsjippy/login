@@ -73,7 +73,7 @@ class CreationCeremony extends WebAuthCeremony{
         );
         
         // store in session
-        storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
+        SIM\storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
         
         return json_decode($jsonObject);
     }
@@ -99,7 +99,7 @@ class CreationCeremony extends WebAuthCeremony{
         try{
             $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
                 $this->publicKeyCredential->response,
-                getFromTransient('publicKeyCredentialCreationOptions'),
+                SIM\getFromTransient('publicKeyCredentialCreationOptions'),
                 $this->domain
             );
         }catch(\Exception $e){

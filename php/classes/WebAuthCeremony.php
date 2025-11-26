@@ -1,6 +1,6 @@
 <?php
-
 namespace SIM\LOGIN;
+use SIM;
 
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -204,14 +204,18 @@ class WebAuthCeremony{
     /**
     * Get all credential meta
     */
-    protected function getCredentialMetas(): array {
-        if(isset($this->credentialMetas)){
+    protected function getCredentialMetas($userId=''): array {
+        if(empty($userId) && isset($this->credentialMetas)){
             return $this->credentialMetas;
+        }
+
+        if(empty($userId)){
+            $userId = $this->user->ID;
         }
         
         $this->credentialMetas = [];
         
-        $credMetas  = get_user_meta($this->user->ID, "2fa_webautn_cred_meta");
+        $credMetas  = get_user_meta($userId, "2fa_webautn_cred_meta");
         foreach($credMetas as $credMeta){
             try{
                 $this->credentialMetas[] = unserialize(base64_decode($credMeta));
@@ -286,5 +290,73 @@ class WebAuthCeremony{
         update_option('sim-webauth-user-handles', $usedIds);
 
         return 'Succesfull removed the authenticator';
+    }
+
+    /**
+     * Creates a table listing all the webauthn methods of an user
+     *
+     * @param   int     $userId     The user id
+     *
+     * @return  string              The table html
+     */
+    public function authTable($userId=''){
+        $this->getCredentialMetas($userId);
+
+        ob_start();
+        if(!empty($this->credentialMetas)){
+            ?>
+            <div id='webautn-devices-wrapper'>
+                <h4>Biometric authenticators overview</h4>
+                <table class='sim-table'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>OS</th>
+                            <th>Added</th>
+                            <th>Last used</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach($this->credentialMetas as $meta){
+                            if(!is_array($meta)){
+                                continue;
+                            }
+
+                            $identifier		= $meta['identifier'];
+                            $osName		    = $meta['os_info']['name'];
+                            $added			= date('jS M Y', strtotime($meta['added']));
+                            $lastUsed       = $meta['last_used'];
+
+                            if($lastUsed != '-'){
+                                $lastUsed		= date('jS M Y', strtotime($meta['last_used']));
+                            }
+
+                            if($meta['cred_id'] == SIM\getFromTransient('last-used-cred-id')){
+                                echo "<tr class='current-device'>";
+                            }else{
+                                echo "<tr>";
+                            }
+                
+                            ?>
+                                <td><?php echo $identifier;?></td>
+                                <td><?php echo $osName;?></td>
+                                <td><?php echo $added;?></td>
+                                <td><?php echo $lastUsed;?></td>
+                                <td>
+                                    <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id'];?>'>-</button>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+        }
+
+        return ob_get_clean();
     }
 }
