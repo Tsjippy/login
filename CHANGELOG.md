@@ -14,6 +14,7 @@
 - login problems
 - get challenge
 - update flow
+- merging issues
 
 ### Updated
 
