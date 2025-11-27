@@ -6,6 +6,7 @@
 ### Changed
 - pre update file location
 - also check new version before running pre update
+- update lib before upgrading
 
 ### Fixed
 
