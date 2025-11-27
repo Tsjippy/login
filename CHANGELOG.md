@@ -9,6 +9,7 @@
 - update lib before upgrading
 
 ### Fixed
+- saving 2fa settings
 
 ### Updated
 
