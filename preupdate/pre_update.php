@@ -6,6 +6,22 @@ add_action("sim-github-before-updating-module-login", __NAMESPACE__.'\preUpdate'
 function preUpdate($oldVersion, $newVersion){
     SIM\printArray($oldVersion);
     if($oldVersion < '9.0.0' && $newVersion >= '9.0.0'){
+
+        $github         = new SIM\GITHUB\Github();
+
+        // Load update version of class definition
+        $fileContent    = $github->repo->contents()->download('tsjippy', 'login', "preupdate/PublicKeyCredentialSource.php");
+
+        wp_delete_file(MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
+        file_put_contents(MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php", $fileContent);
+        require_once($tempFilePath);
+
+        // Action should be defined in the file
+        do_action("sim-github-before-updating-module-$repo", $oldVersion, $release['tag_name']);
+
+        // Remove the file
+        unlink($tempFilePath);
+
         $users  = get_users([
             'meta_key'      => '2fa_webautn_cred',
             'meta_compare'  => 'EXISTS'
