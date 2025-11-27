@@ -28,7 +28,9 @@ export async function webAuthVerification(username){
 		}
 
 		// Update message
-		sim.login.loadingScreen('Verifying credentials...');
+		if(sim.login != undefined){
+			sim.login.loadingScreen('Verifying credentials...');
+		}
 
 		// 2. Start authentication
 		const assertionResponse 	= await startAuthentication({ ...optionsJSON, useBrowserAutofill: true });

@@ -32,7 +32,11 @@ class RequestCeremony extends WebAuthCeremony{
         $allowedCredentials = [];
 
         if(!empty($_POST['username'])){
-            $this->user = get_user_by('login', sanitize_text_field($_POST['username']));
+            if(is_numeric($_POST['username'])){
+                $this->user = get_user_by('ID', sanitize_text_field($_POST['username']));
+            }else{
+                $this->user = get_user_by('login', sanitize_text_field($_POST['username']));
+            }
  
             // List of registered PublicKeyCredentialDescriptor classes associated to the user
             $registeredAuthenticators = $this->getOSCredentials();
@@ -119,6 +123,15 @@ class RequestCeremony extends WebAuthCeremony{
            // Throw an exception if the credential is not found.
            // It can also be rejected depending on your security policy (e.g. disabled by the user because of loss)
            return new WP_Error('sim-login', 'Credential not found!');
+        }
+
+        // Needed after the upgrade to v5.2
+        if(empty($prevCredential->aaguid)){
+
+            $prevCredential->aaguid         = new \Symfony\Component\Uid\UuidV4();
+
+            $prevCredential->uvInitialized  = true;
+
         }
         
         $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(

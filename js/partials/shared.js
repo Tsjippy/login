@@ -6,8 +6,7 @@ export function closeMobileMenu(){
 }
 
 export function showMessage(message){
-	let el = document.querySelector("#message");
-	el.innerHTML= DOMPurify.sanitize(message);
+	document.querySelectorAll("#message").forEach(el => el.innerHTML= DOMPurify.sanitize(message));
 }
 
 export function togglePassworView(ev){
