@@ -133,7 +133,7 @@ function bioRestApi() {
 			'callback' 				=> __NAMESPACE__.'\saveTwoFaSettings',
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-				'2fa_methods'		=> array(
+				'2fa-methods'		=> array(
 					'required'	=> true,
                     'validate_callback' => function($param) {
 						return is_array($param);
@@ -248,8 +248,6 @@ function saveTwoFaSettings(){
 
     $oldMethods     = get_user_meta($userId, '2fa_methods');
 
-    $twofa          = new TwoFactorAuth(new BaconQrCodeProvider());
-
     $message        = 'Nothing to update';
 
     //we just enabled the authenticator
@@ -257,6 +255,8 @@ function saveTwoFaSettings(){
         $secret     = $_POST['auth-secret'];
         $secretkey  = $_POST['secretkey'];
         $hash       = get_user_meta($userId,'2fa_hash',true);
+
+        $twofa          = new TwoFactorAuth(new BaconQrCodeProvider());
 
         //we should have submitted a secret
         if(empty($secret)){

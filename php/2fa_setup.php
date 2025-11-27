@@ -117,7 +117,7 @@ function twoFaSettingsForm($userId=''){
 		}
 
 		// E-mail not yet setup
-		elseif(empty($twoFaMethods) || !in_array('email', $twoFaMethods)){
+		if(empty($twoFaMethods) || !in_array('email', $twoFaMethods)){
 			?>
 			<div id='setup-email' class='twofa-option hidden'>
 				<input type='hidden' class='no-reset' id='username' value='<?php echo $userId;?>'>
@@ -136,7 +136,7 @@ function twoFaSettingsForm($userId=''){
 			<?php
 		}
 		
-		echo SIM\addSaveButton('save2fa',"Save 2fa settings", 'hidden');
+		echo SIM\addSaveButton('save2fa', "Save 2fa settings", 'hidden');
 		?>
 	</form>
 

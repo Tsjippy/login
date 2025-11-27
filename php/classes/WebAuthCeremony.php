@@ -218,7 +218,10 @@ class WebAuthCeremony{
         $credMetas  = get_user_meta($userId, "2fa_webautn_cred_meta");
         foreach($credMetas as $credMeta){
             try{
-                $this->credentialMetas[] = unserialize(base64_decode($credMeta));
+                $unserialized   = unserialize(base64_decode($credMeta));
+                if($unserialized){
+                    $this->credentialMetas[] = $unserialized;
+                }
             }catch(\Throwable $exception) {
                 continue;
             }
@@ -293,6 +296,17 @@ class WebAuthCeremony{
     }
 
     /**
+     * Updates a meta value
+     * 
+     * @param   string          $key        meta key one of 2fa_webautn_cred or 2fa_webautn_cred_meta
+     * @param   object|array    $value      The new value
+     * @param   object|array    $oldValue   The previous value
+     */
+    public function updateUserMeta($key, $value, $oldValue){
+        update_user_meta($this->user->ID, $key, base64_encode(serialize($value)), base64_encode(serialize($oldValue)));
+    }
+
+    /**
      * Creates a table listing all the webauthn methods of an user
      *
      * @param   int     $userId     The user id
@@ -334,7 +348,8 @@ class WebAuthCeremony{
                             }
 
                             if($meta['cred_id'] == SIM\getFromTransient('last-used-cred-id')){
-                                echo "<tr class='current-device'>";
+                                $lastUsed   = 'Now';
+                                echo "<tr class='current-device' style='background: beige;'>";
                             }else{
                                 echo "<tr>";
                             }

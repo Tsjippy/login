@@ -129,15 +129,30 @@ class RequestCeremony extends WebAuthCeremony{
             $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
         );
 
+        /** @disregard P1080 */
         if($publicKeyCredentialSource->counter <= $prevCredential->counter){
             return new WP_Error('sim-login', 'You cannot use this again, please refresh the page');
         }
         
         // Update the credential to keep track of the count
-        update_user_meta($this->user->ID, "2fa_webautn_cred", base64_encode(serialize($publicKeyCredentialSource)), base64_encode(serialize($prevCredential)));
+        $this->updateUserMeta("2fa_webautn_cred", $publicKeyCredentialSource, $prevCredential);
 
+        /** @disregard P1080 */
         SIM\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
-        
+
+        // Update the last used
+        foreach($this->getCredentialMetas() as $meta){
+            /** @disregard P1080 */
+            if($meta['cred_id'] == $publicKeyCredentialSource->publicKeyCredentialId){
+                $newMeta    = $meta;
+
+                $newMeta['last_used']   = date('Y-m-d H:i:s', current_time('timestamp'));
+
+                // Update the credential to keep track of the count
+                $this->updateUserMeta("2fa_webautn_cred_meta", $newMeta, $meta);
+            }
+        }
+
         return "Verified";
     }
 }

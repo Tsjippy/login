@@ -1,10 +1,6 @@
 console.log("2fa.js loaded");
 
 async function saveTwofaSettings(target){
-	// Show loader
-	let loader	= target.closest('.submit-wrapper').querySelector('.loader-wrapper');
-	loader.classList.remove('hidden');
-
 	let form		= target.closest('form');
 
 	form.querySelectorAll('.hidden [required], select[required]').forEach(el=>{el.required = false});
@@ -24,8 +20,6 @@ async function saveTwofaSettings(target){
 			target.closest('form').querySelector('.form-submit').classList.add('hidden');
 		}
 	}
-
-	loader.classList.add('hidden');
 }
 
 function showTwofaSetup(target) {
