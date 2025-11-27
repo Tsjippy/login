@@ -21,8 +21,6 @@ function preUpdate($oldVersion, $newVersion){
             'meta_compare'  => 'EXISTS'
         ]);
 
-        $userHandles    = [];
-
         foreach($users as $user){
             /**
              * Load old cred data
@@ -67,7 +65,5 @@ function preUpdate($oldVersion, $newVersion){
         }
 
         update_option('sim-webauth-user-handles', $userHandles);
-
-        SIM\printArray($userHandles);
     }
 }

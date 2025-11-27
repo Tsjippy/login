@@ -256,7 +256,7 @@ function saveTwoFaSettings(){
         $secretkey  = $_POST['secretkey'];
         $hash       = get_user_meta($userId,'2fa_hash',true);
 
-        $twofa          = new TwoFactorAuth(new BaconQrCodeProvider());
+        $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
 
         //we should have submitted a secret
         if(empty($secret)){
@@ -264,11 +264,11 @@ function saveTwoFaSettings(){
         }
 
         //we should not have changed the secretkey
-        if(!password_verify($secretkey,$hash)){
+        if(!password_verify($secretkey, $hash)){
             return new WP_Error('Secretkey error',"Why do you try to hack me?");
         }
 
-        $last2fa        = '';
+        $last2fa        = 0; // variable will be updated by the verifyCode function
         if($twofa->verifyCode($secretkey, $secret, 1, null, $last2fa)){
             //store in usermeta
             update_user_meta($userId, '2fa_key', $secretkey);
