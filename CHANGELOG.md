@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- bug in pre updates
 
 ### Updated
 
