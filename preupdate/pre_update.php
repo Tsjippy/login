@@ -12,8 +12,8 @@ function preUpdate($oldVersion, $newVersion){
         // Load update version of class definition
         $fileContent    = $github->contents->download('tsjippy', 'login', "preupdate/PublicKeyCredentialSource.php");
 
-        wp_delete_file(MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
-        file_put_contents(MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php", $fileContent);
+        wp_delete_file(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
+        file_put_contents(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php", $fileContent);
         require_once($tempFilePath);
 
         // Action should be defined in the file
