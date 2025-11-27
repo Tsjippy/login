@@ -143,8 +143,10 @@ class RequestCeremony extends WebAuthCeremony{
         );
 
         /** @disregard P1080 */
-        if($publicKeyCredentialSource->counter <= $prevCredential->counter){
-            return new WP_Error('sim-login', 'You cannot use this again, please refresh the page');
+        if($publicKeyCredentialSource->counter < $prevCredential->counter){
+            /** @disregard P1080 */
+            SIM\printArray("Current counter: $publicKeyCredentialSource->counter, previous counter: $prevCredential->counter");
+            //return new WP_Error('sim-login', 'You cannot use this again, please refresh the page');
         }
         
         // Update the credential to keep track of the count
