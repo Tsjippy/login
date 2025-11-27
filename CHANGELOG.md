@@ -7,6 +7,7 @@
 
 ### Fixed
 - bug in pre updates
+- registering authenticator
 
 ### Updated
 
