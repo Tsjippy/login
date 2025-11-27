@@ -8,6 +8,7 @@
 ### Fixed
 - bug in pre updates
 - registering authenticator
+- positional account switcher dependency
 
 ### Updated
 
