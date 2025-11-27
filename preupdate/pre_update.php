@@ -14,13 +14,7 @@ function preUpdate($oldVersion, $newVersion){
 
         wp_delete_file(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
         file_put_contents(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php", $fileContent);
-        require_once($tempFilePath);
-
-        // Action should be defined in the file
-        do_action("sim-github-before-updating-module-$repo", $oldVersion, $release['tag_name']);
-
-        // Remove the file
-        unlink($tempFilePath);
+        require_once(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
 
         $users  = get_users([
             'meta_key'      => '2fa_webautn_cred',
