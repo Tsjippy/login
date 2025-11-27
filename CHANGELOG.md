@@ -4,13 +4,21 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [9.0.1] - 2025-11-27
+
+
+### Changed
 - pre update file location
 - also check new version before running pre update
 - update lib before upgrading
 
 ### Fixed
-
-### Updated
+- saving 2fa settings
 
 ## [8.4.9] - 2025-11-26
 
