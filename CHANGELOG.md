@@ -6,11 +6,16 @@
 ### Changed
 
 ### Fixed
+
+### Updated
+
+## [9.0.2] - 2025-11-27
+
+
+### Fixed
 - bug in pre updates
 - registering authenticator
 - positional account switcher dependency
-
-### Updated
 
 ## [9.0.1] - 2025-11-27
 
