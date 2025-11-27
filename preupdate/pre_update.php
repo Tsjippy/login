@@ -2,10 +2,10 @@
 namespace SIM\LOGIN;
 use SIM;
 
-add_action("sim-github-before-updating-module-login", __NAMESPACE__.'\preUpdate');
-function preUpdate($oldVersion){
+add_action("sim-github-before-updating-module-login", __NAMESPACE__.'\preUpdate', 10, 2);
+function preUpdate($oldVersion, $newVersion){
     SIM\printArray($oldVersion);
-    if($oldVersion < '9.0.0'){
+    if($oldVersion < '9.0.0' && $newVersion >= '9.0.0'){
         $users  = get_users([
             'meta_key'      => '2fa_webautn_cred',
             'meta_compare'  => 'EXISTS'
