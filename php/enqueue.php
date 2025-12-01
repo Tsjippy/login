@@ -15,7 +15,7 @@ function loadAssets(){
             wp_enqueue_script('sim_register_webauthn_script', SIM\pathToUrl(MODULE_PATH.'js/register_webauth.min.js'), array('sim_script', 'sim_formsubmit_script'), MODULE_VERSION, true);
             
             // Make sure we do this only once per login
-            SIM\deleteFromTransient('last-used-cred-id');
+            SIM\storeInTransient('last-used-cred-id', 1);
         }
         
         wp_enqueue_script('sim_logout_script', SIM\pathToUrl(MODULE_PATH.'js/logout.min.js'), array('sim_script', 'sim_formsubmit_script'), MODULE_VERSION, true);
