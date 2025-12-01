@@ -6,14 +6,9 @@
 ### Changed
 
 ### Fixed
+- 2fa error
 
 ### Updated
-
-## [9.0.5] - 2025-12-01
-
-
-### Fixed
-- 2fa error
 
 ## [9.0.4] - 2025-12-01
 
