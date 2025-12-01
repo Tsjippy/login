@@ -3,7 +3,7 @@ namespace SIM\LOGIN;
 use SIM;
 use function SIM\ADMIN\getDefaultPageLink;
 
-const MODULE_VERSION		= '9.0.3';
+const MODULE_VERSION		= '9.0.4';
 //module slug is the same as grandparent folder name
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
