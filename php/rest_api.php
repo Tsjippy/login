@@ -183,10 +183,6 @@ function checkCredentials(){
         //get 2fa methods for this user
         $methods  = get_user_meta($user->ID, '2fa_methods');
 
-        if(!in_array('webauthn', $methods)){
-            SIM\storeInTransient('webauthn', 'failed');
-        }
-
         //return the methods
         if(!empty($methods)){
             return array_values($methods);
@@ -458,7 +454,6 @@ function allowPasswordlessLogin( $user, $username, $password ) {
 
     if(SIM\getFromTransient('allow_passwordless_login')){
         SIM\deleteFromTransient('allow_passwordless_login');
-        SIM\deleteFromTransient('webauthn');
         SIM\deleteFromTransient('user');
 
         session_write_close();

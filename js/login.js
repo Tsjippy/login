@@ -263,11 +263,7 @@ const login = class{
 	
 			//authentication success
 			await this.requestLogin();
-		}catch (error){	
-			let response	= await FormSubmit.fetchRestApi('login/mark_bio_as_failed', '', false);
-			
-			console.log(response);
-	
+		}catch (error){		
 			if(methods.length == 1){
 				showMessage('Authentication failed, please setup an additional login factor.');
 				this.requestLogin();

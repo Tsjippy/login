@@ -11,7 +11,6 @@ function addBioUrls($urls){
     $urls[]	= RESTAPIPREFIX.'/login/auth_finish';
     $urls[]	= RESTAPIPREFIX.'/login/auth_start';
     $urls[] = RESTAPIPREFIX.'/login/request_email_code';
-    $urls[] = RESTAPIPREFIX.'/login/mark_bio_as_failed';
 
     return $urls;
 }
@@ -156,21 +155,6 @@ function bioRestApi() {
 					'required'	=> true
 				),
 			)
-		)
-	);
-
-    // Mark Biometrics login as failed
-    register_rest_route(
-		RESTAPIPREFIX.'/login',
-		'/mark_bio_as_failed',
-		array(
-			'methods' 				=> 'POST',
-			'callback' 				=> function(){
-                SIM\storeInTransient('webauthn', 'failed');
-
-                return 'Marked as failed';
-            },
-			'permission_callback' 	=> '__return_true',
 		)
 	);
 }

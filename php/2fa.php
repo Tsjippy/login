@@ -135,19 +135,19 @@ function authenticate( $user) {
     }
     
     $methods    = get_user_meta($user->ID, '2fa_methods');
-    if(!empty($methods)){
-        // Remove webautn_id if webauthn was unsuccesfull
-        if(SIM\getFromTransient('webautn_id') && SIM\getFromTransient('webauthn') != 'success'){
-            SIM\deleteFromTransient('webautn_id');
-        }
-        
+    if(!empty($methods)){        
         //we did a succesfull webauthn or are on localhost
         if(
             $_SERVER['HTTP_HOST'] == 'localhost'  || 
             str_contains($_SERVER['HTTP_HOST'], '.local') || 
-            in_array('webauthn', $methods) && SIM\getFromTransient('webauthn') == 'success'){
+            SIM\getFromTransient('last-used-cred-id')
+        ){
             //succesfull webauthentication done before
-        }elseif(in_array('authenticator', $methods) && empty($_POST['email-code'])){
+            return $user;
+        }
+        
+        // We have an authenticator app set up and did not supply an e-mail code
+        elseif(in_array('authenticator', $methods) && empty($_POST['email-code'])){
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
             $secretKey  = get_user_meta($user->ID, '2fa_key', true);        
             $authcode   = $_POST['authcode'];
@@ -215,7 +215,7 @@ function redirectTo2fa(){
         (
             !$methods                                   ||	// and we have no 2fa enabled or
             (
-                !SIM\getFromTransient('webauthn')       &&  // the current login is not with webauth
+                !SIM\getFromTransient('last-used-cred-id')       &&  // the current login is not with webauth
                 count($methods) == 1                    &&	// and we only have one 2fa method
                 in_array('webauthn', $methods)				// and that method is webauthn
             )

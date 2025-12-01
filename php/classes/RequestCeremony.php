@@ -81,14 +81,12 @@ class RequestCeremony extends WebAuthCeremony{
         $userId         = $usedIds[$this->publicKeyCredential->response->userHandle];
 
         if(empty($userId)){
-            SIM\storeInTransient('webauthn', 'failed');
-            return new \WP_Error('webauthn',"Authenticator id not found");
+            return new \WP_Error('webauthn', "Authenticator id not found");
         }
 
         $this->user           = get_userdata($userId);
 
         if(empty($this->user)){
-            SIM\storeInTransient('webauthn', 'failed');
 
             return new \WP_Error('webauthn',"User not found");
         }
