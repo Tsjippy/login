@@ -147,7 +147,7 @@ function authenticate( $user) {
             str_contains($_SERVER['HTTP_HOST'], '.local') || 
             in_array('webauthn', $methods) && SIM\getFromTransient('webauthn') == 'success'){
             //succesfull webauthentication done before
-        }elseif(in_array('authenticator', $methods)){
+        }elseif(in_array('authenticator', $methods) && empty($_POST['email-code'])){
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
             $secretKey  = get_user_meta($user->ID, '2fa_key', true);        
             $authcode   = $_POST['authcode'];
