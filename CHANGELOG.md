@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- 2fa error
 
 ### Updated
 
