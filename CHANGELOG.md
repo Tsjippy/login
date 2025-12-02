@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- only add method when it is not there yet
 
 ### Fixed
 - 2fa error
