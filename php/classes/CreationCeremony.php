@@ -134,10 +134,7 @@ class CreationCeremony extends WebAuthCeremony{
         /**
          * Add the webauthn as a 2fa method
          */
-        $methods    = (array)get_user_meta($this->user->ID, "2fa_methods");
-        if(!in_array("webauthn", $methods)){
-            add_user_meta($this->user->ID, "2fa_methods", "webauthn");
-        }
+        addMethod('webauthn', $this->user->ID);
 
         /**
          * Store the userhandle to be used for passkey login

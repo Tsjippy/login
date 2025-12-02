@@ -222,23 +222,14 @@ function redirectTo2fa(){
         )
     ){
         $url		= SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, '2fa-page');
-
-        //SIM\printArray($url);
-
-        //$url=false;
         
         if(!$url){
-
-            session_write_close();
             return;
         }
 
         $fromUrl    = SIM\currentUrl();
 
-        if(str_replace(['http://', 'https://'], '', $fromUrl) != str_replace(['http://', 'https://'], '', $url)){
-
-            session_write_close();
-            
+        if(str_replace(['http://', 'https://'], '', $fromUrl) != str_replace(['http://', 'https://'], '', $url)){            
             SIM\printArray("Redirecting from ".SIM\currentUrl()." to $url");
             wp_redirect($url);
             exit();

@@ -260,8 +260,7 @@ function saveTwoFaSettings(){
         }else{
             return new WP_Error('Invalid 2fa code', "Your code is expired");
         }
-
-        add_user_meta($userId, '2fa_methods', 'authenticator');
+        addMethod('authenticator', $userId);
 
         $message    = "Succesfully enabled authenticator as a second factor";
     }
@@ -283,7 +282,7 @@ function saveTwoFaSettings(){
             return new WP_Error('login', 'Invalid e-mail code');
         }
 
-        add_user_meta($userId, '2fa_methods', 'email');
+        addMethod('email', $userId);
     }
 
     return $message;

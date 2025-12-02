@@ -24,4 +24,18 @@ function pluginUpdate($oldVersion){
             }
         }
     }
+
+    if($oldVersion < '9.0.6'){
+        foreach(get_users() as $user){
+            $methods  = array_unique(get_user_meta($user->ID, '2fa_methods'));
+
+            delete_user_meta($user->ID, '2fa_methods');
+
+            foreach($methods as $method){
+                if(in_array($method, ['webauthn', 'authenticator', 'email'])){
+                    add_user_meta($user->ID, '2fa_methods', $method);
+                }
+            }
+        }
+    }
 }

@@ -82,3 +82,16 @@ function loopEnd() {
         }
     }
 }
+
+/**
+ * Adds a 2fa method if it does not exist already
+ * 
+ * @param   string  $method     one of email, authenticator or webauthn
+ * @param   int     $userId     The userId     
+ */ 
+function addMethod($method, $userId){
+    $methods    = (array)get_user_meta($userId, "2fa_methods");
+    if(!in_array($method, $methods)){
+        add_user_meta($userId, "2fa_methods", $method);
+    }
+}
