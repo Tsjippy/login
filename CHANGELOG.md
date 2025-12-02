@@ -7,6 +7,7 @@
 
 ### Fixed
 - 2fa error
+- reregistering webauthn
 
 ### Updated
 
