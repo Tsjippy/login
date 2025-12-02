@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [9.0.6] - 2025-12-02
+
+
+### Changed
 - only add method when it is not there yet
 
 ### Fixed
 - 2fa error
 - reregistering webauthn
-
-### Updated
 
 ## [9.0.4] - 2025-12-01
 
