@@ -8,16 +8,9 @@ function loadAssets(){
 	    //login form
 	    wp_register_style( 'sim_login_style', SIM\pathToUrl(MODULE_PATH.'css/login.min.css'), array(), MODULE_VERSION);
         wp_enqueue_style( 'sim_login_style');
-
-        wp_enqueue_script('sim_login_script', SIM\pathToUrl(MODULE_PATH.'js/login.min.js'), array('sim_script', 'sim_purify', 'sim_formsubmit_script'), MODULE_VERSION, true);
-    }else{
-        if(!SIM\getFromTransient('last-used-cred-id')){
-            wp_enqueue_script('sim_register_webauthn_script', SIM\pathToUrl(MODULE_PATH.'js/register_webauth.min.js'), array('sim_script', 'sim_formsubmit_script'), MODULE_VERSION, true);
-            
-            // Make sure we do this only once per login
-            SIM\storeInTransient('last-used-cred-id', 1);
-        }
         
+        wp_enqueue_script('sim_login_script', SIM\pathToUrl(MODULE_PATH.'js/login.min.js'), array('sim_script', 'sim_purify', 'sim_formsubmit_script'), MODULE_VERSION, true);
+    }else{        
         wp_enqueue_script('sim_logout_script', SIM\pathToUrl(MODULE_PATH.'js/logout.min.js'), array('sim_script', 'sim_formsubmit_script'), MODULE_VERSION, true);
     }
 

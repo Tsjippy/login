@@ -9,6 +9,10 @@ export function showMessage(message){
 	document.querySelectorAll("#message").forEach(el => el.innerHTML= DOMPurify.sanitize(message));
 }
 
+export function showStatusMessage(message){
+	document.querySelectorAll(".status-message").forEach(el => el.innerHTML= DOMPurify.sanitize(message));
+}
+
 export function togglePassworView(ev){
 	ev.stopImmediatePropagation();
 	

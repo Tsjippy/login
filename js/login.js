@@ -1,6 +1,7 @@
 import {
 	closeMobileMenu,
 	showMessage,
+	showStatusMessage,
 	togglePassworView
 } from './partials/shared.js';
 
@@ -14,6 +15,8 @@ import {
 	checkWebauthnAvailable,
 	webAuthVerification
 } from './partials/webauth.js';
+
+import { registerWebAuthn } from './partials/register_webauth.js'; 
 
 //Add an event listener to the login or register button
 console.log("Login.js loaded");
@@ -46,7 +49,7 @@ const login = class{
 				if(this.curScreen == this.creds && document.getElementById('check-cred').disabled == false){
 					this.verifyCreds();
 				}else if(this.curScreen == this.email || this.curScreen == this.twofa){
-					this.requestLogin();
+					this.requestLogin(true);
 				}
 			}
 		});
@@ -63,13 +66,13 @@ const login = class{
 				this.verifyCreds();
 			}else if(target.id == "login-button"){
 				// Submit the login form when averything is ok
-				this.requestLogin();
+				this.requestLogin(true);
 			}else if(target.closest('.toggle-pwd-view') != null){
 				togglePassworView(event);
 			}else if(target.id == 'password-reset-form' || target.id == "lost-pwd-link"){
 				this.resetPassword(target);
 			}else if(target.id == 'retry_webauthn'){
-				this.showMessage('');
+				showMessage('');
 				this.verifyWebauthn([]);
 			}else if(target.name == 'request_account'){
 				this.requestAccount(target);
@@ -122,7 +125,7 @@ const login = class{
 	 * Show the loading screen
 	 */
 	loadingScreen(message){
-		this.msgScreen.querySelector('.status-message').textContent	= message;
+		showStatusMessage(message);
 
 		this.curScreen.classList.add('hidden');
 		this.login.classList.add('hidden');
@@ -232,7 +235,7 @@ const login = class{
 					this.verifyWebauthn(result);
 				}else if(result.length == 1){
 					showMessage('You do not have a valid second login method for this device, please add one.');
-					this.requestLogin();
+					this.requestLogin(true);
 				}else{
 					this.showTwoFaFields(result);
 				}
@@ -262,11 +265,11 @@ const login = class{
 			}
 	
 			//authentication success
-			await this.requestLogin();
+			await this.requestLogin(false);
 		}catch (error){		
 			if(methods.length == 1){
 				showMessage('Authentication failed, please setup an additional login factor.');
-				this.requestLogin();
+				this.requestLogin(true);
 			}else{
 				console.error(error);
 				let message;
@@ -287,7 +290,7 @@ const login = class{
 	 * Performs the login action
 	 */
 	//show loader
-	async requestLogin(){
+	async requestLogin(createWebAuthn){
 		this.loadingScreen('Logging in...');
 
 		let formData	= new FormData(this.form);
@@ -331,6 +334,14 @@ const login = class{
 			// close all iframes
 			window.parent.document.querySelectorAll('iframe').forEach(el=>el.remove());
 		}else{
+			sim.restNonce	= response.nonce;
+			sim.userId		= response.id;
+
+			// first register a webauthn if needed
+			if(createWebAuthn){
+				await registerWebAuthn();
+			}
+
 			this.loadingScreen('Succesfully logged in, redirecting...');
 
 			if(response.redirect == ''){

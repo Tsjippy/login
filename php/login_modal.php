@@ -47,7 +47,9 @@ $imgSvg = '<svg name="fingerprintpicture" height="24" viewBox="0 0 24 24" width=
                 Login form
             </h3>
             <p id="message"><?php
-                if(!empty($message)){echo $message;}
+                if(!empty($message)){
+                    echo $message;
+                }
             ?></p>
 
             <div id='qrcode-wrapper' style='margin-top: -30px;min-height: 30px;'><span></span></div>
