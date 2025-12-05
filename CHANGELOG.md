@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- register webauthn on login screen
 
 ### Fixed
 
