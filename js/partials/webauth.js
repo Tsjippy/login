@@ -22,8 +22,8 @@ export async function webAuthVerification(username){
 		let formData				= new FormData();
 		formData.append('username', username);
 
-		const optionsJSON			= await FormSubmit.fetchRestApi('login/auth_start', formData);
-		if(!optionsJSON){
+		const options			= await FormSubmit.fetchRestApi('login/auth_start', formData);
+		if(!options){
 			throw new Error('Fetching Server Challenge failed');
 		}
 
@@ -33,7 +33,8 @@ export async function webAuthVerification(username){
 		}
 
 		// 2. Start authentication
-		const assertionResponse 	= await startAuthentication({ ...optionsJSON, useBrowserAutofill: true });
+		//const assertionResponse 	= await startAuthentication({ optionsJSON: options, useBrowserAutofill: true });
+		const assertionResponse 	= await startAuthentication({ optionsJSON: options });
 
 		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
