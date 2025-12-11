@@ -9,6 +9,12 @@
 
 ### Updated
 
+## [9.0.7] - 2025-12-05
+
+
+### Changed
+- register webauthn on login screen
+
 ## [9.0.6] - 2025-12-02
 
 
