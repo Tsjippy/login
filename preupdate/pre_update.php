@@ -1,20 +1,29 @@
 <?php
 namespace SIM\LOGIN;
 use SIM;
+use Github\Exception\ApiLimitExceedException;
 
 add_action("sim-github-before-updating-module-login", __NAMESPACE__.'\preUpdate', 10, 2);
 function preUpdate($oldVersion, $newVersion){
     SIM\printArray($oldVersion);
-    if($oldVersion < '9.0.0' && $newVersion >= '9.0.0'){
+
+    $classPath      = SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php";
+    if($oldVersion < '9.0.0' && $newVersion >= '9.0.0' && file_exists($classPath)){
 
         $github         = new SIM\GITHUB\Github();
 
         // Load update version of class definition
-        $fileContent    = $github->contents->download('tsjippy', 'login', "preupdate/PublicKeyCredentialSource.php");
+        try{
+            $fileContent    = $github->contents->download('tsjippy', 'login', "preupdate/PublicKeyCredentialSource.php");
+        }catch (ApiLimitExceedException $e) {
+            $github->handleRateLimitExceeded();
+        }catch (\Exception $e){
+            SIM\printArray("Could not download updated WebAuthn class definition: ".$e->getMessage());
+        }
 
-        wp_delete_file(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
-        file_put_contents(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php", $fileContent);
-        require_once(SIM\MODULESPATH."login/lib/vendor/web-auth/webauthn-lib/src/PublicKeyCredentialSource.php");
+        wp_delete_file($classPath);
+        file_put_contents($classPath, $fileContent);
+        require_once($classPath);
 
         $users  = get_users([
             'meta_key'      => '2fa_webautn_cred',
