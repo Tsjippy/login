@@ -313,6 +313,8 @@ const login = class{
 
 			return false;
 		}
+
+		this.loadingScreen('Succesfully logged in');
 		
 		// We are logging in from an iframe
 		if(window.self !== window.top){
@@ -342,7 +344,7 @@ const login = class{
 				await registerWebAuthn();
 			}
 
-			this.loadingScreen('Succesfully logged in, redirecting...');
+			this.loadingScreen('Redirecting...');
 
 			if(response.redirect == ''){
 				// refresh the page
