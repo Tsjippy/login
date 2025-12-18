@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- logged messages
 
 ### Fixed
 - startAuthentication params
