@@ -26,8 +26,6 @@ export async function registerWebAuthn(){
 
 	showMessage( 'Please take a few seconds to setup your login token...' );
 
-	showStatusMessage( 'Preparing biometric registration...');
-
 	// Get registration options from the endpoint
 	const optionsJSON			= await FormSubmit.fetchRestApi('login/fingerprint_options');
 
