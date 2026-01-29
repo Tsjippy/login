@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [9.0.8] - 2026-01-29
+
+
+### Added
 - webauthn autofill
 
 ### Changed
@@ -10,8 +21,6 @@
 
 ### Fixed
 - startAuthentication params
-
-### Updated
 
 ## [9.0.7] - 2025-12-05
 
