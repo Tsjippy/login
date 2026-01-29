@@ -10,41 +10,23 @@ window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 	}
 );
 
-export async function autofill(){
-	const options			= await FormSubmit.fetchRestApi('login/auth_start');
-	if(!options){
-		throw new Error('Fetching Server Challenge failed');
-	}
-
-	options.timeout = 60000;
-	options.hints=[];
-
-	const assertionResponse 	= await startAuthentication({ optionsJSON: options, useBrowserAutofill: true });
-
-	console.log('assertionResponse', assertionResponse);
-
-	formData					= new FormData();
-	formData.append('publicKeyCredential', btoa(JSON.stringify(assertionResponse)));
-	
-	let response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
-	if(!response || response.verified){
-		throw new Error('Passkey Login failed');
-	}
-}
 /**
  * Do a webauthn verification after loggin with username and password
  * 
  * @param {string} username The user name to authenticate
  * @param {*} messageEl the html onject to display messages in
  */
-export async function webAuthVerification(username){
+export async function webAuthVerification(username, autofill = false){
 	try {
 		// 1. Fetch authentication options from server
 		let formData				= new FormData();
-		formData.append('username', username);
 
-		const options			= await FormSubmit.fetchRestApi('login/auth_start', formData);
-		if(!options){
+		if(!autofill){
+			formData.append('username', username);
+		}
+
+		const optionsJSON			= await FormSubmit.fetchRestApi('login/auth_start', formData);
+		if(!optionsJSON){
 			throw new Error('Fetching Server Challenge failed');
 		}
 
@@ -53,9 +35,15 @@ export async function webAuthVerification(username){
 			sim.login.loadingScreen('Preparing Passkey Login...');
 		}
 
+		let options					= { optionsJSON: optionsJSON };
+		if(autofill){
+			options.useBrowserAutofill	= true;
+		}
+
 		// 2. Start authentication
-		//const assertionResponse 	= await startAuthentication({ optionsJSON: options, useBrowserAutofill: true });
-		const assertionResponse 	= await startAuthentication({ optionsJSON: options });
+		const assertionResponse 	= await startAuthentication(options);
+
+		sim.login.loadingScreen('Validating Passkey...');
 
 		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
@@ -67,53 +55,23 @@ export async function webAuthVerification(username){
 			throw new Error('Passkey Login failed');
 		}
 
-		showMessage('Passkey Login successfull');
+		if(response){
+			showMessage('Passkey login succesfull');
 
-		return true;
+			return await sim.login.requestLogin();
+		}else{
+			sim.login.reset();
+
+			showMessage('Passkey login failed, try using your username and password');
+
+			return false;
+		}
 	} catch (error) {
 		console.error('Passkey Login failed:', error);
 
 		showMessage(error);
 
-		return false;
-	}
-}
-
-/**
- * Start passkey login without username
- * 
- * @param {string} mediation the type of request
- * 
- * @returns 
- */
-export let startConditionalRequest = async (mediation) => {
-	if (window.PublicKeyCredential && PublicKeyCredential.isConditionalMediationAvailable) {
-		console.log("Conditional UI is understood by the browser");
-		if (!await window.PublicKeyCredential.isConditionalMediationAvailable()) {
-			console.log("Conditional UI is understood by your browser but not available");
-			return;
-		}
-	} else {
-		if (!navigator.credentials.conditionalMediationSupported) {
-			console.log("Your browser does not implement Conditional UI (are you running the right chrome/safari version with the right flags?)");
-			return;
-		} else {
-			console.log("This browser understand the old version of Conditional UI feature detection");
-		}
-	}
-
-	sim.login.loadingScreen('Performing passkey login');
-
-	let webauthResult =  await webAuthVerification('');
-
-	if(webauthResult){
-		showMessage('Passkey login succesfull');
-
-		return await sim.login.requestLogin();
-	}else{
-		sim.login.reset();
-
-		showMessage('Passkey login failed, try using your username and password');
+		showStatusMessage('Passkey Login failed');
 
 		return false;
 	}

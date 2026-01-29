@@ -11,7 +11,6 @@ import {
 } from './partials/qr_login.js';
 
 import {
-	startConditionalRequest,
 	checkWebauthnAvailable,
 	webAuthVerification,
 	autofill
@@ -29,11 +28,6 @@ const login = class{
 		let params = new Proxy(new URLSearchParams(window.location.search), {
 			get: (searchParams, prop) => searchParams.get(prop),
 		});
-
-		if(params['showlogin'] != null){
-			console.log('Trying silent login');
-			startConditionalRequest('silent');
-		}
 
 		if(this.checkIsIOS){
 			this.addMaximumScaleToMetaViewport();
@@ -60,8 +54,6 @@ const login = class{
 
 			if(target.matches('.login')){
 				this.openLoginModal();
-
-				console.log('Trying silent login');
 			}else if(target.id == 'check-cred'){
 				// Check if a valid username and password is submitted
 				this.verifyCreds();
@@ -77,8 +69,6 @@ const login = class{
 				this.verifyWebauthn([]);
 			}else if(target.name == 'request_account'){
 				this.requestAccount(target);
-			}else if(target.closest(`[name='fingerprintpicture']`) != null){
-				startConditionalRequest('silent');
 			}else if(target.matches('.show-login-qr')){
 				showLoginQrCode();
 			}else if(target.matches('.close-qr')){
@@ -279,7 +269,7 @@ const login = class{
 			}
 	
 			//authentication success
-			await this.requestLogin(false);
+			this.requestLogin(false);
 		}catch (error){		
 			if(methods.length == 1){
 				showMessage('Passkey Verification failed, please setup an additional login factor.');
@@ -540,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//check if the current browser supports webauthn
 	checkWebauthnAvailable();
 
-	autofill();
+	webAuthVerification('', true);
 
 	document.querySelectorAll('.login.hidden').forEach(el=>{
 		el.classList.remove('hidden');
