@@ -13,7 +13,8 @@ import {
 import {
 	startConditionalRequest,
 	checkWebauthnAvailable,
-	webAuthVerification
+	webAuthVerification,
+	autofill
 } from './partials/webauth.js';
 
 import { registerWebAuthn } from './partials/register_webauth.js'; 
@@ -105,7 +106,7 @@ const login = class{
 
 		this.curScreen		= this.creds;
 		
-		if(this.msgScreen.querySelector('.loader') == null){
+		if(this.msgScreen != null && this.msgScreen.querySelector('.loader') == null){
 			Main.showLoader(this.msgScreen.querySelector('.status-message'), false, 75);
 		}
 	}
@@ -248,6 +249,19 @@ const login = class{
 		}
 	}
 
+	async checkImmediateMediationAvailability() {
+		try {
+			const capabilities = await PublicKeyCredential.getClientCapabilities();
+			if (capabilities.immediateGet && window.PasswordCredential) {
+			console.log("Immediate Mediation with passwords supported.");
+			} else if (capabilities.immediateGet) {
+			console.log("Immediate Mediation without passwords supported.");
+			} else { console.log("Immediate Mediation unsupported."); }
+		} catch (error) {
+			console.error("Error getting client capabilities:", error);
+		}
+	}
+
 	/**
 	 * Initiates and verifies a webauthentication login
 	 * @param {*} methods 
@@ -255,20 +269,20 @@ const login = class{
 	 */
 	async verifyWebauthn(methods){	
 		//show webauthn messages
-		this.loadingScreen('Starting Webauthentication');
+		this.loadingScreen('Starting Passkey Verification');
 	
 		try{
 			let result	= await webAuthVerification(this.username, this.msgScreen.querySelector('.status-message'));
 	
 			if(!result){
-				throw new Error( 'Webauthentication failed' );
+				throw new Error( 'Passkey Verification failed' );
 			}
 	
 			//authentication success
 			await this.requestLogin(false);
 		}catch (error){		
 			if(methods.length == 1){
-				showMessage('Authentication failed, please setup an additional login factor.');
+				showMessage('Passkey Verification failed, please setup an additional login factor.');
 				this.requestLogin(true);
 			}else{
 				console.error(error);
@@ -276,7 +290,7 @@ const login = class{
 				if(error['message'] == "No authenticator available"){
 					message = "No biometric login for this device found. <br>Give verification code.";
 				}else{
-					message = 'Web authentication failed, please give verification code.';
+					message = 'Passkey Verification failed, please give verification code.';
 				}
 				showMessage(message);
 	
@@ -526,9 +540,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	//check if the current browser supports webauthn
 	checkWebauthnAvailable();
 
+	autofill();
+
 	document.querySelectorAll('.login.hidden').forEach(el=>{
 		el.classList.remove('hidden');
 	});	
 
 	sim.login = new login();
+
+	sim.login.checkImmediateMediationAvailability();
 });

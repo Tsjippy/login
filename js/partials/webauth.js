@@ -10,6 +10,27 @@ window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 	}
 );
 
+export async function autofill(){
+	const options			= await FormSubmit.fetchRestApi('login/auth_start');
+	if(!options){
+		throw new Error('Fetching Server Challenge failed');
+	}
+
+	options.timeout = 60000;
+	options.hints=[];
+
+	const assertionResponse 	= await startAuthentication({ optionsJSON: options, useBrowserAutofill: true });
+
+	console.log('assertionResponse', assertionResponse);
+
+	formData					= new FormData();
+	formData.append('publicKeyCredential', btoa(JSON.stringify(assertionResponse)));
+	
+	let response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
+	if(!response || response.verified){
+		throw new Error('Passkey Login failed');
+	}
+}
 /**
  * Do a webauthn verification after loggin with username and password
  * 
@@ -29,7 +50,7 @@ export async function webAuthVerification(username){
 
 		// Update message
 		if(sim.login != undefined){
-			sim.login.loadingScreen('Verifying credentials...');
+			sim.login.loadingScreen('Preparing Passkey Login...');
 		}
 
 		// 2. Start authentication
@@ -43,14 +64,14 @@ export async function webAuthVerification(username){
 		
 		let response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
 		if(!response || response.verified){
-			throw new Error('Verification failed');
+			throw new Error('Passkey Login failed');
 		}
 
-		showMessage('Verification successfull');
+		showMessage('Passkey Login successfull');
 
 		return true;
 	} catch (error) {
-		console.error('Authentication failed:', error);
+		console.error('Passkey Login failed:', error);
 
 		showMessage(error);
 

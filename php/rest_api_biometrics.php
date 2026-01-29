@@ -68,11 +68,7 @@ function bioRestApi() {
                 return $ceremony->createOptions();
             },
             'permission_callback' => '__return_true',
-            'args'					=> array(
-				'username'		=> array(
-					'required'	=> true
-				),
-			)
+            
 		)
 	);
 

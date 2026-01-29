@@ -25,6 +25,7 @@ export async function registerWebAuthn(){
 	let identifier          = `${device.device.type}_${device.device.brand}_${device.device.model}_${device.client.name}`;
 
 	showMessage( 'Please take a few seconds to setup your login token...' );
+	showStatusMessage( 'Preparing your Passkey...' );
 
 	// Get registration options from the endpoint
 	const optionsJSON			= await FormSubmit.fetchRestApi('login/fingerprint_options');
@@ -34,23 +35,28 @@ export async function registerWebAuthn(){
 
 	let attResp;
 	try {
-		// Pass the options to the authenticator and wait for a response
-		attResp = await startRegistration({ optionsJSON });
+		// Try to use the browser's auto register feature first
+		attResp = await startRegistration({ optionsJSON, useAutoRegister: true });
 	} catch (error) {
-        // Handle different error types
-        if (error.name === 'NotAllowedError') {
-            showStatusMessage('Operation cancelled or timed out');
-        } else if (error.name === 'InvalidStateError') {
-            showStatusMessage('Authenticator already registered');
-        } else if (error.name === 'NotSupportedError') {
-            showStatusMessage('WebAuthn not supported in this browser');
-        } else if (error.name === 'AbortError') {
-            showStatusMessage('Operation was aborted');
-        } else {
-            showStatusMessage('Authentication failed: ' + error.message);
-        }
-		
-		return;
+        try {
+			// Pass the options to the authenticator and wait for a response
+			attResp = await startRegistration({ optionsJSON });
+		} catch (error) {
+			// Handle different error types
+			if (error.name === 'NotAllowedError') {
+				showStatusMessage('Operation cancelled or timed out');
+			} else if (error.name === 'InvalidStateError') {
+				showStatusMessage('Authenticator already registered');
+			} else if (error.name === 'NotSupportedError') {
+				showStatusMessage('WebAuthn not supported in this browser');
+			} else if (error.name === 'AbortError') {
+				showStatusMessage('Operation was aborted');
+			} else {
+				showStatusMessage('Authentication failed: ' + error.message);
+			}
+			
+			return;
+		}
 	}
 
 	showMessage( '' );
