@@ -5,6 +5,7 @@
 
 ### Changed
 - logged messages
+- trying to fix autocomplete for webauthn
 
 ### Fixed
 - startAuthentication params
