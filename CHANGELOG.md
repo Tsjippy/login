@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- webauthn as a second login factor
 
 ### Updated
+
+## [9.1.0] - 2026-01-30
+
+
+### Fixed
+- webauthn as a second login factor
 
 ## [9.0.8] - 2026-01-29
 
