@@ -13,7 +13,8 @@ import {
 import {
 	checkWebauthnAvailable,
 	webAuthVerification,
-	autofill
+	checkImmediateMediationAvailability,
+	verifyWebauthn
 } from './partials/webauth.js';
 
 import { registerWebAuthn } from './partials/register_webauth.js'; 
@@ -64,9 +65,6 @@ const login = class{
 				togglePassworView(event);
 			}else if(target.id == 'password-reset-form' || target.id == "lost-pwd-link"){
 				this.resetPassword(target);
-			}else if(target.id == 'retry_webauthn'){
-				showMessage('');
-				this.verifyWebauthn([]);
 			}else if(target.name == 'request_account'){
 				this.requestAccount(target);
 			}else if(target.matches('.show-login-qr')){
@@ -236,57 +234,6 @@ const login = class{
 			}
 
 			return true;
-		}
-	}
-
-	async checkImmediateMediationAvailability() {
-		try {
-			const capabilities = await PublicKeyCredential.getClientCapabilities();
-			if (capabilities.immediateGet && window.PasswordCredential) {
-			console.log("Immediate Mediation with passwords supported.");
-			} else if (capabilities.immediateGet) {
-			console.log("Immediate Mediation without passwords supported.");
-			} else { console.log("Immediate Mediation unsupported."); }
-		} catch (error) {
-			console.error("Error getting client capabilities:", error);
-		}
-	}
-
-	/**
-	 * Initiates and verifies a webauthentication login
-	 * @param {*} methods 
-	 * @returns 
-	 */
-	async verifyWebauthn(methods){	
-		//show webauthn messages
-		this.loadingScreen('Starting Passkey Verification');
-	
-		try{
-			let result	= await webAuthVerification(this.username, this.msgScreen.querySelector('.status-message'));
-	
-			if(!result){
-				throw new Error( 'Passkey Verification failed' );
-			}
-	
-			//authentication success
-			this.requestLogin(false);
-		}catch (error){		
-			if(methods.length == 1){
-				showMessage('Passkey Verification failed, please setup an additional login factor.');
-				this.requestLogin(true);
-			}else{
-				console.error(error);
-				let message;
-				if(error['message'] == "No authenticator available"){
-					message = "No biometric login for this device found. <br>Give verification code.";
-				}else{
-					message = 'Passkey Verification failed, please give verification code.';
-				}
-				showMessage(message);
-	
-				//Show other 2fa fields
-				this.showTwoFaFields(methods);
-			}
 		}
 	}
 
@@ -525,18 +472,20 @@ const login = class{
 	};
 }
 
-// SHow the login button
+// Show the login button
 document.addEventListener('DOMContentLoaded', () => {
-	//check if the current browser supports webauthn
-	checkWebauthnAvailable();
+	// Add the verifyWebauthn method to the login class
+	login.prototype.verifyWebauthn = verifyWebauthn;
 
+	// Prepare webauthn autofill
 	webAuthVerification('', true);
 
 	document.querySelectorAll('.login.hidden').forEach(el=>{
 		el.classList.remove('hidden');
 	});	
 
+	// Instantiate the login class
 	sim.login = new login();
 
-	sim.login.checkImmediateMediationAvailability();
+	checkImmediateMediationAvailability();
 });
