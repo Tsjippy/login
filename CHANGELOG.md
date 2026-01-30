@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- webauthn as a second login factor
 
 ### Updated
 
