@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- login after autofill webauthn failed
 
 ### Updated
+
+## [9.1.1] - 2026-02-05
+
+
+### Fixed
+- login after autofill webauthn failed
 
 ## [9.1.0] - 2026-01-30
 
