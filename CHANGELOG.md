@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- login after autofill webauthn failed
 
 ### Updated
 
