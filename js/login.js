@@ -473,12 +473,9 @@ const login = class{
 }
 
 // Show the login button
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 	// Add the verifyWebauthn method to the login class
 	login.prototype.verifyWebauthn = verifyWebauthn;
-
-	// Prepare webauthn autofill
-	webAuthVerification('', true);
 
 	document.querySelectorAll('.login.hidden').forEach(el=>{
 		el.classList.remove('hidden');
@@ -488,4 +485,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	sim.login = new login();
 
 	checkImmediateMediationAvailability();
+
+	// Prepare webauthn autofill
+	let result = await webAuthVerification('', true);
+
+	if(!result){
+		sim.login.reset();
+
+		showMessage('Passkey Verification failed, try using your username and password');
+	}
 });

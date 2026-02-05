@@ -77,11 +77,9 @@ export async function webAuthVerification(username, autofill = false){
 		if (!autofill || !(error instanceof WebAuthnError && error.code === 'ERROR_CEREMONY_ABORTED')) {
 			console.error('Passkey Verification Failed:', error);
 
-			if (!autofill){
-				showMessage(error);
+			showMessage(error);
 
-				showStatusMessage('Passkey Verification Failed');
-			}
+			showStatusMessage('Passkey Verification Failed');
 		}
 
 		return false;
