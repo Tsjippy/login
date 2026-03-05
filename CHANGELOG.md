@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- fixed with login screen
 
 ### Fixed
 
 ### Updated
+
+## [9.1.2] - 2026-03-05
+
+
+### Changed
+- fixed with login screen
 
 ## [9.1.1] - 2026-02-05
 
