@@ -6,14 +6,9 @@
 ### Changed
 
 ### Fixed
+- login issues
 
 ### Updated
-
-## [9.1.3] - 2026-04-16
-
-
-### Fixed
-- login issues
 
 ## [9.1.2] - 2026-03-05
 
