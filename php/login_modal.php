@@ -89,20 +89,20 @@ loadAssets();
                 <div id='authenticator-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the two-factor authentication (2FA) verification code below to login.
-                        <input type="tel" name="authcode"  class='wide' size="20" pattern="[0-9]*" required>
+                        <input type="number" name="authcode"  class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
                 <div id='email-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the code sent to your e-mail below to login.
-                        <input type="tel" name="email-code"  class='wide' size="20" pattern="[0-9]*" required>
+                        <input type="number" name="email-code"  class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
                 <div id='login-button-wrapper' class='hidden'>
                     <div class='submit-wrapper'>
-                        <button type='button' class='button' id='login-button' disabled>Login</button>
+                        <button type='button' class='button' id='login-button'>Login</button>
                     </div>
                 </div>
             </form>

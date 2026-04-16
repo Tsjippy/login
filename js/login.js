@@ -59,7 +59,7 @@ const login = class{
 				// Check if a valid username and password is submitted
 				this.verifyCreds();
 			}else if(target.id == "login-button"){
-				// Submit the login form when averything is ok
+				// Submit the login form when everything is ok
 				this.requestLogin(true);
 			}else if(target.closest('.toggle-pwd-view') != null){
 				togglePassworView(event);

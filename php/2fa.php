@@ -140,6 +140,7 @@ function authenticate( $user) {
         if(
             $_SERVER['HTTP_HOST'] == 'localhost'  || 
             str_contains($_SERVER['HTTP_HOST'], '.local') || 
+            str_contains($_SERVER['HTTP_HOST'], '.test') || 
             SIM\getFromTransient('last-used-cred-id')
         ){
             //succesfull webauthentication done before
