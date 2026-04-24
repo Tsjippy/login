@@ -201,8 +201,8 @@ function moduleOptions($optionsHtml, $settings){
 	return $optionsHtml.ob_get_clean();
 }
 
-add_filter('sim_email_login_settings', __NAMESPACE__.'\emailSettings', 10, 2);
-function emailSettings($html, $settings){
+add_filter('sim_email_login_settings', __NAMESPACE__.'\emailSettings');
+function emailSettings($html){
 	ob_start();
 	?>
 	<h4>E-mail with the two factor login code</h4>
@@ -210,7 +210,7 @@ function emailSettings($html, $settings){
 	<?php
 	$twoFAEmail    = new TwoFaEmail(wp_get_current_user());
 	$twoFAEmail->printPlaceholders();
-	$twoFAEmail->printInputs($settings);
+	$twoFAEmail->printInputs();
 
 	?>
 	<br>
@@ -221,7 +221,7 @@ function emailSettings($html, $settings){
 	<?php
 	$unsafeLogin    = new UnsafeLogin(wp_get_current_user());
 	$unsafeLogin->printPlaceholders();
-	$unsafeLogin->printInputs($settings);
+	$unsafeLogin->printInputs();
 
 	?>
 	<br>
@@ -232,7 +232,7 @@ function emailSettings($html, $settings){
 	<?php
 	$twoFaReset    = new TwoFaReset(wp_get_current_user());
 	$twoFaReset->printPlaceholders();
-	$twoFaReset->printInputs($settings);
+	$twoFaReset->printInputs();
 
 	?>
 	<br>
@@ -242,7 +242,7 @@ function emailSettings($html, $settings){
 	<?php
 	$emailVerfEnabled    = new EmailVerfEnabled(wp_get_current_user());
 	$emailVerfEnabled->printPlaceholders();
-	$emailVerfEnabled->printInputs($settings);
+	$emailVerfEnabled->printInputs();
 
 	?>
 	<h4>E-mail to people who requested a password reset</h4>
@@ -250,7 +250,7 @@ function emailSettings($html, $settings){
 	<?php
 	$passwordResetMail    = new PasswordResetMail(wp_get_current_user());
 	$passwordResetMail->printPlaceholders();
-	$passwordResetMail->printInputs($settings);
+	$passwordResetMail->printInputs();
 	?>
 	<br>
 	<br>

@@ -138,9 +138,7 @@ function authenticate( $user) {
     if(!empty($methods)){        
         //we did a succesfull webauthn or are on localhost
         if(
-            $_SERVER['HTTP_HOST'] == 'localhost'  || 
-            str_contains($_SERVER['HTTP_HOST'], '.local') || 
-            str_contains($_SERVER['HTTP_HOST'], '.test') || 
+            wp_get_environment_type() === 'local' || 
             SIM\getFromTransient('last-used-cred-id')
         ){
             //succesfull webauthentication done before
