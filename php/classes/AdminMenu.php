@@ -37,7 +37,21 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             }
         }
 
+        if(wp_is_block_theme()){
+            ?>
+            <div class='warning' style='max-width: 500px;'>
+                This site has an active block theme.<br>
+                Make sure to add a login/logout block to your menu <a href="<?php echo SITEURL;?>/wp-admin/site-editor.php?p=%2Fnavigation">here</a> 
+            </div>
+            <?php
+            addRawHtml(ob_get_clean(), $parent);
+        
+            return true;
+        }
+
+        // Classic menus's
         $menus	= wp_get_nav_menus();
+        
 
         if(empty($menus)){
             ?>
