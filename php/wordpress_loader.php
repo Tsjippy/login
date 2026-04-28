@@ -1,6 +1,10 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function loadWordpress($title){
 

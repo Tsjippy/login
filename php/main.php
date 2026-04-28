@@ -1,12 +1,16 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 //disable wp-login.php except for logout
 add_action('init', __NAMESPACE__.'\redirectToLogin');
 function redirectToLogin(){
     // do not run during rest request
-    if(SIM\isRestApiRequest()){
+    if(TSJIPPY\isRestApiRequest()){
         return;
     }
 
@@ -33,19 +37,19 @@ function loginUrl($loginUrl, $redirect ){
 }
 
 // Tweak the message people see when not logged in and making an ajax request
-add_filter('sim-content-filter-rest-not-logged-in-message', __NAMESPACE__.'\notLoggedInMsg');
+add_filter('tsjippy-content-filter-rest-not-logged-in-message', __NAMESPACE__.'\notLoggedInMsg');
 function notLoggedInMsg($message){
     $message    = "<div id='iframe-loader'>";
         $message    .= "<h4>You are not logged in, loading login form...</h4>";
         $message    .= '<div class="loader-image-trigger"></div>';
     $message    .= "</div>";
-    $message    .= "<iframe src='".SITEURL."/wp-content/sim-modules/login/php/login_modal.php?iframe=true' style='position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
+    $message    .= "<iframe src='".WP_PLUGIN_URL."/tsjippy-login/php/login_modal.php?iframe=true' style='position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
     
     return $message;
 }
 
 // Tweak the message people see when not logged in and making an ajax request
-add_filter('sim-content-filter-rest-not-logged-in-data', __NAMESPACE__.'\notLoggedInData');
+add_filter('tsjippy-content-filter-rest-not-logged-in-data', __NAMESPACE__.'\notLoggedInData');
 function notLoggedInData($data){
     if(!empty($data['status'])){
         unset($data['status']);
@@ -94,4 +98,18 @@ function addMethod($method, $userId){
     if(!in_array($method, $methods)){
         add_user_meta($userId, "2fa_methods", $method);
     }
+}
+
+add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
+function postStates( $states, $post ) {
+
+    if(in_array($post->ID, SETTINGS['password-reset-page'] ?? false)) {
+        $states[] = __('Password reset page');
+    }elseif(in_array($post->ID, SETTINGS['register-page'] ?? false)){
+        $states[] = __('User register page');
+    }elseif(in_array($post->ID, SETTINGS['2fa-page'] ?? false )) {
+        $states[] = __('Two Factor Setup page');
+    }
+
+    return $states;
 }

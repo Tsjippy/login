@@ -277,18 +277,18 @@ const login = class{
 			window.parent.document.getElementById('iframe-loader').textContent	= 'Succesfully logged in, you may now close this popup';
 
 			// Refresh the rest api nonce
-			window.parent.sim.restNonce	= response.nonce;
+			window.parent.restNonce	= response.nonce;
 
 			// Update user id
-			window.parent.sim.userId	= response.id;
+			window.parent.userId	= response.id;
 
 			console.log(window.parent.document.getElementById('iframe-loader'));
 
 			// close all iframes
 			window.parent.document.querySelectorAll('iframe').forEach(el=>el.remove());
 		}else{
-			sim.restNonce	= response.nonce;
-			sim.userId		= response.id;
+			restNonce	= response.nonce;
+			userId		= response.id;
 
 			// first register a webauthn if needed
 			if(createWebAuthn){
@@ -482,7 +482,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});	
 
 	// Instantiate the login class
-	sim.login = new login();
+	login = new login();
 
 	checkImmediateMediationAvailability();
 
@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	let result = await webAuthVerification('', true);
 
 	if(!result){
-		sim.login.reset();
+		login.reset();
 
 		showMessage('Passkey Verification failed, try using your username and password');
 	}

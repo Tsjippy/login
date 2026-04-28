@@ -1,7 +1,11 @@
 <?php
 
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
@@ -73,7 +77,7 @@ class CreationCeremony extends WebAuthCeremony{
         );
         
         // store in session
-        SIM\storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
+        TSJIPPY\storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
         
         return json_decode($jsonObject);
     }
@@ -92,20 +96,20 @@ class CreationCeremony extends WebAuthCeremony{
         // Check if the right class
         if (!$this->publicKeyCredential->response instanceof AuthenticatorAttestationResponse) {
             //e.g. process here with a redirection to the public key creation page. 
-            return new \WP_Error('sim-login', 'Invalid response try again');
+            return new \WP_Error('tsjippy-login', 'Invalid response try again');
         }
 
         // validate the response
         try{
             $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
                 $this->publicKeyCredential->response,
-                SIM\getFromTransient('publicKeyCredentialCreationOptions'),
+                TSJIPPY\getFromTransient('publicKeyCredentialCreationOptions'),
                 $this->domain
             );
         }catch(\Exception $e){
-            SIM\printArray($e->getMessage());
+            TSJIPPY\printArray($e->getMessage());
 
-            return new \WP_Error('sim-login', $e->getMessage());
+            return new \WP_Error('tsjippy-login', $e->getMessage());
         }
         
         // store in db
@@ -140,12 +144,12 @@ class CreationCeremony extends WebAuthCeremony{
          * Store the userhandle to be used for passkey login
          */
         // get all passkey login users
-        $webAuthIds    = get_option('sim-webauth-user-handles', []);
+        $webAuthIds    = get_option('tsjippy-webauth-user-handles', []);
 
         // Add the current one
         $webAuthIds[$data->userHandle]   = $this->user->ID;
 
         // Save in db
-        update_option('sim-webauth-user-handles', $webAuthIds);
+        update_option('tsjippy-webauth-user-handles', $webAuthIds);
     }
 }

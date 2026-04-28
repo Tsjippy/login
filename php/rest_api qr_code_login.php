@@ -1,10 +1,14 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addQrLoginUrls');
+add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addQrLoginUrls');
 function addQrLoginUrls($urls){
     $urls[] = RESTAPIPREFIX.'/login/get_login_qr_code';
     $urls[] = RESTAPIPREFIX.'/login/qr_code_scanned';
@@ -110,8 +114,8 @@ function isQrCodeScanned(){
         return new WP_Error('login', 'Invalid login!');
     }
 
-    SIM\storeInTransient("username", $username);
-    SIM\storeInTransient("allow_passwordless_login", true);
+    TSJIPPY\storeInTransient("username", $username);
+    TSJIPPY\storeInTransient("allow_passwordless_login", true);
 
     return userLogin();
 }

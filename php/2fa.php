@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 use RobThree\Auth\TwoFactorAuth;
 use BaconQrCode\Renderer\ImageRenderer;
 use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
@@ -9,6 +9,10 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use stdClass;
 use WP_Error;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 require( plugin_dir_path(__DIR__)  . 'lib/vendor/autoload.php');
 
@@ -66,7 +70,7 @@ function setupTimeCode(){
 function sendEmailCode($user){
     $emailCode  = mt_rand(1000000000,9999999999);
 
-    SIM\storeInTransient('2fa_email_key', $emailCode);
+    TSJIPPY\storeInTransient('2fa_email_key', $emailCode);
 
     $twoFaEmail = new TwoFaEmail($user, $emailCode);
 	$twoFaEmail->filterMail();
@@ -80,8 +84,8 @@ function sendEmailCode($user){
  * @return  bool    true if valid code false otherwise
  */
 function verifyEmailCode(){
-    if(SIM\getFromTransient('2fa_email_key') == $_POST['email-code']){
-        SIM\deleteFromTransient('2fa_email_key');
+    if(TSJIPPY\getFromTransient('2fa_email_key') == $_POST['email-code']){
+        TSJIPPY\deleteFromTransient('2fa_email_key');
 
         return true;
     }
@@ -139,7 +143,7 @@ function authenticate( $user) {
         //we did a succesfull webauthn or are on localhost
         if(
             wp_get_environment_type() === 'local' || 
-            SIM\getFromTransient('last-used-cred-id')
+            TSJIPPY\getFromTransient('last-used-cred-id')
         ){
             //succesfull webauthentication done before
             return $user;
@@ -198,7 +202,7 @@ function authenticate( $user) {
 add_action('init', __NAMESPACE__.'\redirectTo2fa');
 function redirectTo2fa(){
     // do not run during rest request
-    if(SIM\isRestApiRequest()){
+    if(TSJIPPY\isRestApiRequest()){
         return;
     }
 
@@ -214,22 +218,22 @@ function redirectTo2fa(){
         (
             !$methods                                   ||	// and we have no 2fa enabled or
             (
-                !SIM\getFromTransient('last-used-cred-id')       &&  // the current login is not with webauth
+                !TSJIPPY\getFromTransient('last-used-cred-id')       &&  // the current login is not with webauth
                 count($methods) == 1                    &&	// and we only have one 2fa method
                 in_array('webauthn', $methods)				// and that method is webauthn
             )
         )
     ){
-        $url		= SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, '2fa-page');
+        $url		= TSJIPPY\ADMIN\getDefaultPageLink(PLUGINSLUG, '2fa-page');
         
         if(!$url){
             return;
         }
 
-        $fromUrl    = SIM\currentUrl();
+        $fromUrl    = TSJIPPY\currentUrl();
 
         if(str_replace(['http://', 'https://'], '', $fromUrl) != str_replace(['http://', 'https://'], '', $url)){            
-            SIM\printArray("Redirecting from ".SIM\currentUrl()." to $url");
+            TSJIPPY\printArray("Redirecting from ".TSJIPPY\currentUrl()." to $url");
             wp_redirect($url);
             exit();
         }

@@ -1,6 +1,10 @@
 <?php 
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Displays the password reset form for an user
@@ -11,10 +15,10 @@ use SIM;
  */
 function passwordResetForm($user){
 	// Load style
-	wp_enqueue_style('sim_pw_reset_style');
+	wp_enqueue_style('tsjippy_pw_reset_style');
 
 	//Load js
-	wp_enqueue_script('sim_password_strength_script');
+	wp_enqueue_script('tsjippy_password_strength_script');
 
 	if(get_current_user_id() == $user->id || !is_user_logged_in()){
 		$message		 = "Change your password using the fields below.<br>";
@@ -40,7 +44,7 @@ function passwordResetForm($user){
 					<input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off" required/>
 				</label>
 				<button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-					<img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
+					<img src="<?php echo TSJIPPY\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
 				</button>
 				<br>
 				<span class="pass-strength-result hidden" id="pass-strength-result1">Strength indicator</span>
@@ -52,14 +56,14 @@ function passwordResetForm($user){
 					<input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off" required/>
 				</label>
 				<button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-					<img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
+					<img src="<?php echo TSJIPPY\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
 				</button>
 				<br>
 				<span class="pass-strength-result hidden" id="pass-strength-result2">Strength indicator</span>
 			</div>
 			<?php echo do_action('resetpass_form');?>
 		</div>
-		<?php echo SIM\addSaveButton('update-password', 'Change password');?>
+		<?php echo TSJIPPY\addSaveButton('update-password', 'Change password');?>
 	</form>
 	
 	<?php
@@ -139,7 +143,7 @@ function requestAccount(){
 		</label>
 		<?php
 		do_action( 'register_form');
-		echo SIM\addSaveButton('request_account', 'Request an account');
+		echo TSJIPPY\addSaveButton('request_account', 'Request an account');
 		?>
 	</form>
 	<?php

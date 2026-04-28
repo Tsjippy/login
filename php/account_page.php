@@ -1,8 +1,12 @@
 <?php 
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 
-add_filter('sim_user_info_page', __NAMESPACE__.'\userInfoPage', 10, 3);
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+add_filter('tsjippy_user_info_page', __NAMESPACE__.'\userInfoPage', 10, 3);
 function userInfoPage($html, $showCurrentUserData, $user){
     /*
         Two FA Info

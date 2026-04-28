@@ -1,36 +1,40 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__.'\loadAssets');
 function loadAssets(){
     if(!is_user_logged_in()){
 	    //login form
-	    wp_register_style( 'sim_login_style', SIM\pathToUrl(MODULE_PATH.'css/login.min.css'), array(), MODULE_VERSION);
-        wp_enqueue_style( 'sim_login_style');
+	    wp_register_style( 'tsjippy_login_style', TSJIPPY\pathToUrl(PLUGINPATH.'css/login.min.css'), array(), PLUGINVERSION);
+        wp_enqueue_style( 'tsjippy_login_style');
         
-        wp_enqueue_script('sim_login_script', SIM\pathToUrl(MODULE_PATH.'js/login.min.js'), array('sim_script', 'sim_purify', 'sim_formsubmit_script'), MODULE_VERSION, true);
+        wp_enqueue_script('tsjippy_login_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/login.min.js'), array('tsjippy_script', 'tsjippy_purify', 'tsjippy_formsubmit_script'), PLUGINVERSION, true);
     }else{        
-        wp_enqueue_script('sim_logout_script', SIM\pathToUrl(MODULE_PATH.'js/logout.min.js'), array('sim_script', 'sim_formsubmit_script'), MODULE_VERSION, true);
+        wp_enqueue_script('tsjippy_logout_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/logout.min.js'), array('tsjippy_script', 'tsjippy_formsubmit_script'), PLUGINVERSION, true);
     }
 
-    wp_register_style( 'sim_pw_reset_style', SIM\pathToUrl(MODULE_PATH.'css/pw_reset.min.css'), array(), MODULE_VERSION);
+    wp_register_style( 'tsjippy_pw_reset_style', TSJIPPY\pathToUrl(PLUGINPATH.'css/pw_reset.min.css'), array(), PLUGINVERSION);
 
-    wp_register_script('sim_password_strength_script', SIM\pathToUrl(MODULE_PATH.'js/password_strength.min.js'), array('password-strength-meter'), MODULE_VERSION,true);
+    wp_register_script('tsjippy_password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/password_strength.min.js'), array('password-strength-meter'), PLUGINVERSION,true);
 
-	wp_register_script('sim_2fa_script', SIM\pathToUrl(MODULE_PATH.'js/2fa.min.js'), array('sim_table_script'), MODULE_VERSION, true);
+	wp_register_script('tsjippy_2fa_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/2fa.min.js'), array('tsjippy_table_script'), PLUGINVERSION, true);
 
     if(is_numeric(get_the_ID())){
-        $passwordResetPage  = SIM\getModuleOption(MODULE_SLUG, 'password-reset-page');
-        $registerPage       = SIM\getModuleOption(MODULE_SLUG, 'register-page');
+        $passwordResetPage  = SETTINGS['password-reset-page'] ?? false;
+        $registerPage       = SETTINGS['register-page'] ?? false;
         if(get_the_ID() == $passwordResetPage || get_the_ID() == $registerPage){
-            wp_enqueue_style('sim_pw_reset_style');
+            wp_enqueue_style('tsjippy_pw_reset_style');
 
-            wp_enqueue_script('sim_password_strength_script');
+            wp_enqueue_script('tsjippy_password_strength_script');
         }
 
-        if(in_array(get_the_ID(), SIM\getModuleOption(MODULE_SLUG, '2fa-page', false))){
-            wp_enqueue_script('sim_2fa_script');
+        if(in_array(get_the_ID(), SETTINGS['2fa-page'] ?? [])){
+            wp_enqueue_script('tsjippy_2fa_script');
         }
     }
 }

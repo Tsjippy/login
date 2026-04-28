@@ -1,17 +1,21 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 //add login and logout buttons to menu's
 add_filter('wp_nav_menu_items', __NAMESPACE__.'\menuItems', 10, 2);
 function menuItems($items, $args) {
-    $loginMenus     = SIM\getModuleOption(MODULE_SLUG, 'loginmenu', false);
-    $logoutMenus    = SIM\getModuleOption(MODULE_SLUG, 'logoutmenu', false);
+    $loginMenus     = SETTINGS['loginmenu'] ?? false;
+    $logoutMenus    = SETTINGS['logoutmenu'] ?? false;
 
     if(
         !in_array($args->menu->term_id, $loginMenus)   &&  // Do not add when not in the list
         !in_array($args->menu->term_id, $logoutMenus)  &&
-        !empty(SIM\getModuleOption(MODULE_SLUG, 'menu', false))
+        !empty(SETTINGS['menu'] ?? false)
     ){
         return $items;
     }
@@ -23,7 +27,7 @@ function menuItems($items, $args) {
             $class  = 'button';
         }
 
-        $visibilities   = SIM\getModuleOption(MODULE_SLUG, 'visibilty-logout-menu', false);
+        $visibilities   = SETTINGS['visibilty-logout-menu'] ?? false;
 
         if(in_array($args->menu->term_id, array_keys($visibilities))){
             if($visibilities[$args->menu->term_id] == 'mobile'){
@@ -43,7 +47,7 @@ function menuItems($items, $args) {
         !is_user_logged_in() &&                     // we are not logged in
         in_array($args->menu->term_id, $loginMenus) // we should add it to the current menu
     ){
-        $shouldAdd  = apply_filters('sim_add_login_button', true, $args->menu->term_id, $loginMenus);
+        $shouldAdd  = apply_filters('tsjippy_add_login_button', true, $args->menu->term_id, $loginMenus);
 
         if(!$shouldAdd){
             return $items;
@@ -54,7 +58,7 @@ function menuItems($items, $args) {
             $class  = 'button';
         }
 
-        $visibilities   = SIM\getModuleOption(MODULE_SLUG, 'visibilty-login-menu', false);
+        $visibilities   = SETTINGS['visibilty-login-menu'] ?? false;
 
         if(in_array($args->menu->term_id, array_keys($visibilities))){
             if($visibilities[$args->menu->term_id] == 'mobile'){
@@ -66,7 +70,7 @@ function menuItems($items, $args) {
             }
         }
 
-        $menuItem   = apply_filters('sim-login-menu-item', "<a href='#login' class='login $class'>Log in</a>");
+        $menuItem   = apply_filters('tsjippy-login-menu-item', "<a href='#login' class='login $class'>Log in</a>");
         $items     .=  "<li class='menu-item login hidden'>$menuItem</li>";
     }
   return $items;

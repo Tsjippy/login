@@ -1,6 +1,10 @@
 <?php 
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 add_shortcode('twofa_setup', __NAMESPACE__.'\twoFaSettingsForm');
 function twoFaSettingsForm($userId=''){
@@ -18,12 +22,12 @@ function twoFaSettingsForm($userId=''){
 			</p>
 		</div>
 		<?php
-		wp_enqueue_script('sim_qr_code_login', SIM\pathToUrl(MODULE_PATH.'js/qr_code_login.min.js'), [], MODULE_VERSION, true);
+		wp_enqueue_script('tsjippy_qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH.'js/qr_code_login.min.js'), [], PLUGINVERSION, true);
 		return ob_get_clean();
 	}
 
 	//Load js
-	wp_enqueue_script('sim_2fa_script');
+	wp_enqueue_script('tsjippy_2fa_script');
 
 	if(!is_numeric($userId)){
 		$userId = get_current_user_id();
@@ -136,7 +140,7 @@ function twoFaSettingsForm($userId=''){
 			<?php
 		}
 		
-		echo SIM\addSaveButton('save2fa', "Save 2fa settings", 'hidden');
+		echo TSJIPPY\addSaveButton('save2fa', "Save 2fa settings", 'hidden');
 		?>
 	</form>
 

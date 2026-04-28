@@ -1,6 +1,10 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 $standAlone = false;
 
@@ -71,7 +75,7 @@ loadAssets();
                             <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn">
                         </label>
                         <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-                            <img src="<?php echo SIM\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
+                            <img src="<?php echo TSJIPPY\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
                         </button>
                     </div>
                     <div id='check-cred-wrapper'>

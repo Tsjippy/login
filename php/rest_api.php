@@ -1,10 +1,14 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addLoginUrls');
+add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addLoginUrls');
 function addLoginUrls($urls){
     $urls[] = RESTAPIPREFIX.'/login/check-cred';
     $urls[] = RESTAPIPREFIX.'/login/request_login';
@@ -172,7 +176,7 @@ function checkCredentials(){
 
     $user       = get_user_by('login', $username);
 
-    $user       = apply_filters( 'sim-after-user-check', $user);
+    $user       = apply_filters( 'tsjippy-after-user-check', $user);
 
     if(is_wp_error($user)){
         return $user;
@@ -280,8 +284,8 @@ function userLogin(){
     $urlComp    = parse_url($_SERVER['HTTP_REFERER']);
 
     // redirect to the current page if not the home page
-    if(SIM\getCurrentUrl() != get_home_url()){
-        $redirect   = SIM\getCurrentUrl();
+    if(TSJIPPY\getCurrentUrl() != get_home_url()){
+        $redirect   = TSJIPPY\getCurrentUrl();
     }
     // Redirect from rest api
     elseif(isset($urlComp['query'])){
@@ -388,7 +392,7 @@ function requestUserAccount(){
         return new WP_Error('Password error', "Passwords do not match, try again.");
     }
 
-	$username	= SIM\getAvailableUsername($firstName, $lastName);
+	$username	= TSJIPPY\getAvailableUsername($firstName, $lastName);
 
 	// Creating account
 	//Build the user
@@ -415,7 +419,7 @@ function requestUserAccount(){
 	$userId = wp_insert_user( $userdata ) ;
 	
 	if(is_wp_error($userId)){
-		SIM\printArray($userId->get_error_message());
+		TSJIPPY\printArray($userId->get_error_message());
 		return new WP_Error('User insert error', $userId->get_error_message());
 	}
 
@@ -452,13 +456,13 @@ function allowPasswordlessLogin( $user, $username, $password ) {
 
     session_start();
 
-    if(SIM\getFromTransient('allow_passwordless_login')){
-        SIM\deleteFromTransient('allow_passwordless_login');
-        SIM\deleteFromTransient('user');
+    if(TSJIPPY\getFromTransient('allow_passwordless_login')){
+        TSJIPPY\deleteFromTransient('allow_passwordless_login');
+        TSJIPPY\deleteFromTransient('user');
 
         session_write_close();
 
-        $user   =  get_user_by( 'login', SIM\getFromTransient('username') );
+        $user   =  get_user_by( 'login', TSJIPPY\getFromTransient('username') );
 
         return $user;
     }

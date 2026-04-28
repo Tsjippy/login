@@ -1,6 +1,6 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -11,6 +11,10 @@ use Webauthn\PublicKeyCredential;
 use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
 use Webauthn\AuthenticatorSelectionCriteria;
 use DeviceDetector\Parser\OperatingSystem as OS_info;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
 * Register a webauthn method
@@ -285,12 +289,12 @@ class WebAuthCeremony{
         $this->getCredential($id);
 
         // store id for keypasslogin without username
-        $usedIds    = get_option('sim-webauth-user-handles');
+        $usedIds    = get_option('tsjippy-webauth-user-handles');
         if(!$usedIds){
             $usedIds    = [];
         }
         unset($usedIds[$_POST['key']]);
-        update_option('sim-webauth-user-handles', $usedIds);
+        update_option('tsjippy-webauth-user-handles', $usedIds);
 
         return 'Succesfull removed the authenticator';
     }
@@ -321,7 +325,7 @@ class WebAuthCeremony{
             ?>
             <div id='webautn-devices-wrapper'>
                 <h4>Biometric authenticators overview</h4>
-                <table class='sim-table'>
+                <table class='tsjippy table'>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -347,7 +351,7 @@ class WebAuthCeremony{
                                 $lastUsed		= date('jS M Y', strtotime($meta['last_used']));
                             }
 
-                            if($meta['cred_id'] == SIM\getFromTransient('last-used-cred-id')){
+                            if($meta['cred_id'] == TSJIPPY\getFromTransient('last-used-cred-id')){
                                 $lastUsed   = 'Now';
                                 echo "<tr class='current-device' style='background: beige;'>";
                             }else{

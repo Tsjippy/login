@@ -1,11 +1,15 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use Imagick;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if(!class_exists('BaconQrCode\Renderer\ImageRenderer')){
     return new \WP_Error('2fa', "bacon-qr-code interface does not exist. Please run 'composer require bacon/bacon-qr-code'");
@@ -26,8 +30,8 @@ class QrCodeLogin{
      * @return  string      The login link
      */
     private function getLoginLink(){
-        //$url            = SIM\ADMIN\getDefaultPageLink('login', '2fa-page');
-        $url            = SIM\pathToUrl(MODULE_PATH.'php/qr_code_login.php');
+        //$url            = TSJIPPY\ADMIN\getDefaultPageLink('login', '2fa-page');
+        $url            = TSJIPPY\pathToUrl(PLUGINPATH.'php/qr_code_login.php');
 
         $this->token    = bin2hex(random_bytes(10));
         $this->key      = time();
@@ -54,7 +58,7 @@ class QrCodeLogin{
     public function getQrCode(){
         if (! class_exists('Imagick')) {
 
-            SIM\printArray('Imagick is not installed');
+            TSJIPPY\printArray('Imagick is not installed');
 
             return '';
         }

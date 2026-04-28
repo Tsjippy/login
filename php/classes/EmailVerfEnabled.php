@@ -1,7 +1,11 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class EmailVerfEnabled extends ADMIN\MailSetting{
 
@@ -9,7 +13,7 @@ class EmailVerfEnabled extends ADMIN\MailSetting{
 
     public function __construct($user) {
         // call parent constructor
-		parent::__construct('email_enabled', MODULE_SLUG);
+		parent::__construct('email_enabled', PLUGINSLUG);
 
         $this->addUser($user);
 

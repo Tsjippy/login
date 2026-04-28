@@ -37,8 +37,8 @@ export async function webAuthVerification(username, autofill = false){
 		}
 
 		// Update message
-		if(sim.login != undefined && !autofill){
-			sim.login.loadingScreen('Preparing Passkey Verification...');
+		if(login != undefined && !autofill){
+			login.loadingScreen('Preparing Passkey Verification...');
 		}
 
 		let options					= { optionsJSON: optionsJSON };
@@ -49,7 +49,7 @@ export async function webAuthVerification(username, autofill = false){
 		// 2. Start authentication
 		const assertionResponse 	= await startAuthentication(options);
 
-		sim.login.loadingScreen('Validating Passkey...');
+		login.loadingScreen('Validating Passkey...');
 
 		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
@@ -64,9 +64,9 @@ export async function webAuthVerification(username, autofill = false){
 		if(response){
 			showMessage('Passkey Verification Succesfull');
 
-			return await sim.login.requestLogin();
+			return await login.requestLogin();
 		}else{
-			sim.login.reset();
+			login.reset();
 
 			showMessage('Passkey Verification failed, try using your username and password');
 

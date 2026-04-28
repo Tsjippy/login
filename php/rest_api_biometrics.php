@@ -1,12 +1,16 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addBioUrls');
+add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addBioUrls');
 function addBioUrls($urls){
     $urls[]	= RESTAPIPREFIX.'/login/auth_finish';
     $urls[]	= RESTAPIPREFIX.'/login/auth_start';
@@ -177,13 +181,14 @@ function requestEmailCode(){
 
 function removeWebAuthenticator(){
     $key        = sanitize_text_field($_POST['userHandle']);
+    
     // store id for keypasslogin without username
-    $usedIds    = get_option('sim-webauth-user-handles', []);
+    $usedIds    = get_option('tsjippy-webauth-user-handles', []);
     if(!$usedIds){
         $usedIds    = [];
     }
     unset($usedIds[$key]);
-    update_option('sim-webauth-user-handles', $usedIds);
+    update_option('tsjippy-webauth-user-handles', $usedIds);
 
     return 'Succesfull removed the authenticator';
 }

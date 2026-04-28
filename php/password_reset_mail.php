@@ -1,6 +1,10 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * sends the password reset e-mail
@@ -15,7 +19,7 @@ function sendPasswordResetMessage($user){
 		return $key;
 	}
 
-	$pageurl	 = get_permalink(SIM\getModuleOption(MODULE_SLUG, 'password-reset-page')[0]);
+	$pageurl	 = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
 	$url		 = "$pageurl?key=$key&login=$user->user_login";
 
 	//Send e-mail
@@ -31,7 +35,7 @@ function sendPasswordResetMessage($user){
 
 add_filter( 'retrieve_password_message', __NAMESPACE__.'\passwordMessage', 10, 4);
 function passwordMessage($message, $key, $userLogin, $user){
-	$pageurl	 = get_permalink(SIM\getModuleOption(MODULE_SLUG, 'password-reset-page')[0]);
+	$pageurl	 = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
 
 	if(!$pageurl){
 		return $message;

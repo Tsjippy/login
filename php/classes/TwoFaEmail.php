@@ -1,7 +1,11 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class TwoFaEmail extends ADMIN\MailSetting{
 
@@ -10,7 +14,7 @@ class TwoFaEmail extends ADMIN\MailSetting{
 
     public function __construct($user, $emailCode='') {
         // call parent constructor
-		parent::__construct( 'email_code', MODULE_SLUG);
+		parent::__construct( 'email_code', PLUGINSLUG);
 
         $this->addUser($user);
 

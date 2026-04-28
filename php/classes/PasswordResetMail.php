@@ -1,7 +1,11 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class PasswordResetMail extends ADMIN\MailSetting{
 
@@ -10,7 +14,7 @@ class PasswordResetMail extends ADMIN\MailSetting{
 
     public function __construct($user, $url='') {
         // call parent constructor
-		parent::__construct('password_reset', MODULE_SLUG);
+		parent::__construct('password_reset', PLUGINSLUG);
 
         $this->addUser($user);
 

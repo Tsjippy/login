@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Cose\Algorithm\Signature\ECDSA;
 
-use InvalidArgumentException;
 use function bin2hex;
 use function dechex;
 use function hex2bin;
 use function hexdec;
+use InvalidArgumentException;
 use function str_pad;
+use const STR_PAD_LEFT;
 use function strlen;
 use function substr;
-use const STR_PAD_LEFT;
 
 /**
  * @internal
@@ -42,7 +42,7 @@ final class ECSignature
         }
 
         $pointR = self::preparePositiveInteger(substr($signature, 0, $length));
-        $pointS = self::preparePositiveInteger(substr($signature, $length, null));
+        $pointS = self::preparePositiveInteger(substr($signature, $length));
 
         $lengthR = self::octetLength($pointR);
         $lengthS = self::octetLength($pointS);
@@ -67,7 +67,6 @@ final class ECSignature
             throw new InvalidArgumentException('Invalid data. Should start with a sequence.');
         }
 
-        // @phpstan-ignore-next-line
         if (self::readAsn1Content($message, $position, self::BYTE_SIZE) === self::ASN1_LENGTH_2BYTES) {
             $position += self::BYTE_SIZE;
         }
@@ -93,7 +92,7 @@ final class ECSignature
             str_starts_with($data, self::ASN1_NEGATIVE_INTEGER)
             && substr($data, 2, self::BYTE_SIZE) <= self::ASN1_BIG_INTEGER_LIMIT
         ) {
-            $data = substr($data, 2, null);
+            $data = substr($data, 2);
         }
 
         return $data;
@@ -124,7 +123,7 @@ final class ECSignature
             str_starts_with($data, self::ASN1_NEGATIVE_INTEGER)
             && substr($data, 2, self::BYTE_SIZE) > self::ASN1_BIG_INTEGER_LIMIT
         ) {
-            $data = substr($data, 2, null);
+            $data = substr($data, 2);
         }
 
         return $data;

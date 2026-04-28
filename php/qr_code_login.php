@@ -1,6 +1,10 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 // only direct loading allowed
 if ( defined( 'ABSPATH' ) ) {
@@ -39,7 +43,7 @@ if(!is_user_logged_in() && !auth_redirect()){
 				Please authenticate to approve the qr code login request
 			</p>
 		</main>
-        <script src="<?php echo SIM\pathToUrl(MODULE_PATH.'js/qr_code_login.min.js');?>"></script>
+        <script src="<?php echo TSJIPPY\pathToUrl(PLUGINPATH.'js/qr_code_login.min.js');?>"></script>
     </body>
 </html>
 <?php

@@ -1,7 +1,7 @@
 <?php
 
-namespace SIM\LOGIN;
-use SIM;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialDescriptor;
@@ -11,6 +11,10 @@ use Webauthn\AuthenticatorAssertionResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use WP_Error;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
 * Register a webauthn method
@@ -59,7 +63,7 @@ class RequestCeremony extends WebAuthCeremony{
             )
         ;
 
-        SIM\storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions);
+        TSJIPPY\storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions);
 
         $jsonObject = $this->serializer->serialize(
             $publicKeyCredentialRequestOptions,
@@ -75,7 +79,7 @@ class RequestCeremony extends WebAuthCeremony{
 
     public function passkeyLogin(){
         // get all passkey login users
-        $usedIds    = get_option('sim-webauth-user-handles', []);
+        $usedIds    = get_option('tsjippy-webauth-user-handles', []);
 
         // Find the user id by credential userhandle
         $userId         = $usedIds[$this->publicKeyCredential->response->userHandle];
@@ -93,8 +97,8 @@ class RequestCeremony extends WebAuthCeremony{
 
         $userNameAuth   = $this->user->user_login;
 
-        SIM\storeInTransient("username", $userNameAuth);
-        SIM\storeInTransient("allow_passwordless_login", true);
+        TSJIPPY\storeInTransient("username", $userNameAuth);
+        TSJIPPY\storeInTransient("allow_passwordless_login", true);
     }
     
     public function verifyResponse($response, $isPassKeyLogin){
@@ -120,7 +124,7 @@ class RequestCeremony extends WebAuthCeremony{
         if (empty($prevCredential)) {
            // Throw an exception if the credential is not found.
            // It can also be rejected depending on your security policy (e.g. disabled by the user because of loss)
-           return new WP_Error('sim-login', 'Credential not found!');
+           return new WP_Error('tsjippy-login', 'Credential not found!');
         }
 
         // Needed after the upgrade to v5.2
@@ -135,7 +139,7 @@ class RequestCeremony extends WebAuthCeremony{
         $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
             clone $prevCredential,
             $this->publicKeyCredential->response,
-            SIM\getFromTransient('publicKeyCredentialRequestOptions'),
+            TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions'),
             $this->domain,
             $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
         );
@@ -143,15 +147,15 @@ class RequestCeremony extends WebAuthCeremony{
         /** @disregard P1080 */
         if($publicKeyCredentialSource->counter < $prevCredential->counter){
             /** @disregard P1080 */
-            SIM\printArray("Current counter: $publicKeyCredentialSource->counter, previous counter: $prevCredential->counter");
-            //return new WP_Error('sim-login', 'You cannot use this again, please refresh the page');
+            TSJIPPY\printArray("Current counter: $publicKeyCredentialSource->counter, previous counter: $prevCredential->counter");
+            //return new WP_Error('tsjippy-login', 'You cannot use this again, please refresh the page');
         }
         
         // Update the credential to keep track of the count
         $this->updateUserMeta("2fa_webautn_cred", $publicKeyCredentialSource, $prevCredential);
 
         /** @disregard P1080 */
-        SIM\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
+        TSJIPPY\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
 
         // Update the last used
         foreach($this->getCredentialMetas() as $meta){

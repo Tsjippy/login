@@ -50,7 +50,7 @@ async function logout(event){
             Main.displayMessage(response,'success', false, true);
 
             //redirect to homepage
-            location.href	= sim.baseUrl;
+            location.href	= baseUrl;
         }
     }
 }

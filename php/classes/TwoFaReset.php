@@ -1,7 +1,11 @@
 <?php
-namespace SIM\LOGIN;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class TwoFaReset extends ADMIN\MailSetting{
 
@@ -9,7 +13,7 @@ class TwoFaReset extends ADMIN\MailSetting{
 
     public function __construct($user) {
         // call parent constructor
-		parent::__construct('twofa_reset', MODULE_SLUG);
+		parent::__construct('twofa_reset', PLUGINSLUG);
 
         $this->addUser($user);
 
