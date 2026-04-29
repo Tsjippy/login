@@ -4,6 +4,7 @@
 ### Added
 - support for block theme
 - add login/logout block in block theme
+- redirection to settings page on plugin activation
 
 ### Changed
 - implemented wp_get_environment_type(
