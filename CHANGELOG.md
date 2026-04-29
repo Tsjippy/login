@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- support for block theme
 
 ### Changed
 - implemented wp_get_environment_type(
