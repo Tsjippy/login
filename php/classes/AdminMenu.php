@@ -41,7 +41,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             ?>
             <div class='warning' style='max-width: 500px;'>
                 This site has an active block theme.<br>
-                Make sure to add a login/logout block to your menu <a href="<?php echo SITEURL;?>/wp-admin/site-editor.php?p=%2Fnavigation">here</a> 
+                Make sure to add a login/logout block to your menu <a href="<?php echo SITEURL;?>/wp-admin/site-editor.php?p=%2Fnavigation">here</a>.
+                <br>
+                <br>
+                <label>
+                    <input type='checkbox' name='addLoginLogout' value="1">
+                    Add Login/Logout Button
+                </label>
             </div>
             <?php
             addRawHtml(ob_get_clean(), $parent);
@@ -276,5 +282,30 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     public function functions($parent){
 
         return false;
+    }
+
+    /**
+     * Adds a login/logout block to all nvigation blocks
+     */
+    public function postSettingsSave(){
+        if(isset($_POST['addLoginLogout'])){
+            $posts = get_posts(
+				array(
+					'numberposts'	=> -1,
+					'post_type'      => 'wp_navigation',
+					'post_status'    => array( 'publish', 'inherit' ),
+				)
+			);
+
+            foreach($posts as $post){
+                if(!str_contains($post->post_content, 'wp:loginout')){
+                    $post->post_content .= "<!-- wp:loginout /-->";
+
+                    wp_update_post( ['ID' => $post->ID, 'post_content' => $post->post_content] );
+                }
+            }
+
+            return "Added login/logout button to the menu";
+        }
     }
 }
