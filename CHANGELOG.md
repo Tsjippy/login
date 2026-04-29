@@ -3,6 +3,7 @@
 
 ### Added
 - support for block theme
+- add login/logout block in block theme
 
 ### Changed
 - implemented wp_get_environment_type(
