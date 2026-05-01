@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.0.0] - 2026-05-01
+
+
+### Added
 - support for block theme
 - add login/logout block in block theme
 - redirection to settings page on plugin activation
@@ -14,8 +25,6 @@
 
 ### Fixed
 - login issues
-
-### Updated
 
 ## [9.1.2] - 2026-03-05
 
