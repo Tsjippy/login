@@ -34,7 +34,7 @@ define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_login_settings', []));
 
 require( PLUGINPATH  . 'lib/vendor/autoload.php');
 
-// run on activation
+// run right before activation
 register_activation_hook( __FILE__, function(){
 	$publicCat	= get_cat_ID('Public');
 
@@ -76,9 +76,3 @@ register_deactivation_hook( __FILE__, function(){
 	}
 } );
 
-add_action( 'activated_plugin', function($plugin){
-	// Redirect to settings page after plugin activation
-    if($plugin == PLUGIN && wp_safe_redirect( esc_url(admin_url('admin.php?page=tsjippy-'.PLUGINSLUG) )  ) ){
-		exit();
-	}
-});
