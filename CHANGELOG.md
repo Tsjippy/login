@@ -11,6 +11,7 @@
 - module to plugin
 - exclude .vscode from releases
 - updated github workflow versions
+- removed the redirection at activation as it is done by the share plugin
 
 ### Fixed
 - login issues
