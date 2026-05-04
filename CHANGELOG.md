@@ -7,6 +7,7 @@
 
 ### Fixed
 - plugin settings
+- admin menu
 
 ### Updated
 
