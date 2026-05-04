@@ -189,7 +189,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     }
 
     public function emails($parent){
-        $tab      = '2fa-email';
+        $tab      = 'twofa-email';
         if(isset($_GET['second-tab'])){
             $tab  = sanitize_key($_GET['second-tab']);
         }
