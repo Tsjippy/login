@@ -103,11 +103,11 @@ function addMethod($method, $userId){
 add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
 function postStates( $states, $post ) {
 
-    if(in_array($post->ID, SETTINGS['password-reset-page'] ?? false)) {
+    if($post->ID == SETTINGS['password-reset-page'] ?? false) {
         $states[] = __('Password reset page');
-    }elseif(in_array($post->ID, SETTINGS['register-page'] ?? false)){
+    }elseif($post->ID == SETTINGS['register-page'] ?? false){
         $states[] = __('User register page');
-    }elseif(in_array($post->ID, SETTINGS['2fa-page'] ?? false )) {
+    }elseif($post->ID == SETTINGS['2fa-page'] ?? false ) {
         $states[] = __('Two Factor Setup page');
     }
 

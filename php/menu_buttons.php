@@ -27,7 +27,7 @@ function menuItems($items, $args) {
             $class  = 'button';
         }
 
-        $visibilities   = SETTINGS['visibilty-logout-menu'] ?? false;
+        $visibilities   = SETTINGS['visibilty-logout-menu'] ?? [];
 
         if(in_array($args->menu->term_id, array_keys($visibilities))){
             if($visibilities[$args->menu->term_id] == 'mobile'){

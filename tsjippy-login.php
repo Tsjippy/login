@@ -57,16 +57,16 @@ register_activation_hook( __FILE__, function(){
 register_deactivation_hook( __FILE__, function(){
 	$removePages	= [];
 
-	if(is_array(SETTINGS['password-reset-page'])){
-		$removePages	= array_merge($removePages, SETTINGS['password-reset-page']);
+	if(isset(SETTINGS['password-reset-page'])){
+		$removePages[]	= SETTINGS['password-reset-page'];
 	}
 
-	if(is_array(SETTINGS['register-page'])){
-		$removePages	= array_merge($removePages, SETTINGS['register-page']);
+	if(isset(SETTINGS['register-page'])){
+		$removePages[]	= SETTINGS['register-page'];
 	}
 
-	if(is_array(SETTINGS['2fa-page'])){
-		$removePages	= array_merge($removePages, SETTINGS['2fa-page']);
+	if(isset(SETTINGS['2fa-page'])){
+		$removePages[]	= SETTINGS['2fa-page'];
 	}
 
 	// Remove the auto created pages

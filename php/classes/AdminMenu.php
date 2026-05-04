@@ -89,7 +89,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
             foreach($menus as $menu){
                 $checked	= '';
-                if(isset($this->settings['loginmenu']) && in_array($menu->term_id, $this->settings['loginmenu'])){
+                if(isset($this->settings['login-menu']) && in_array($menu->term_id, $this->settings['login-menu'])){
                     $checked	= 'checked';
                 }
 
@@ -99,7 +99,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 echo "<tr>";
                     echo "<td>";
                         echo "<label>";
-                            echo "<input type='checkbox' name='loginmenu[]' value='$menu->term_id' $checked>";
+                            echo "<input type='checkbox' name='login-menu[]' value='$menu->term_id' $checked>";
                             echo "$menu->name";
                         echo "</label>";
                     echo "</td>";
@@ -141,13 +141,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             <?php
             foreach($menus as $menu){
                 $checked	= '';
-                if(isset($this->settings['logoutmenu']) && in_array($menu->term_id, $this->settings['logoutmenu'])){
+                if(isset($this->settings['logout-menu']) && in_array($menu->term_id, $this->settings['logout-menu'])){
                     $checked	= 'checked';
                 }
                 echo "<tr>";
                     echo "<td>";
                         echo "<label>";
-                            echo "<input type='checkbox' name='logoutmenu[]' value='$menu->term_id' $checked>";
+                            echo "<input type='checkbox' name='logout-menu[]' value='$menu->term_id' $checked>";
                             echo "$menu->name";
                         echo "</label>";
                     echo "</td>";
