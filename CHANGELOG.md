@@ -8,6 +8,7 @@
 ### Fixed
 - plugin settings
 - admin menu
+- login menu items
 
 ### Updated
 
