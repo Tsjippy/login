@@ -6,7 +6,6 @@
 ### Changed
 
 ### Fixed
-- menu buttons
 
 ### Updated
 
