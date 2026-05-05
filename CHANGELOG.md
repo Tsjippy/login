@@ -6,11 +6,16 @@
 ### Changed
 
 ### Fixed
+
+### Updated
+
+## [10.0.3] - 2026-05-05
+
+
+### Fixed
 - plugin settings
 - admin menu
 - login menu items
-
-### Updated
 
 ## [10.0.1] - 2026-05-03
 
