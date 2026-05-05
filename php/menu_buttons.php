@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 //add login and logout buttons to menu's
 add_filter('wp_nav_menu_items', __NAMESPACE__.'\menuItems', 10, 2);
 function menuItems($items, $args) {
-    $loginMenus     = SETTINGS['loginmenu'] ?? [];
-    $logoutMenus    = SETTINGS['logoutmenu'] ?? [];
+    $loginMenus     = SETTINGS['login-menu'] ?? [];
+    $logoutMenus    = SETTINGS['logout-menu'] ?? [];
 
     if(
         !in_array($args->menu->term_id, $loginMenus)   &&  // Do not add when not in the list
