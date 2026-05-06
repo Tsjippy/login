@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- url in js
-- login issues
 
 ### Updated
+
+## [10.0.5] - 2026-05-06
+
+
+### Fixed
+- url in js
+- login issues
 
 ## [10.0.4] - 2026-05-05
 
