@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- url in js
 
 ### Updated
 
