@@ -19,10 +19,11 @@ window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 /**
  * Do a webauthn verification after loggin with username and password
  * 
- * @param {string} username The user name to authenticate
- * @param {bool} autofill Whether to use browser autofill
+ * @param {string} 	username 	The user name to authenticate
+ * @param {bool} 	autofill 	Whether to use browser autofill
+ * @param {object}	loginObj	Instance of a login class
  */
-export async function webAuthVerification(username, autofill = false){
+export async function webAuthVerification(username, autofill = false, loginObj = undefined){
 	try {
 		// 1. Fetch authentication options from server
 		let formData				= new FormData();
@@ -37,8 +38,8 @@ export async function webAuthVerification(username, autofill = false){
 		}
 
 		// Update message
-		if(login != undefined && !autofill){
-			login.loadingScreen('Preparing Passkey Verification...');
+		if(loginObj != undefined && !autofill){
+			loginObj.loadingScreen('Preparing Passkey Verification...');
 		}
 
 		let options					= { optionsJSON: optionsJSON };
@@ -49,7 +50,7 @@ export async function webAuthVerification(username, autofill = false){
 		// 2. Start authentication
 		const assertionResponse 	= await startAuthentication(options);
 
-		login.loadingScreen('Validating Passkey...');
+		loginObj.loadingScreen('Validating Passkey...');
 
 		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
@@ -66,7 +67,7 @@ export async function webAuthVerification(username, autofill = false){
 
 			return await login.requestLogin();
 		}else{
-			login.reset();
+			loginObj.reset();
 
 			showMessage('Passkey Verification failed, try using your username and password');
 

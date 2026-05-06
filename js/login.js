@@ -287,8 +287,9 @@ const login = class{
 			// close all iframes
 			window.parent.document.querySelectorAll('iframe').forEach(el=>el.remove());
 		}else{
-			restNonce	= response.nonce;
-			userId		= response.id;
+			// Update the tsjippy variable with new values
+			tsjippy.restNonce	= response.nonce;
+			tsjippy.userId		= response.id;
 
 			// first register a webauthn if needed
 			if(createWebAuthn){
@@ -482,15 +483,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 	});	
 
 	// Instantiate the login class
-	login = new login();
+	let loginObj = new login();
 
 	checkImmediateMediationAvailability();
 
 	// Prepare webauthn autofill
-	let result = await webAuthVerification('', true);
+	let result = await webAuthVerification('', true, loginObj);
 
 	if(!result){
-		login.reset();
+		loginObj.reset();
 
 		showMessage('Passkey Verification failed, try using your username and password');
 	}
