@@ -7,6 +7,7 @@
 
 ### Fixed
 - url in js
+- login issues
 
 ### Updated
 
