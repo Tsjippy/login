@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
             // close the tab
             if(value < 1){
-                location.href   =   baseUrl+'?message=Login%20succesfully%20aproved';
+                location.href   =   tsjippy.baseUrl+'?message=Login%20succesfully%20aproved';
             }else{
                 value--;
 
