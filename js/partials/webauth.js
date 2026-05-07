@@ -65,7 +65,7 @@ export async function webAuthVerification(username, autofill = false, loginObj =
 		if(response){
 			showMessage('Passkey Verification Succesfull');
 
-			return await login.requestLogin();
+			return await loginObj.requestLogin();
 		}else{
 			loginObj.reset();
 
