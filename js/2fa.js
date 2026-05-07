@@ -14,7 +14,7 @@ async function saveTwofaSettings(target){
 		if(response){
 			form.querySelectorAll('[id^="setup-"]:not(.hidden)').forEach(el=>el.classList.add('hidden'));
 
-			Main.displayMessage(response, 'success');
+			Main.displayMessage(response);
 
 			//Show submit button
 			target.closest('form').querySelector('.form-submit').classList.add('hidden');

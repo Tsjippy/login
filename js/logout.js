@@ -23,31 +23,18 @@ async function logout(event){
 	if(target.matches(".logout")){
         closeMobileMenu();
 
-        let loader				= Main.showLoader(target, false, 50, '', true);
+        let options	= {
+            title: `Logging out...`
+        };
 
-        if(typeof(Swal) != 'undefined'){
-            var options = {
-                iconHtml: loader,
-                title: 'Logging out...',
-                showConfirmButton: false,
-                customClass: {
-                    icon: 'no-border'
-                }
-            };
-            
-            if(document.fullscreenElement != null){
-                options['target']	= document.fullscreenElement;
-            }
-            
-            Swal.fire(options);
-        }
+        new Main.Alert('', 'loader', options);
 
         var formData	= new FormData();
 
         var response    = await FormSubmit.fetchRestApi('login/logout', formData);
 
         if(response){
-            Main.displayMessage(response,'success', false, true);
+            Main.displayMessage(response);
 
             //redirect to homepage
             location.href	= tsjippy.baseUrl;

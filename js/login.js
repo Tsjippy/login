@@ -400,7 +400,7 @@ const login = class{
 		let response	= await FormSubmit.fetchRestApi('login/request_pwd_reset', formData);
 
 		if (response) {
-			Main.displayMessage(response, 'success');
+			Main.displayMessage(response);
 			
 			// Show the login form
 			document.getElementById('loginform').classList.remove('hidden');
