@@ -7,6 +7,7 @@
 - replaced sweetalert
 
 ### Fixed
+- webauth login
 
 ### Updated
 
