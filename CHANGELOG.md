@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- account page retrieval
 
 ### Updated
 
