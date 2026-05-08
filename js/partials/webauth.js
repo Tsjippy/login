@@ -50,7 +50,9 @@ export async function webAuthVerification(username, autofill = false, loginObj =
 		// 2. Start authentication
 		const assertionResponse 	= await startAuthentication(options);
 
-		loginObj.loadingScreen('Validating Passkey...');
+		if(loginObj != undefined){
+			loginObj.loadingScreen('Validating Passkey...');
+		}
 
 		// 3. Send to server for validation
 		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
@@ -65,14 +67,20 @@ export async function webAuthVerification(username, autofill = false, loginObj =
 		if(response){
 			showMessage('Passkey Verification Succesfull');
 
-			return await loginObj.requestLogin();
+			if(loginObj != undefined){
+				return await loginObj.requestLogin();
+			}
 		}else{
-			loginObj.reset();
+			if(loginObj != undefined){
+				loginObj.reset();
+			}
 
 			showMessage('Passkey Verification failed, try using your username and password');
 
 			return false;
 		}
+
+		return true;
 	} catch (error) {
 		// Ignore if the ceremony was aborted
 		if (!autofill || !(error instanceof WebAuthnError && error.code === 'ERROR_CEREMONY_ABORTED')) {

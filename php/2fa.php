@@ -224,8 +224,7 @@ function redirectTo2fa(){
             )
         )
     ){
-        $url		= TSJIPPY\ADMIN\getDefaultPageLink(PLUGINSLUG, '2fa-page');
-        
+        $url		= get_permalink(SETTINGS['2fa-page'] ?? '');
         if(!$url){
             return;
         }

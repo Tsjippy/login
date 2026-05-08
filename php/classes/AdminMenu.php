@@ -28,7 +28,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         </label>
         <?php 
         if($this->settings['user-registration']){
-            $url	= \TSJIPPY\ADMIN\getDefaultPageLink(PLUGINSLUG, 'register-page');
+            $url	= get_permalink(SETTINGS['register-page'] ?? '');
 
             if($url){
                 ?>

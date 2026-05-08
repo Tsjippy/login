@@ -30,7 +30,6 @@ class QrCodeLogin{
      * @return  string      The login link
      */
     private function getLoginLink(){
-        //$url            = TSJIPPY\ADMIN\getDefaultPageLink('login', '2fa-page');
         $url            = TSJIPPY\pathToUrl(PLUGINPATH.'php/qr_code_login.php');
 
         $this->token    = bin2hex(random_bytes(10));
