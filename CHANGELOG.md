@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- account page retrieval
 
 ### Updated
+
+## [10.0.7] - 2026-05-08
+
+
+### Fixed
+- account page retrieval
 
 ## [10.0.6] - 2026-05-07
 
