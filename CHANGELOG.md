@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- echo error
 
 ### Updated
 
