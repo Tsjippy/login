@@ -120,7 +120,9 @@ function loginRestApi() {
 		'/request_user_account',
 		array(
 			'methods' 				=> 'POST',
-			'callback' 				=> __NAMESPACE__.'\requestUserAccount',
+			'callback' 				=> function(){
+                return TSJIPPY\createUserAccount(true);
+            },
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
                 'first-name'		=> array(
@@ -378,55 +380,6 @@ function processPasswordUpdate(){
         'message'	=> $message,
         'redirect'	=> SITEURL."/?showlogin=$user->user_login"
     ];
-}
-
-// Request user account.
-function requestUserAccount(){
-	$firstName	= $_POST['first-name'];
-	$lastName	= $_POST['last-name'];
-	$email	    = $_POST['email'];
-	$pass1	    = $_POST['pass1'];
-	$pass2	    = $_POST['pass2'];
-
-	if($pass1 != $pass2){
-        return new WP_Error('Password error', "Passwords do not match, try again.");
-    }
-
-	$username	= TSJIPPY\getAvailableUsername($firstName, $lastName);
-
-	// Creating account
-	//Build the user
-	$userdata = array(
-		'user_login'    => $username,
-		'last_name'     => $lastName,
-		'first_name'    => $firstName,
-		'user_email'    => $email,
-		'display_name'  => "$firstName $lastName",
-	);
-
-    if(!empty($pass1)){
-        $userdata['user_pass']     = $pass1;
-    }
-
-    $errors = new \WP_Error();
-    $errors = apply_filters( 'registration_errors', $errors, $userdata );
-
-	if ( $errors->has_errors() ) {
-		return $errors;
-	}
-
-	//Insert the user
-	$userId = wp_insert_user( $userdata ) ;
-	
-	if(is_wp_error($userId)){
-		TSJIPPY\printArray($userId->get_error_message());
-		return new WP_Error('User insert error', $userId->get_error_message());
-	}
-
-	// Disable the useraccount until approved by admin
-	update_user_meta( $userId, 'disabled', 'pending' );
-
-	return 'Useraccount successfully created, you will receive an e-mail as soon as it gets approved.';
 }
 
 /**

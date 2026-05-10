@@ -61,7 +61,7 @@ function passwordResetForm($user){
 				<br>
 				<span class="pass-strength-result hidden" id="pass-strength-result2">Strength indicator</span>
 			</div>
-			<?php echo do_action('resetpass_form');?>
+			<?php do_action('resetpass_form');?>
 		</div>
 		<?php echo TSJIPPY\addSaveButton('update-password', 'Change password');?>
 	</form>
