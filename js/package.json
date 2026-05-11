@@ -4,11 +4,11 @@
   "description": "login",
   "main": "./login.js",
   "scripts": {
-    "login": "webpack --watch --entry ./login.js --output-path . --output-filename login.min.js --progress --mode=production --devtool source-map",
-    "2fa": "webpack  --watch --entry ./2fa.js --output-path . --output-filename 2fa.min.js --progress --mode=production --devtool source-map",
-    "logout": "webpack  --watch --entry ./logout.js --output-path . --output-filename logout.min.js --progress --mode=production --devtool source-map",
-    "password": "webpack --watch --entry ./password_strength.js --output-path . --output-filename password_strength.min.js --progress --mode=production --devtool source-map",
-    "qr": "webpack --watch --entry ./qr_code_login.js --output-path . --output-filename qr_code_login.min.js --progress --mode=production --devtool source-map",
+    "login": "webpack --entry ./login.js --output-path . --output-filename login.min.js --progress --mode=production --devtool source-map",
+    "2fa": "webpack --entry ./2fa.js --output-path . --output-filename 2fa.min.js --progress --mode=production --devtool source-map",
+    "logout": "webpack --entry ./logout.js --output-path . --output-filename logout.min.js --progress --mode=production --devtool source-map",
+    "password": "webpack --entry ./password_strength.js --output-path . --output-filename password_strength.min.js --progress --mode=production --devtool source-map",
+    "qr": "webpack --entry ./qr_code_login.js --output-path . --output-filename qr_code_login.min.js --progress --mode=production --devtool source-map",
     "all": "run-p login 2fa logout password qr"
   },
   "author": "Ewald Harmsen",
