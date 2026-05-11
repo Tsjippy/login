@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- echo error
 
 ### Updated
+
+## [10.0.8] - 2026-05-11
+
+
+### Fixed
+- echo error
 
 ## [10.0.7] - 2026-05-08
 
