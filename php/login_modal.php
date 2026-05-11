@@ -14,11 +14,11 @@ if ( !defined( 'ABSPATH' ) ) {
     
     $required   = true;
     $standAlone = true;
-}elseif($required === null){
+}elseif(empty($required)){
     return;
 }
 
-if(!is_string($username)){
+if(empty($username)){
     $username   = '';
 }
 
@@ -113,7 +113,7 @@ loadAssets();
 
             <form id="password-reset-form">
                 <div class='form-elements hidden' style='margin-bottom: 10px;'>
-                    <?php echo do_action('resetpass_form');?>
+                    <?php do_action('resetpass_form');?>
                 </div>
                 <a href='#pwd_reset' id='lost-pwd-link'>Request password reset</a>
             </form>
