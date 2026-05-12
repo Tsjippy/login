@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- login_modal not loaded before usage
 
 ### Fixed
 
