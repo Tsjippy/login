@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- login modal
 
 ### Updated
+
+## [10.1.2] - 2026-05-12
+
+
+### Fixed
+- login modal
 
 ## [10.1.1] - 2026-05-12
 
