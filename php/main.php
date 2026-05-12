@@ -32,24 +32,46 @@ function redirectToLogin(){
 
 //make sure wp_login_url returns correct url
 add_filter( 'login_url', __NAMESPACE__.'\loginUrl', 10, 2);
+/**
+ * Tweaks the login url
+ *
+ * @param   string  $loginUrl    The default login url
+ * @param   string  $redirect    The redirect url
+ *
+ * @return  string  The login url to show
+ */
 function loginUrl($loginUrl, $redirect ){
     return add_query_arg(['showlogin' => '', 'redirect' => $redirect], home_url());
 }
 
 // Tweak the message people see when not logged in and making an ajax request
 add_filter('tsjippy-content-filter-rest-not-logged-in-message', __NAMESPACE__.'\notLoggedInMsg');
+/**
+ * Tweaks the message people see when not logged in and making an ajax request
+ * 
+ * @param   string  $message    The default message
+ * 
+ * @return  string  The message to show when not logged in and making an ajax request
+ */
 function notLoggedInMsg($message){
     $message    = "<div id='iframe-loader'>";
         $message    .= "<h4>You are not logged in, loading login form...</h4>";
         $message    .= '<div class="loader-image-trigger"></div>';
     $message    .= "</div>";
-    $message    .= "<iframe src='".WP_PLUGIN_URL."/tsjippy-login/php/login_modal.php?iframe=true' style='position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
+    $message    .= "<iframe src='".WP_PLUGIN_URL."/tsjippy-login/php/on_request/login_modal.php?iframe=true' style='position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
     
     return $message;
 }
 
 // Tweak the message people see when not logged in and making an ajax request
 add_filter('tsjippy-content-filter-rest-not-logged-in-data', __NAMESPACE__.'\notLoggedInData');
+/**
+ * Tweaks the data returned when not logged in and making an ajax request
+ *
+ * @param   array  $data    The default data
+ *
+ * @return  array  The data to show when not logged in and making an ajax request
+ */
 function notLoggedInData($data){
     if(!empty($data['status'])){
         unset($data['status']);
@@ -60,6 +82,11 @@ function notLoggedInData($data){
 
 /**
  * Creates a login form modal
+ * 
+ * @param   string  $message    An optional message to show in the modal
+ * @param   bool    $required   Whether the login is required or just optional (default false)
+ * @param   string  $username   An optional username to prefill the form with
+ * 
  */
 function loginModal($message='', $required=false, $username=''){
     // Login modal already added
@@ -68,7 +95,7 @@ function loginModal($message='', $required=false, $username=''){
     }
     $GLOBALS['loginadded']  = true;
 
-    require(__DIR__ . '/login_modal.php');
+    require(__DIR__ . '/on_request/login_modal.php');
 }
 
 //add hidden login modal to page if not logged in
@@ -101,6 +128,14 @@ function addMethod($method, $userId){
 }
 
 add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
+/**
+ * Tweaks the post states displayed in the admin area
+ *
+ * @param   array  $states    The current post states
+ * @param   object  $post     The post object
+ *
+ * @return  array  The modified post states
+ */
 function postStates( $states, $post ) {
 
     if($post->ID == SETTINGS['password-reset-page'] ?? false) {
