@@ -14,7 +14,7 @@ if ( !defined( 'ABSPATH' ) ) {
     
     $required   = true;
     $standAlone = true;
-}elseif(empty($required)){
+}elseif(!isset($required)){
     return;
 }
 
