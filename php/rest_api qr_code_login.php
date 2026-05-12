@@ -9,6 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Allow rest api urls for non-logged in users
 add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addQrLoginUrls');
+/**
+ * Adds QR login URLs to the list of allowed REST API URLs
+ *
+ * @param array $urls The list of allowed REST API URLs
+ * @return array The updated list of allowed REST API URLs
+ */
 function addQrLoginUrls($urls){
     $urls[] = RESTAPIPREFIX.'/login/get_login_qr_code';
     $urls[] = RESTAPIPREFIX.'/login/qr_code_scanned';
@@ -36,7 +42,7 @@ function qrLoginRestApi() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\isQrCodeScanned',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',             // Allow public access
 			'args'					=> array(
                 'token'		=> array(
 					'required'	=> true
@@ -55,7 +61,7 @@ function qrLoginRestApi() {
 		array(
 			'methods' 				=> 'POST, GET',
 			'callback' 				=> __NAMESPACE__.'\submitUsernameForQrCode',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',                             // Allow public access, the user still needs to be logged in to submit the username, but this allows us to check if the user is logged in or not in the callback function and return a more specific error message if needed
 			'args'					=> array(
                 'token'		=> array(
 					'required'	=> true
@@ -69,7 +75,7 @@ function qrLoginRestApi() {
 }
 
 /**
- * Retrives a login qr code
+ * Retrieves a login qr code
  */
 function getLoginQrCode(){
     // check if previous qr code has been scanned

@@ -11,6 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Allow rest api urls for non-logged in users
 add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addBioUrls');
+/**
+ * Add biometric authentication URLs to the list of allowed REST API endpoints
+ *
+ * @param array $urls The list of allowed REST API URLs
+ * @return array The updated list of allowed REST API URLs
+ */
 function addBioUrls($urls){
     $urls[]	= RESTAPIPREFIX.'/login/auth_finish';
     $urls[]	= RESTAPIPREFIX.'/login/auth_start';
@@ -114,7 +120,7 @@ function bioRestApi() {
 		array(
 			'methods' 				=> 'POST, GET',
 			'callback' 				=>  __NAMESPACE__.'\requestEmailCode',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',     // Allow public access
 			'args'					=> array(
 				'username'		=> array(
 					'required'	=> true
@@ -130,7 +136,9 @@ function bioRestApi() {
 		array(
 			'methods' 				=> 'GET,POST',
 			'callback' 				=> __NAMESPACE__.'\saveTwoFaSettings',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){
+                return current_user_can('read');
+            },
 			'args'					=> array(
 				'2fa-methods'		=> array(
 					'required'	=> true,
@@ -149,7 +157,9 @@ function bioRestApi() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\removeWebAuthenticator',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){
+                return current_user_can('read');
+            },
 			'args'					=> array(
                 'key'		=> array(
 					'required'	=> true
@@ -194,6 +204,15 @@ function removeWebAuthenticator(){
 }
 
 add_filter( 'check_password', __NAMESPACE__.'\checkBioPassword', 10, 4);
+/**
+ * Check the user's password
+ *
+ * @param bool $check
+ * @param string $password
+ * @param string $storedHash
+ * @param int $userId
+ * @return bool
+ */
 function checkBioPassword($check, $password, $storedHash, $userId ){
     if(empty($check) && empty($storedHash)){
         $user           = get_user_by('id', $userId);

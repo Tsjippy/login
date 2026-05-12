@@ -16,8 +16,8 @@ if(!class_exists('BaconQrCode\Renderer\ImageRenderer')){
 }
 
 class QrCodeLogin{
-    private $token;
-    private $key;
+    private string $token;
+    private string $key;
 
     function __construct() {
         $this->token    = '';

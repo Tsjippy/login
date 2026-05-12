@@ -9,6 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Allow rest api urls for non-logged in users
 add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addLoginUrls');
+/**
+ * Add login URLs to the list of allowed REST API endpoints
+ *
+ * @param array $urls The list of allowed REST API URLs
+ * @return array The updated list of allowed REST API URLs
+ */
 function addLoginUrls($urls){
     $urls[] = RESTAPIPREFIX.'/login/check-cred';
     $urls[] = RESTAPIPREFIX.'/login/request_login';
@@ -28,7 +34,7 @@ function loginRestApi() {
 		array(
 			'methods' 				=> 'POST,GET',
 			'callback' 				=> __NAMESPACE__.'\checkCredentials',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',    // Allow public access
 			'args'					=> array(
 				'username'		=> array(
 					'required'	=> true
@@ -47,7 +53,7 @@ function loginRestApi() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\userLogin',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',         // Allow public access
 			'args'					=> array(
                 'username'		=> array(
 					'required'	=> true
@@ -69,7 +75,9 @@ function loginRestApi() {
                 wp_logout();
                 return 'Log out success';
             },
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){
+                return current_user_can('read');		// Allow access to logged in users
+            },
 		)
 	);
 
@@ -80,7 +88,7 @@ function loginRestApi() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\requestPasswordReset',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',     // Allow public access
 			'args'					=> array(
                 'username'		=> array(
 					'required'	=> true
@@ -96,7 +104,9 @@ function loginRestApi() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\processPasswordUpdate',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){
+                return current_user_can('read');		// Allow access to logged in users, we
+            },
 			'args'					=> array(
                 'user-id'		=> array(
 					'required'	=> true,
@@ -123,7 +133,7 @@ function loginRestApi() {
 			'callback' 				=> function(){
                 return TSJIPPY\createUserAccount(true);
             },
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',     // Allow public access
 			'args'					=> array(
                 'first-name'		=> array(
 					'required'	=> true
@@ -140,6 +150,15 @@ function loginRestApi() {
 }
 
 add_filter( 'check_password', __NAMESPACE__.'\checkPassword', 10, 4);
+/**
+ * Check the user's password
+ *
+ * @param bool $check
+ * @param string $password
+ * @param string $storedHash
+ * @param int $userId
+ * @return bool
+ */
 function checkPassword($check, $password, $storedHash, $userId ){
     if(empty($check) && empty($storedHash)){
         $user           = get_user_by('id', $userId);
@@ -203,6 +222,17 @@ function checkCredentials(){
 
 // function to update the $_COOKIE variable without refreshing the page
 // Needed to create a nonce after ajax login
+/**
+ * Store the logged in cookie in the $_COOKIE variable
+ * 
+ * @param string $loggedInCookie The value of the logged in cookie
+ * @param int $expire The time the cookie expires
+ * @param int $expiration The time the cookie should be considered expired
+ * @param int $userId The ID of the user that just logged in
+ * @param string $type The type of the cookie being set
+ * @param string $token The token used for authentication (if applicable)
+ * @return void
+ */
 function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type, $token){
     // make sure we only write the right cookie
     //if(get_current_user_id() == $userId){
@@ -239,7 +269,7 @@ function userLogin(){
     remove_action( 'set_logged_in_cookie', __NAMESPACE__.'\storeInCookieVar' );
 
     // remove the filter to allow passwordless sign in
-    remove_filter( 'authenticate', __NAMESPACE__.'\allowPasswordlessLogin', 999, 3 );
+    remove_filter( 'authenticate', __NAMESPACE__.'\allowPasswordlessLogin', 999);
 
     if ( is_wp_error( $user ) ) {
         return new WP_Error('Login error', $user->get_error_message());
@@ -388,10 +418,10 @@ function processPasswordUpdate(){
   * To avoid potential security vulnerabilities, this should only be used in the context of a programmatic login,
   * and unhooked immediately after it fires.
   * 
-  * @param WP_User $user
+  * @param \WP_User $user
   * @param string $username
   * @param string $password
-  * @return bool|WP_User a WP_User object if the username matched an existing user, or false if it didn't
+  * @return bool|\WP_User a WP_User object if the username matched an existing user, or false if it didn't
 */
 function allowPasswordlessLogin( $user, $username, $password ) {
     
@@ -459,7 +489,7 @@ function checkAdminDetails($user){
              *
              * @param string           $redirectTo              The redirect destination URL.
              * @param string           $requestedRedirectTo     The requested redirect destination URL passed as a parameter.
-             * @param WP_User|WP_Error $user                    WP_User object if login was successful, WP_Error object otherwise.
+             * @param \WP_User|WP_Error $user                    WP_User object if login was successful, WP_Error object otherwise.
              */
             $redirectTo = apply_filters( 'login_redirect', $redirectTo, $requestedRedirectTo, $user );
 
