@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- login_modal not loaded before usage
 
 ### Fixed
 
 ### Updated
+
+## [10.1.0] - 2026-05-12
+
+
+### Changed
+- login_modal not loaded before usage
 
 ## [10.0.9] - 2026-05-11
 
