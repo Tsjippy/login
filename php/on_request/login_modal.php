@@ -18,8 +18,11 @@ if ( !defined( 'ABSPATH' ) ) {
     return;
 }
 
-if(empty($username)){
+if(!isset($username)){
     $username   = '';
+}
+if(!isset($message)){
+    $message    = '';
 }
 
 if($standAlone && is_user_logged_in()){
@@ -49,8 +52,12 @@ loadAssets();
                 Login form
             </h3>
             <p id="message"><?php
-                if(!empty($message)){
-                    echo $message;
+                if(is_wp_error($message)){
+                    TSJIPPY\printArray($message);
+                    /** @var \WP_Error $message */
+                    echo '<span class="error">'.$message->get_error_message().'</span>';
+                }elseif(!empty($message)){
+                    echo '<span class="message">'.$message.'</span>';
                 }
             ?></p>
 
