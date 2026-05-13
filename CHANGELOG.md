@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- login errors
-- login troubles
 
 ### Updated
+
+## [10.1.4] - 2026-05-13
+
+
+### Fixed
+- login errors
+- login troubles
 
 ## [10.1.2] - 2026-05-12
 
