@@ -133,13 +133,20 @@ function reset2fa($userId){
 
 // Check 2fa after user credentials are checked
 add_filter( 'authenticate', __NAMESPACE__.'\authenticate', 40);
+/**
+ * Check if the user has 2fa enabled and if so verify the provided code
+ * 
+ * @param   object  $user   WP_User or WP_Error if the credentials are not correct
+ * 
+ * @return  object  WP_User if the user is authenticated, WP_Error otherwise
+ */
 function authenticate( $user) {
     if(is_wp_error($user)){
         return $user;
     }
     
     $methods    = get_user_meta($user->ID, '2fa_methods');
-    if(!empty($methods)){        
+    if(!empty($methods)){
         //we did a succesfull webauthn or are on localhost
         if(
             wp_get_environment_type() === 'local' || 
