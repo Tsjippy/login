@@ -7,6 +7,7 @@
 
 ### Fixed
 - login errors
+- login troubles
 
 ### Updated
 
