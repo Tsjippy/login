@@ -490,9 +490,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 	// Prepare webauthn autofill
 	let result = await webAuthVerification('', true, loginObj);
 
-	if(!result){
+	/* if(!result){
 		loginObj.reset();
 
 		showMessage('Passkey Verification failed, try using your username and password');
-	}
+	} */
 });
