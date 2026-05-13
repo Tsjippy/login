@@ -298,7 +298,7 @@ function userLogin(){
             $expiryTime = strtotime("+$validity month", time());
 
             //Convert to date
-            $expiryDate = date('Y-m-d', $expiryTime);
+            $expiryDate = gmdate('Y-m-d', $expiryTime);
 
             //Save the date
             update_user_meta( $user->ID, 'account_validity', $expiryDate);
@@ -307,7 +307,7 @@ function userLogin(){
     update_user_meta( $user->ID, 'login_count', $loginCount );
 
     //store login date
-    update_user_meta( $user->ID, 'last_login_date', date('Y-m-d'));
+    update_user_meta( $user->ID, 'last_login_date', gmdate('Y-m-d'));
 
     /* check if we should redirect */
     $redirect   = '';

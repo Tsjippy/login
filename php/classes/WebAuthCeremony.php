@@ -344,11 +344,11 @@ class WebAuthCeremony{
 
                             $identifier		= $meta['identifier'];
                             $osName		    = $meta['os_info']['name'];
-                            $added			= date('jS M Y', strtotime($meta['added']));
+                            $added			= gmdate('jS M Y', strtotime($meta['added']));
                             $lastUsed       = $meta['last_used'];
 
                             if($lastUsed != '-'){
-                                $lastUsed		= date('jS M Y', strtotime($meta['last_used']));
+                                $lastUsed		= gmdate('jS M Y', strtotime($meta['last_used']));
                             }
 
                             if($meta['cred_id'] == TSJIPPY\getFromTransient('last-used-cred-id')){

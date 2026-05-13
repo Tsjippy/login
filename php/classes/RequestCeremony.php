@@ -163,7 +163,7 @@ class RequestCeremony extends WebAuthCeremony{
             if($meta['cred_id'] == $publicKeyCredentialSource->publicKeyCredentialId){
                 $newMeta    = $meta;
 
-                $newMeta['last_used']   = date('Y-m-d H:i:s', current_time('timestamp'));
+                $newMeta['last_used']   = gmdate('Y-m-d H:i:s', current_time('timestamp'));
 
                 // Update the credential to keep track of the count
                 $this->updateUserMeta("2fa_webautn_cred_meta", $newMeta, $meta);

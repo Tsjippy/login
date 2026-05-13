@@ -123,7 +123,7 @@ class CreationCeremony extends WebAuthCeremony{
             'cred_id'       => $data->publicKeyCredentialId,
             "identifier"    => $identifier,
             "os_info"       => $this->getOsInfo(),
-            "added"         => date('Y-m-d H:i:s', current_time('timestamp')),
+            "added"         => gmdate('Y-m-d H:i:s', current_time('timestamp')),
             "userHandle"    => $data->userHandle,
             "last_used"     => "-"
         );
