@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- login errors
 
 ### Updated
 
