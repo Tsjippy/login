@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- lostpassword_url filter to point to custom pw reset page
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.1.6] - 2026-05-14
+
+
+### Added
+- lostpassword_url filter to point to custom pw reset page
 
 ## [10.1.5] - 2026-05-14
 
