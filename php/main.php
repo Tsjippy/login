@@ -148,3 +148,14 @@ function postStates( $states, $post ) {
 
     return $states;
 }
+
+/**
+ * Tweaks the lost password url to point to our custom password reset page if set
+ */
+add_filter( 'lostpassword_url', function($lostpasswordUrl ){
+    $pageUrl	= get_permalink(SETTINGS['password-reset-page'] ?? '' );
+    if($pageUrl){
+        return $pageUrl;
+    }
+    return $lostpasswordUrl;
+});
