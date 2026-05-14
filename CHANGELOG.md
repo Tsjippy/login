@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- lostpassword_url filter to point to custom pw reset page
 
 ### Changed
 
