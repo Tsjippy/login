@@ -20,7 +20,7 @@ function passwordResetForm($user){
 	//Load js
 	wp_enqueue_script('tsjippy_password_strength_script');
 
-	if(get_current_user_id() == $user->id || !is_user_logged_in()){
+	if(get_current_user_id() == $user->ID || !is_user_logged_in()){
 		$message		 = "Change your password using the fields below.<br>";
 		$message		.= "<br>Your username is $user->user_login.";
 	}else{
