@@ -273,7 +273,8 @@ class WebAuthCeremony{
         $os         = $this->getOsInfo()['name'];
 
         foreach($this->getCredentials() as $data){
-            if( $os == $this->getCredentialMetaById($data->publicKeyCredentialId)['os_info']['name']){
+            $credentialMeta = $this->getCredentialMetaById($data->publicKeyCredentialId);
+            if( $credentialMeta && isset($credentialMeta['os_info']['name']) && $os == ['os_info']['name']){
                 $credentials[] = $data;
             }
         }
