@@ -10,9 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_filter( 'wp_die_handler', function($handler){
 
     if(!is_user_logged_in()){
-        return "TSJIPPY\LOGIN\loginModal";
+        return __NAMESPACE__.'\wpDieCallLoginModal';
     }else{
         return $handler;
     }
 });
 
+function wpDieCallLoginModal($message, $title, $args ){
+    TSJIPPY\printArray($_SERVER);
+    loginModal($message, true);
+}
