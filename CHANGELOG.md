@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- empty error
 
 ### Updated
+
+## [10.1.8] - 2026-05-23
+
+
+### Fixed
+- empty error
 
 ## [10.1.7] - 2026-05-21
 
