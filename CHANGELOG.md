@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- call login modal from wp_die
 
 ### Updated
 
