@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- array index bug
 
 ### Updated
+
+## [10.2.0] - 2026-05-24
+
+
+### Fixed
+- array index bug
 
 ## [10.1.9] - 2026-05-23
 
