@@ -196,7 +196,7 @@ class WebAuthCeremony{
      */
     public function getCredential($id){
         foreach($this->getCredentials() as $credential){
-            if($credential->publicKeyCredentialId == $id){
+            if($credential && $credential->publicKeyCredentialId == $id){
                 return $credential;
             }
         }

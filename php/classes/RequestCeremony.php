@@ -82,7 +82,11 @@ class RequestCeremony extends WebAuthCeremony{
         $usedIds    = get_option('tsjippy-webauth-user-handles', []);
 
         // Find the user id by credential userhandle
-        $userId         = $usedIds[$this->publicKeyCredential->response->userHandle];
+        $userId     = false;
+
+        if(!empty($usedIds[$this->publicKeyCredential->response->userHandle])){
+            $userId     = $usedIds[$this->publicKeyCredential->response->userHandle];
+        }
 
         if(empty($userId)){
             return new \WP_Error('webauthn', "Authenticator id not found");

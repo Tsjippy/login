@@ -17,6 +17,10 @@ add_filter( 'wp_die_handler', function($handler){
 });
 
 function wpDieCallLoginModal($message, $title, $args ){
-    TSJIPPY\printArray($_SERVER);
+    if(wp_doing_cron()){
+        TSJIPPY\printArray($_SERVER['REQUEST_URI']);
+
+        TSJIPPY\printArray(TSJIPPY\generateStackTrace());
+    }
     loginModal($message, true);
 }
