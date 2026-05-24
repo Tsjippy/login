@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- call login modal from wp_die
 
 ### Updated
+
+## [10.1.9] - 2026-05-23
+
+
+### Fixed
+- call login modal from wp_die
 
 ## [10.1.8] - 2026-05-23
 
