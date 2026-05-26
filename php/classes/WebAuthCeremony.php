@@ -149,7 +149,7 @@ class WebAuthCeremony{
             $this->user->user_login,
             $webauthnKey,
             $this->user->display_name,
-            $this->getProfilePicture($this->user->ID)
+            null
         );
     }
     
