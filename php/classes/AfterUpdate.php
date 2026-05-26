@@ -1,14 +1,15 @@
 <?php
-namespace TSJIPPY;
+namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class AfterUpdate extends AfterPluginUpdate {
+class AfterUpdate extends TSJIPPY\AfterPluginUpdate {
 
     public function afterPluginUpdate($oldVersion){
         global $wpdb;
 
-        printArray('Running update actions');
+        TSJIPPY\printArray('Running update actions');
 
         error_log("Old Version is $oldVersion");
 
