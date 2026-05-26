@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- invalid chanllenge bug
 
 ### Updated
 
