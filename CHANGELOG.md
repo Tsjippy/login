@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- PublicKeyCredentialUserEntity remove profile picture
 
 ### Fixed
 - invalid chanllenge bug
