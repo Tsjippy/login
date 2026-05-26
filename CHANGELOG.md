@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.1] - 2026-05-26
+
+
+### Changed
 - PublicKeyCredentialUserEntity remove profile picture
 
 ### Fixed
 - invalid chanllenge bug
-
-### Updated
 
 ## [10.2.0] - 2026-05-24
 
