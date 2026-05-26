@@ -140,40 +140,45 @@ class RequestCeremony extends WebAuthCeremony{
 
         }
         
-        $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
-            clone $prevCredential,
-            $this->publicKeyCredential->response,
-            TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions'),
-            $this->domain,
-            $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
-        );
+        try{
+            $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
+                clone $prevCredential,
+                $this->publicKeyCredential->response,
+                TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions'),
+                $this->domain,
+                $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
+            );
 
-        /** @disregard P1080 */
-        if($publicKeyCredentialSource->counter < $prevCredential->counter){
             /** @disregard P1080 */
-            TSJIPPY\printArray("Current counter: $publicKeyCredentialSource->counter, previous counter: $prevCredential->counter");
-            //return new WP_Error('tsjippy-login', 'You cannot use this again, please refresh the page');
-        }
-        
-        // Update the credential to keep track of the count
-        $this->updateUserMeta("2fa_webautn_cred", $publicKeyCredentialSource, $prevCredential);
-
-        /** @disregard P1080 */
-        TSJIPPY\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
-
-        // Update the last used
-        foreach($this->getCredentialMetas() as $meta){
-            /** @disregard P1080 */
-            if($meta['cred_id'] == $publicKeyCredentialSource->publicKeyCredentialId){
-                $newMeta    = $meta;
-
-                $newMeta['last_used']   = gmdate('Y-m-d H:i:s', current_time('timestamp'));
-
-                // Update the credential to keep track of the count
-                $this->updateUserMeta("2fa_webautn_cred_meta", $newMeta, $meta);
+            if($publicKeyCredentialSource->counter < $prevCredential->counter){
+                /** @disregard P1080 */
+                TSJIPPY\printArray("Current counter: $publicKeyCredentialSource->counter, previous counter: $prevCredential->counter");
+                //return new WP_Error('tsjippy-login', 'You cannot use this again, please refresh the page');
             }
-        }
+            
+            // Update the credential to keep track of the count
+            $this->updateUserMeta("2fa_webautn_cred", $publicKeyCredentialSource, $prevCredential);
 
-        return "Verified";
+            /** @disregard P1080 */
+            TSJIPPY\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
+
+            // Update the last used
+            foreach($this->getCredentialMetas() as $meta){
+                /** @disregard P1080 */
+                if($meta['cred_id'] == $publicKeyCredentialSource->publicKeyCredentialId){
+                    $newMeta    = $meta;
+
+                    $newMeta['last_used']   = gmdate('Y-m-d H:i:s', current_time('timestamp'));
+
+                    // Update the credential to keep track of the count
+                    $this->updateUserMeta("2fa_webautn_cred_meta", $newMeta, $meta);
+                }
+            }
+        
+            return "Verified";
+
+        }catch(\Exception $e) {
+            return new \WP_Error('tsjippy-login', $e->getMessage());
+        }
     }
 }
