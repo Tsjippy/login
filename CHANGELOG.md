@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- after update namespace
 
 ### Updated
+
+## [10.2.2] - 2026-05-27
+
+
+### Fixed
+- after update namespace
 
 ## [10.2.1] - 2026-05-26
 
