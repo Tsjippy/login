@@ -7,6 +7,7 @@
 
 ### Fixed
 - ?? bug
+- bug with empty os info
 
 ### Updated
 
