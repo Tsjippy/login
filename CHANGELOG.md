@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- ?? bug
-- bug with empty os info
 
 ### Updated
+
+## [10.2.3] - 2026-05-28
+
+
+### Fixed
+- ?? bug
+- bug with empty os info
 
 ## [10.2.2] - 2026-05-27
 
