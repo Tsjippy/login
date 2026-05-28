@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- username listener for password reset form
 
 ### Changed
 
 ### Fixed
-- prefill password reset username
 
 ### Updated
+
+## [10.2.4] - 2026-05-28
+
+
+### Added
+- username listener for password reset form
+
+### Fixed
+- prefill password reset username
 
 ## [10.2.3] - 2026-05-28
 
