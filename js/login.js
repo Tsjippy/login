@@ -91,6 +91,7 @@ const login = class{
 		this.email			= document.getElementById('email-wrapper');
 		this.login			= document.getElementById('login-button-wrapper');
 		this.passwordReset 	= document.getElementById('password-reset-form');
+		this.username		= '';
 
 		this.curScreen		= this.creds;
 		
@@ -356,7 +357,9 @@ const login = class{
 	}
 
 	//request password reset e-mail
-	async resetPassword(target){		
+	async resetPassword(target){
+		this.username		= document.getElementById('username').value;
+
 		let form 			= target.closest('form');
 
 		let button			= form.querySelector('#lost-pwd-link');
@@ -371,7 +374,7 @@ const login = class{
 			if(form.querySelector(`[name='username']`) == null){
 				extraElements.innerHTML	= `<label class="form-label">
 					Username<br>
-					<input type="text" name="username" id="username" class="form-control" value="${this.username}" required>
+					<input type="text" name="username" class="form-control" value="${this.username}" required>
 				</label><br>`+extraElements.innerHTML;
 			}
 
