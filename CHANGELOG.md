@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- unnecesary session_starts
 
 ### Updated
+
+## [10.2.6] - 2026-05-28
+
+
+### Fixed
+- unnecesary session_starts
 
 ## [10.2.5] - 2026-05-28
 
