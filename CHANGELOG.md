@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- unnecesary session_starts
 
 ### Updated
 
