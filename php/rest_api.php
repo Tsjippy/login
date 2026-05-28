@@ -437,13 +437,9 @@ function allowPasswordlessLogin( $user, $username, $password ) {
         return $user;
     }
 
-    session_start();
-
     if(TSJIPPY\getFromTransient('allow_passwordless_login')){
         TSJIPPY\deleteFromTransient('allow_passwordless_login');
         TSJIPPY\deleteFromTransient('user');
-
-        session_write_close();
 
         $user   =  get_user_by( 'login', TSJIPPY\getFromTransient('username') );
 
