@@ -77,6 +77,12 @@ const login = class{
 
 			event.stopImmediatePropagation();
 		});
+
+		document.addEventListener("input", event => {
+			if( event.target.name == 'username'){
+				this.username = event.target.value;
+			}
+		});
 	};
 
 	checkIsIOS(){
@@ -358,8 +364,6 @@ const login = class{
 
 	//request password reset e-mail
 	async resetPassword(target){
-		this.username		= document.getElementById('username').value;
-
 		let form 			= target.closest('form');
 
 		let button			= form.querySelector('#lost-pwd-link');
@@ -376,6 +380,8 @@ const login = class{
 					Username<br>
 					<input type="text" name="username" class="form-control" value="${this.username}" required>
 				</label><br>`+extraElements.innerHTML;
+			}else{
+				form.querySelector(`[name='username']`).value = this.username;
 			}
 
 			// Show the form
