@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- prefill password reset username
 
 ### Updated
 
