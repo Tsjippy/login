@@ -3,6 +3,7 @@
 
 ### Added
 - account creation nonce
+- wp_unslash
 
 ### Changed
 
