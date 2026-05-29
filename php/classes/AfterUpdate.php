@@ -7,11 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class AfterUpdate extends TSJIPPY\AfterPluginUpdate {
 
     public function afterPluginUpdate($oldVersion){
-        global $wpdb;
-
-        TSJIPPY\printArray('Running update actions');
-
-        error_log("Old Version is $oldVersion");
 
         if(version_compare('10.0.1', $oldVersion) === 1 ){
             $settings       = get_option('tsjippy-login-settings');
