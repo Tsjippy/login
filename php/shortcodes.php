@@ -112,6 +112,7 @@ function requestAccount(){
 		<p>Please fill in the form to create an user account</p>
 		
 		<input type="hidden" class="no-reset" name="action" value="requestuseraccount">
+		<input type="hidden" class="no-reset" name="nonce" value="<?php echo wp_create_nonce('account-creation');?>">
 		
 		<label>
 			<h4>First name<span class="required">*</span></h4>
