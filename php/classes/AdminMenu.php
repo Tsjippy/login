@@ -197,7 +197,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     public function emails($parent){
         $tab      = 'twofa-email';
         if(isset($_GET['second-tab'])){
-            $tab  = sanitize_key($_GET['second-tab']);
+            $tab  = sanitize_key( wp_unslash( $_GET['second-tab']));
         }
 
         $tablinkWrapper = addElement('div', $parent, ['class' => 'tablink-wrapper']);

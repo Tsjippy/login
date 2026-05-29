@@ -48,7 +48,7 @@ function bioRestApi() {
         array(
             'methods'               => 'POST,GET',
             'callback'              => function(){
-                $credential  = base64_decode(sanitize_text_field($_POST["publicKeyCredential"]));
+                $credential  = base64_decode(sanitize_text_field( wp_unslash( $_POST["publicKeyCredential"])));
 
                 // Check param
                 if(empty($credential)){
@@ -56,7 +56,7 @@ function bioRestApi() {
                 }
 
                 $ceremony    = new CreationCeremony();
-                return $ceremony->verifyResponse($credential, sanitize_text_field($_POST['identifier']));
+                return $ceremony->verifyResponse($credential, sanitize_text_field( wp_unslash( $_POST['identifier'])));
             },
             'permission_callback'   => '__return_true',
             'args'					=> array(
@@ -89,7 +89,7 @@ function bioRestApi() {
         array(
             'methods' => 'POST,GET',
             'callback' => function(){
-                $credential  = base64_decode(sanitize_text_field($_POST["publicKeyCredential"]));
+                $credential  = base64_decode(sanitize_text_field( wp_unslash( $_POST["publicKeyCredential"])));
 
                 // Check param
                 if(empty($credential)){
@@ -170,7 +170,7 @@ function bioRestApi() {
 }
 
 function requestEmailCode(){
-    $username   = sanitize_text_field($_REQUEST['username']);
+    $username   = sanitize_text_field( wp_unslash( $_REQUEST['username']));
     if(is_numeric($username)){
         $user       = get_user_by('id', $username);
     }else{
@@ -190,7 +190,7 @@ function requestEmailCode(){
 }
 
 function removeWebAuthenticator(){
-    $key        = sanitize_text_field($_POST['userHandle']);
+    $key        = sanitize_text_field( wp_unslash( $_POST['userHandle']));
     
     // store id for keypasslogin without username
     $usedIds    = get_option('tsjippy-webauth-user-handles', []);

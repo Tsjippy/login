@@ -192,8 +192,8 @@ function checkPassword($check, $password, $storedHash, $userId ){
 
 // Verify username and password
 function checkCredentials(){
-    $username   = sanitize_text_field($_POST['username']);
-    $password   = sanitize_text_field($_POST['password']);
+    $username   = sanitize_text_field( wp_unslash( $_POST['username']));
+    $password   = sanitize_text_field( wp_unslash( $_POST['password']));
 
     $user       = get_user_by('login', $username);
 
@@ -246,9 +246,9 @@ function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type,
  * @return array        Array of 'redirect'  => $redirect,  'message'   => $message, 'nonce'     => wp_create_nonce('wp_rest'),  'id'        => $user->ID
  **/
 function userLogin(){
-    $username       = !empty($_REQUEST['username'])   ? sanitize_text_field($_REQUEST['username'])   : '';
-    $password       = !empty($_REQUEST['password'])   ? sanitize_text_field($_REQUEST['password'])   : '';
-    $remember       = !empty($_REQUEST['rememberme']) ? sanitize_text_field($_REQUEST['rememberme']) : true;
+    $username       = sanitize_text_field( wp_unslash( $_REQUEST['username'] ?? ''));
+    $password       = sanitize_text_field( wp_unslash( $_REQUEST['password'] ?? ''));
+    $remember       = sanitize_text_field( wp_unslash( $_REQUEST['rememberme'] ?? true ));
 
     $creds = array(
         'user_login'    => $username,
@@ -353,7 +353,7 @@ function userLogin(){
 
 // Send password reset e-mail
 function requestPasswordReset(){
-    $username   = sanitize_text_field($_POST['username']);
+    $username   = sanitize_text_field( wp_unslash( $_POST['username']));
 
 	$user	= get_user_by('login', $username);
     if(!$user){

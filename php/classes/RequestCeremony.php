@@ -37,9 +37,9 @@ class RequestCeremony extends WebAuthCeremony{
 
         if(!empty($_POST['username'])){
             if(is_numeric($_POST['username'])){
-                $this->user = get_user_by('ID', sanitize_text_field($_POST['username']));
+                $this->user = get_user_by('ID', sanitize_text_field( wp_unslash( $_POST['username'])));
             }else{
-                $this->user = get_user_by('login', sanitize_text_field($_POST['username']));
+                $this->user = get_user_by('login', sanitize_text_field( wp_unslash( $_POST['username'])));
             }
  
             // List of registered PublicKeyCredentialDescriptor classes associated to the user
@@ -120,7 +120,7 @@ class RequestCeremony extends WebAuthCeremony{
         if($isPassKeyLogin){
             $this->passkeyLogin();
         }else{
-            $this->user = get_user_by('login', sanitize_text_field($_POST['username']));
+            $this->user = get_user_by('login', sanitize_text_field( wp_unslash( $_POST['username'])));
         }
         
         $prevCredential = $this->getCredential( $this->publicKeyCredential->rawId );
