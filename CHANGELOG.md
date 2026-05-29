@@ -2,14 +2,19 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- account creation nonce
-- wp_unslash
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.2.7] - 2026-05-29
+
+
+### Added
+- account creation nonce
+- wp_unslash
 
 ## [10.2.6] - 2026-05-28
 
