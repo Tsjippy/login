@@ -1,3 +1,4 @@
+== Description ==
 This module turns on AJAX login and adds two factor login, webauthentication(fingerprint, facial, pincode) and qr code login.<br>
 The normal login (wp-login.php) is no longer available once this module is activated.<br>
 A 'login' or 'logout' menu button will be added instead.<br>
@@ -25,3 +26,12 @@ on Devices without webauthenticators people can login by scanning a qr code usin
 <br>
 2fa setup is done on the page containing the twofa_setup shortcode.<br>
 Use like this: <code>[twofa_setup]</code>
+
+
+== Hooks ==
+# FILTERS
+- apply_filters('sim_add_login_button', true, $args->menu->term_id, $loginMenus);
+- apply_filters( 'lostpassword_errors', $errors, $user );
+- apply_filters( 'registration_errors', $errors, $userdata );
+- sim-login-menu-item
+- sim-after-user-check
