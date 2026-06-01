@@ -139,11 +139,11 @@ add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
 function postStates( $states, $post ) {
 
     if($post->ID == (SETTINGS['password-reset-page'] ?? false)) {
-        $states[] = __('Password reset page');
+        $states[] = __('Password reset page', 'tsjippy');
     }elseif($post->ID == (SETTINGS['register-page'] ?? false)){
-        $states[] = __('User register page');
+        $states[] = __('User register page', 'tsjippy');
     }elseif($post->ID == (SETTINGS['2fa-page'] ?? false) ) {
-        $states[] = __('Two Factor Setup page');
+        $states[] = __('Two Factor Setup page', 'tsjippy');
     }
 
     return $states;
