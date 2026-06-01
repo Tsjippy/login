@@ -14,8 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require( plugin_dir_path(__DIR__)  . 'lib/vendor/autoload.php');
-
 if(!class_exists('BaconQrCode\Renderer\ImageRenderer')){
     return new WP_Error('2fa', "bacon-qr-code interface does not exist. Please run 'composer require bacon/bacon-qr-code'");
 }

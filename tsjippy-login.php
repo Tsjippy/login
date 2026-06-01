@@ -32,8 +32,6 @@ define(__NAMESPACE__ .'\PLUGINVERSION', get_plugin_data(__FILE__, false, false)[
 define(__NAMESPACE__ .'\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FILE__, '.php')));
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_login_settings', []));
 
-require( PLUGINPATH  . 'lib/vendor/autoload.php');
-
 // run right before activation
 register_activation_hook( __FILE__, function(){
 	$publicCat	= get_cat_ID('Public');
