@@ -63,7 +63,7 @@ function passwordResetForm($user){
 			</div>
 			<?php do_action('resetpass_form');?>
 		</div>
-		<?php echo TSJIPPY\addSaveButton('update-password', 'Change password');?>
+		<?php TSJIPPY\addSaveButton('update-password', 'Change password');?>
 	</form>
 	
 	<?php
@@ -144,7 +144,7 @@ function requestAccount(){
 		</label>
 		<?php
 		do_action( 'register_form');
-		echo TSJIPPY\addSaveButton('request_account', 'Request an account');
+		TSJIPPY\addSaveButton('request_account', 'Request an account');
 		?>
 	</form>
 	<?php

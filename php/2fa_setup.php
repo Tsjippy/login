@@ -140,7 +140,7 @@ function twoFaSettingsForm($userId=''){
 			<?php
 		}
 		
-		echo TSJIPPY\addSaveButton('save2fa', "Save 2fa settings", 'hidden');
+		TSJIPPY\addSaveButton('save2fa', "Save 2fa settings", 'hidden');
 		?>
 	</form>
 
