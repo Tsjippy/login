@@ -360,10 +360,10 @@ class WebAuthCeremony{
                             }
                 
                             ?>
-                                <td><?php echo $identifier;?></td>
-                                <td><?php echo $osName;?></td>
-                                <td><?php echo $added;?></td>
-                                <td><?php echo $lastUsed;?></td>
+                                <td><?php echo esc_attr($identifier);?></td>
+                                <td><?php echo esc_attr($osName);?></td>
+                                <td><?php echo esc_attr($added);?></td>
+                                <td><?php echo esc_attr($lastUsed);?></td>
                                 <td>
                                     <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id'];?>'>-</button>
                                 </td>

@@ -27,7 +27,7 @@ function loadWordpress($title){
     <html <?php language_attributes(); ?>>
         <head>
             <meta http-equiv="Content-Type" content="<?php bloginfo( 'html_type' ); ?>; charset=<?php bloginfo( 'charset' ); ?>" />
-            <title><?php echo $title;?></title>
+            <title><?php echo esc_attr($title);?></title>
             <link rel="icon" type="image/x-icon" href="<?php echo get_site_icon_url();?>">
             <?php
             wp_print_scripts();

@@ -38,7 +38,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
             if($url){
                 ?>
-                <a href="<?php echo $url;?>" target="_blank">View registration page</a>
+                <a href="<?php echo esc_url($url);?>" target="_blank">View registration page</a>
                 <?php
             }
         }

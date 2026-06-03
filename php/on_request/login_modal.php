@@ -73,7 +73,7 @@ loadAssets();
                 <div id='credentials-wrapper'>
                     <label style="width: 100%;">
                         Username<br>
-                        <input id="username" type="text" class='wide' name="username" value="<?php echo $username;?>" autofocus autocomplete="username webauthn">
+                        <input id="username" type="text" class='wide' name="username" value="<?php echo esc_attr($username);?>" autofocus autocomplete="username webauthn">
                     </label>
 
                     <div class="password">
