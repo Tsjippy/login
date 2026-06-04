@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
@@ -7,7 +9,7 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use Imagick;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -15,11 +17,13 @@ if (!class_exists('BaconQrCode\Renderer\ImageRenderer')) {
     return new \WP_Error('2fa', "bacon-qr-code interface does not exist. Please run 'composer require bacon/bacon-qr-code'");
 }
 
-class QrCodeLogin{
+class QrCodeLogin
+{
     private string $token;
     private string $key;
 
-    function __construct() {
+    function __construct()
+    {
         $this->token    = '';
         $this->key      = '';
     }
@@ -29,16 +33,17 @@ class QrCodeLogin{
      *
      * @return  string      The login link
      */
-    private function getLoginLink() {
-        $url            = TSJIPPY\pathToUrl(PLUGINPATH. 'php/qr_code_login.php');
+    private function getLoginLink()
+    {
+        $url            = TSJIPPY\pathToUrl(PLUGINPATH . 'php/qr_code_login.php');
 
         $this->token    = bin2hex(random_bytes(10));
         $this->key      = time();
         set_transient($this->key, $this->token, 60); // one minute
 
         if (empty($url)) {
-            $url    = get_home_url(). '?message=No%202fa%20Page%20found&type=error';
-        }else{
+            $url    = get_home_url() . '?message=No%202fa%20Page%20found&type=error';
+        } else {
             $url    .= "?key=$this->key&token=$this->token";
         }
 
@@ -54,7 +59,8 @@ class QrCodeLogin{
      *
      * @return  string          The html qr code image. Empty string if imagick is not installed
      */
-    public function getQrCode() {
+    public function getQrCode()
+    {
         if (! class_exists('Imagick')) {
 
             TSJIPPY\printArray('Imagick is not installed');
@@ -65,7 +71,7 @@ class QrCodeLogin{
         $renderer                   = new ImageRenderer(
             new RendererStyle(400),
             new ImagickImageBackEnd()
-       );
+        );
         $writer         = new Writer($renderer);
 
         $url            = $this->getLoginLink();

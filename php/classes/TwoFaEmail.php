@@ -1,18 +1,22 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class TwoFaEmail extends ADMIN\MailSetting{
+class TwoFaEmail extends ADMIN\MailSetting
+{
 
     public $user;
     public $emailCode;
 
-    public function __construct($user, $emailCode='') {
+    public function __construct($user, $emailCode = '')
+    {
         // call parent constructor
         parent::__construct('email_code', PLUGINSLUG);
 

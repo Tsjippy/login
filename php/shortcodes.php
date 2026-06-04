@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -13,7 +15,8 @@ if ( ! defined('ABSPATH')) {
  *
  * @return    string            The html
  */
-function passwordResetForm($user) {
+function passwordResetForm($user)
+{
     // Load style
     wp_enqueue_style('tsjippy_pw_reset_style');
 
@@ -23,28 +26,28 @@ function passwordResetForm($user) {
     if (get_current_user_id() == $user->ID || !is_user_logged_in()) {
         $message         = "Change your password using the fields below.<br>";
         $message        .= "<br>Your username is $user->user_login. ";
-    }else{
+    } else {
         $message         = "Change the password for $user->display_name using the fields below.<br>";
         $message        .= "<br>Username is $user->user_login. ";
     }
 
     ob_start();
-    ?>
+?>
 
     <form class="pwd-reset">
         <div class="login-info">
-            <input type="hidden" class="no-reset" name="user-id"                    value="<?php echo esc_attr($user->ID); ?>">
+            <input type="hidden" class="no-reset" name="user-id" value="<?php echo esc_attr($user->ID); ?>">
 
             <p style="margin-top:30px;">
-                <?php echo $message;?>
+                <?php echo $message; ?>
             </p>
             <div class='password'>
                 <label>
                     New Password<br>
-                    <input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off" required/>
+                    <input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off" required />
                 </label>
                 <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-                    <img src="<?php echo TSJIPPY\PICTURESURL. '/invisible.png';?>" loading='lazy' alt='togglepasword'>
+                    <img src="<?php echo TSJIPPY\PICTURESURL . '/invisible.png'; ?>" loading='lazy' alt='togglepasword'>
                 </button>
                 <br>
                 <span class="pass-strength-result hidden" id="pass-strength-result1">Strength indicator</span>
@@ -53,20 +56,20 @@ function passwordResetForm($user) {
             <div class='password'>
                 <label>
                     Confirm New Password<br>
-                    <input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off" required/>
+                    <input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off" required />
                 </label>
                 <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-                    <img src="<?php echo TSJIPPY\PICTURESURL. '/invisible.png';?>" loading='lazy' alt='togglepasword'>
+                    <img src="<?php echo TSJIPPY\PICTURESURL . '/invisible.png'; ?>" loading='lazy' alt='togglepasword'>
                 </button>
                 <br>
                 <span class="pass-strength-result hidden" id="pass-strength-result2">Strength indicator</span>
             </div>
-            <?php do_action('resetpass_form');?>
+            <?php do_action('resetpass_form'); ?>
         </div>
-        <?php TSJIPPY\addSaveButton('update-password', 'Change password');?>
+        <?php TSJIPPY\addSaveButton('update-password', 'Change password'); ?>
     </form>
 
-    <?php
+<?php
     return ob_get_clean();
 }
 
@@ -77,7 +80,8 @@ add_filter('password_reset_expiration', function () {
 
 // Display password reset
 add_shortcode("change_password", __NAMESPACE__ . '\changePassword');
-function changePassword() {
+function changePassword()
+{
     $user    = '';
 
     if (!empty($_GET['key']) && !empty($_GET['login'])) {
@@ -90,7 +94,7 @@ function changePassword() {
                 return "This link has expired, please request a new password using the login menu. ";
             }
 
-            return $user->get_error_message(). "<br>Please try again. ";
+            return $user->get_error_message() . "<br>Please try again. ";
         }
 
 
@@ -105,18 +109,19 @@ function changePassword() {
 #####
 //Shortcode for people to register themselves
 add_shortcode('request_account', __NAMESPACE__ . '\requestAccount');
-function requestAccount() {
+function requestAccount()
+{
     ob_start();
-    ?>
+?>
     <form class='request-account'>
         <p>Please fill in the form to create an user account</p>
 
         <input type="hidden" class="no-reset" name="action" value="requestuseraccount">
-        <input type="hidden" class="no-reset" name="nonce" value="<?php echo wp_create_nonce('account-creation');?>">
+        <input type="hidden" class="no-reset" name="nonce" value="<?php echo wp_create_nonce('account-creation'); ?>">
 
         <label>
             <h4>First name<span class="required">*</span></h4>
-            <input type="text" class='wide'  name="first-name" value="" required>
+            <input type="text" class='wide' name="first-name" value="" required>
         </label>
 
         <label>
@@ -126,14 +131,14 @@ function requestAccount() {
 
         <label>
             <h4>Desired Password</h4>
-            <input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off"/>
+            <input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off" />
         </label>
         <br>
         <span style="text-align: center;" class="pass-strength-result hidden" id="pass-strength-result1">Strength indicator</span>
         <br>
         <label>
             <h4>Confirm Password</h4>
-            <input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off"/>
+            <input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off" />
         </label>
         <br>
         <span style="text-align: center;" class="pass-strength-result hidden" id="pass-strength-result2">Strength indicator</span>
@@ -147,7 +152,7 @@ function requestAccount() {
         TSJIPPY\addSaveButton('request_account', 'Request an account');
         ?>
     </form>
-    <?php
+<?php
 
     return ob_get_clean();
 }

@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -13,7 +15,8 @@ if ( ! defined('ABSPATH')) {
  *
  * @param    true|WP_Error    true on success, error on failure
  */
-function sendPasswordResetMessage($user) {
+function sendPasswordResetMessage($user)
+{
     $key         = get_password_reset_key($user);
     if (is_wp_error($key)) {
         return $key;
@@ -34,7 +37,8 @@ function sendPasswordResetMessage($user) {
 }
 
 add_filter('retrieve_password_message', __NAMESPACE__ . '\passwordMessage', 10, 4);
-function passwordMessage($message, $key, $userLogin, $user) {
+function passwordMessage($message, $key, $userLogin, $user)
+{
     $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
 
     if (!$pageurl) {

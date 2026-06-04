@@ -1,18 +1,22 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class PasswordResetMail extends ADMIN\MailSetting{
+class PasswordResetMail extends ADMIN\MailSetting
+{
 
     public $user;
     public $url;
 
-    public function __construct($user, $url='') {
+    public function __construct($user, $url = '')
+    {
         // call parent constructor
         parent::__construct('password_reset', PLUGINSLUG);
 

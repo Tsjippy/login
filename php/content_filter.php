@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -11,12 +13,13 @@ add_filter('wp_die_handler', function ($handler) {
 
     if (!is_user_logged_in()) {
         return __NAMESPACE__ . '\wpDieCallLoginModal';
-    }else{
+    } else {
         return $handler;
     }
 });
 
-function wpDieCallLoginModal($message, $title, $args) {
+function wpDieCallLoginModal($message, $title, $args)
+{
     if (wp_doing_cron()) {
         TSJIPPY\printArray($_SERVER['REQUEST_URI']);
 

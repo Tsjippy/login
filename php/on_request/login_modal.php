@@ -1,20 +1,22 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 $standAlone = false;
 
-if ( !defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
     require_once(__DIR__ . '/wordpress_loader.php');
     loadWordpress('Login');
 
     $required   = true;
     $standAlone = true;
-}elseif (!isset($required)) {
+} elseif (!isset($required)) {
     return;
 }
 
@@ -26,21 +28,25 @@ if (!isset($message)) {
 }
 
 if ($standAlone && is_user_logged_in()) {
-    ?>
+?>
+
     <body>
         <div style='text-align:center;margin-top:20px;'>
             You are already logged in.<br><br>
-            <a href='<?php echo SITEURL;?>'>Go Home</a></body>
-        </div>
+            <a href='<?php echo SITEURL; ?>'>Go Home</a>
     </body>
-    <?php
+    </div>
+    </body>
+<?php
     exit();
 }
 
 loadAssets();
 
 ?>
-<div id="login-modal" class="modal <?php if (!$required) {echo 'hidden';}?>" style="display:unset;">
+<div id="login-modal" class="modal <?php if (!$required) {
+                                        echo 'hidden';
+                                    } ?>" style="display:unset;">
     <div class="modal-content" style="min-width:500px;">
         <?php
         if (!$required) {
@@ -52,14 +58,14 @@ loadAssets();
                 Login form
             </h3>
             <p id="message"><?php
-                if (is_wp_error($message)) {
-                    TSJIPPY\printArray($message);
-                    /** @var \WP_Error $message */
-                    echo '<span class="error">' .$message->get_error_message(). '</span>';
-                }elseif (!empty($message)) {
-                    echo '<span class="message">' .$message. '</span>';
-                }
-            ?></p>
+                            if (is_wp_error($message)) {
+                                TSJIPPY\printArray($message);
+                                /** @var \WP_Error $message */
+                                echo '<span class="error">' . $message->get_error_message() . '</span>';
+                            } elseif (!empty($message)) {
+                                echo '<span class="message">' . $message . '</span>';
+                            }
+                            ?></p>
 
             <div id='qrcode-wrapper' style='margin-top: -30px;min-height: 30px;'><span></span></div>
 
@@ -73,7 +79,7 @@ loadAssets();
                 <div id='credentials-wrapper'>
                     <label style="width: 100%;">
                         Username<br>
-                        <input id="username" type="text" class='wide' name="username" value="<?php echo esc_attr($username);?>" autofocus autocomplete="username webauthn">
+                        <input id="username" type="text" class='wide' name="username" value="<?php echo esc_attr($username); ?>" autofocus autocomplete="username webauthn">
                     </label>
 
                     <div class="password">
@@ -82,7 +88,7 @@ loadAssets();
                             <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn">
                         </label>
                         <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-                            <img src="<?php echo TSJIPPY\PICTURESURL. '/invisible.png';?>" loading='lazy' alt='togglepasword'>
+                            <img src="<?php echo TSJIPPY\PICTURESURL . '/invisible.png'; ?>" loading='lazy' alt='togglepasword'>
                         </button>
                     </div>
                     <div id='check-cred-wrapper'>
@@ -91,7 +97,7 @@ loadAssets();
                             Remember Me
                         </label>
                     </div>
-                    <?php do_action('login_form');?>
+                    <?php do_action('login_form'); ?>
 
                     <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
                     <button type='button' id='check-cred' class='button'>Login</button>
@@ -100,14 +106,14 @@ loadAssets();
                 <div id='authenticator-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the two-factor authentication (2FA) verification code below to login.
-                        <input type="number" name="authcode"  class='wide' size="20" pattern="[0-9]*" required>
+                        <input type="number" name="authcode" class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
                 <div id='email-wrapper' class='authenticator-wrapper hidden'>
                     <label>
                         Please enter the code sent to your e-mail below to login.
-                        <input type="number" name="email-code"  class='wide' size="20" pattern="[0-9]*" required>
+                        <input type="number" name="email-code" class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
@@ -120,7 +126,7 @@ loadAssets();
 
             <form id="password-reset-form">
                 <div class='form-elements hidden' style='margin-bottom: 10px;'>
-                    <?php do_action('resetpass_form');?>
+                    <?php do_action('resetpass_form'); ?>
                 </div>
                 <a href='#pwd_reset' id='lost-pwd-link'>Request password reset</a>
             </form>

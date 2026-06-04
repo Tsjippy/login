@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use RobThree\Auth\TwoFactorAuth;
 use BaconQrCode\Renderer\ImageRenderer;
@@ -10,7 +12,7 @@ use BaconQrCode\Writer;
 use stdClass;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -27,7 +29,8 @@ if (!class_exists('RobThree\Auth\TwoFactorAuth')) {
  *
  * @return  object       An object with the secret key and qr code
  */
-function setupTimeCode() {
+function setupTimeCode()
+{
     $user                           = wp_get_current_user();
     $userId                         = $user->ID;
     $twofa                          = new TwoFactorAuth(new BaconQrCodeProvider());
@@ -37,20 +40,20 @@ function setupTimeCode() {
     update_user_meta($userId, '2fa_hash', password_hash($setupDetails->secretKey, PASSWORD_DEFAULT));
 
     if (!extension_loaded('imagick')) {
-        $setupDetails->imageHtml    = "<img src=" .$twofa->getQRCodeImageAsDataUri(SITENAME. " (" .get_userdata($userId)->user_login. ")", $setupDetails->secretKey). " loading='lazy'>";
-    }else{
-        $qrCodeUrl                  = $twofa->getQRText(SITENAME. " (" .get_userdata($userId)->user_login. ")",$setupDetails->secretKey);
+        $setupDetails->imageHtml    = "<img src=" . $twofa->getQRCodeImageAsDataUri(SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey) . " loading='lazy'>";
+    } else {
+        $qrCodeUrl                  = $twofa->getQRText(SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey);
 
         $renderer                   = new ImageRenderer(
             new RendererStyle(400),
             new ImagickImageBackEnd()
-       );
+        );
         $writer         = new Writer($renderer);
         $qrcodeImage   = base64_encode($writer->writeString($qrCodeUrl));
 
         $setupDetails->imageHtml     = "<img loading='lazy' src='data:image/png;base64, $qrcodeImage'/>";
     }
-    otpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example
+    otpauth: //totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example
 
     $websiteName                   = rawurlencode(get_bloginfo('name'));
     $userName                      = rawurlencode($user->display_name);
@@ -64,9 +67,10 @@ function setupTimeCode() {
  * Create a randow code and send it via e-mail to an user
  *
  * @param   object  WP_User
-*/
-function sendEmailCode($user) {
-    $emailCode  = mt_rand(1000000000,9999999999);
+ */
+function sendEmailCode($user)
+{
+    $emailCode  = mt_rand(1000000000, 9999999999);
 
     TSJIPPY\storeInTransient('2fa_email_key', $emailCode);
 
@@ -81,7 +85,8 @@ function sendEmailCode($user) {
  *
  * @return  bool    true if valid code false otherwise
  */
-function verifyEmailCode() {
+function verifyEmailCode()
+{
     if (TSJIPPY\getFromTransient('2fa_email_key') == $_POST['email-code']) {
         TSJIPPY\deleteFromTransient('2fa_email_key');
 
@@ -96,7 +101,8 @@ function verifyEmailCode() {
  *
  * @param   object  $user       WP_User
  */
-function send2faWarningEmail($user) {
+function send2faWarningEmail($user)
+{
     //if this is the first time ever login we do not have to send a warning
     if (!get_user_meta($user->id, 'login_count', true)) {
         return;
@@ -114,7 +120,8 @@ function send2faWarningEmail($user) {
  *
  * @param int   $userId
  */
-function reset2fa($userId) {
+function reset2fa($userId)
+{
     global $wpdb;
 
     //Remove all 2fa keys
@@ -123,8 +130,8 @@ function reset2fa($userId) {
             "DELETE FROM %i WHERE meta_key LIKE '2fa%' AND user_id = %d",
             $wpdb->usermeta,
             $userId
-       )
-   );
+        )
+    );
 
     $userdata = get_userdata($userId);
 
@@ -144,7 +151,8 @@ add_filter('authenticate', __NAMESPACE__ . '\authenticate', 40);
  *
  * @return  object  WP_User if the user is authenticated, WP_Error otherwise
  */
-function authenticate($user) {
+function authenticate($user)
+{
     if (is_wp_error($user)) {
         return $user;
     }
@@ -155,7 +163,7 @@ function authenticate($user) {
         if (
             wp_get_environment_type() === 'local' ||
             TSJIPPY\getFromTransient('last-used-cred-id')
-       ) {
+        ) {
             //succesfull webauthentication done before
             return $user;
         }
@@ -172,36 +180,36 @@ function authenticate($user) {
                 $user = new \WP_Error(
                     '2fa error',
                     'No 2FA code given'
-               );
-            }elseif ($twofa->verifyCode($secretKey, $authcode, 1, null, $timeslice)) {
+                );
+            } elseif ($twofa->verifyCode($secretKey, $authcode, 1, null, $timeslice)) {
                 //timeslice should be larger then last2fa
                 if ($timeslice <= $last2fa) {
                     $user = new \WP_Error(
                         '2fa error',
                         'Invalid 2FA code given'
-                   );
-                }else{
+                    );
+                } else {
                     //store last time
                     update_user_meta($user->ID, '2fa_last', $last2fa);
                 }
-            }else{
+            } else {
                 $user = new \WP_Error(
                     '2fa error',
                     'Invalid 2FA code given'
-               );
+                );
             }
-        }elseif (in_array('email', $methods)) {
+        } elseif (in_array('email', $methods)) {
             if (!verifyEmailCode()) {
                 $user = new \WP_Error(
                     '2fa error',
                     'Invalid e-mail code given'
-               );
+                );
             }
-        }else{
+        } else {
             //we have setup an authenticator method but did not use it
             send2faWarningEmail($user);
         }
-    }else{
+    } else {
         //no 2fa configured yet
         send2faWarningEmail($user);
     }
@@ -211,7 +219,8 @@ function authenticate($user) {
 
 //Redirect to 2fa page if not setup
 add_action('init', __NAMESPACE__ . '\redirectTo2fa');
-function redirectTo2fa() {
+function redirectTo2fa()
+{
     // do not run during rest request
     if (TSJIPPY\isRestApiRequest()) {
         return;
@@ -224,7 +233,7 @@ function redirectTo2fa() {
 
     if (
         is_user_logged_in()                             &&    // we are logged in
-        !str_contains($user->user_email,' .empty')       &&     // we have a valid email
+        !str_contains($user->user_email, ' .empty')       &&     // we have a valid email
         !is_admin()                                     &&  // we are not on an admin page
         (
             !$methods                                   ||    // and we have no 2fa enabled or
@@ -232,9 +241,9 @@ function redirectTo2fa() {
                 !TSJIPPY\getFromTransient('last-used-cred-id')       &&  // the current login is not with webauth
                 count($methods) == 1                    &&    // and we only have one 2fa method
                 in_array('webauthn', $methods)                // and that method is webauthn
-           )
-       )
-   ) {
+            )
+        )
+    ) {
         $url        = get_permalink(SETTINGS['2fa-page'] ?? '');
         if (!$url) {
             return;
@@ -243,7 +252,7 @@ function redirectTo2fa() {
         $fromUrl    = TSJIPPY\currentUrl();
 
         if (str_replace(['http://', 'https://'], '', $fromUrl) != str_replace(['http://', 'https://'], '', $url)) {
-            TSJIPPY\printArray("Redirecting from " .TSJIPPY\currentUrl(). " to $url");
+            TSJIPPY\printArray("Redirecting from " . TSJIPPY\currentUrl() . " to $url");
             wp_redirect($url);
             exit();
         }

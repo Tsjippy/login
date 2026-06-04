@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_filter('tsjippy_user_info_page', __NAMESPACE__ . '\userInfoPage', 10, 3);
-function userInfoPage($html, $showCurrentUserData, $user) {
+function userInfoPage($html, $showCurrentUserData, $user)
+{
     /*
         Two FA Info
 
@@ -18,7 +21,7 @@ function userInfoPage($html, $showCurrentUserData, $user) {
 
         //Content
         $twofaHtml = '<div id="twofa-info" class="tabcontent hidden">';
-            $twofaHtml .= twoFaSettingsForm($user->ID);
+        $twofaHtml .= twoFaSettingsForm($user->ID);
         $twofaHtml .= '</div>';
 
         $html['html']    .= $twofaHtml;

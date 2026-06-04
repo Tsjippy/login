@@ -1,45 +1,40 @@
-import {
-    closeMobileMenu
-} from './partials/shared.js';
+import { closeMobileMenu } from "./partials/shared.js";
 
 console.log("logout.js loaded");
 
 //Logout user
-document.addEventListener("DOMContentLoaded",function() {
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".logout.hidden").forEach((el) => {
+    el.addEventListener("click", logout);
 
-	document.querySelectorAll('.logout.hidden').forEach(el=>{
-        el.addEventListener('click', logout);
-
-        el.classList.remove('hidden');
-    });
+    el.classList.remove("hidden");
+  });
 });
 
-async function logout(event){
-    event.stopPropagation();
-    event.preventDefault();
+async function logout(event) {
+  event.stopPropagation();
+  event.preventDefault();
 
-	var target = event.target;
-    
-	if(target.matches(".logout")){
-        closeMobileMenu();
+  var target = event.target;
 
-        let options	= {
-            title: `Logging out...`
-        };
+  if (target.matches(".logout")) {
+    closeMobileMenu();
 
-        new Main.Alert('', 'loader', options);
+    let options = {
+      title: `Logging out...`,
+    };
 
-        var formData	= new FormData();
+    new Main.Alert("", "loader", options);
 
-        var response    = await FormSubmit.fetchRestApi('login/logout', formData);
+    var formData = new FormData();
 
-        if(response){
-            Main.displayMessage(response);
+    var response = await FormSubmit.fetchRestApi("login/logout", formData);
 
-            //redirect to homepage
-            location.href	= tsjippy.baseUrl;
-        }
+    if (response) {
+      Main.displayMessage(response);
+
+      //redirect to homepage
+      location.href = tsjippy.baseUrl;
     }
+  }
 }
-
-

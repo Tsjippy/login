@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-function loadWordpress($title) {
+function loadWordpress($title)
+{
 
     ob_start();
     define('WP_USE_THEMES', false); // Do not use the theme files
@@ -22,17 +25,18 @@ function loadWordpress($title) {
     do_action('wp_enqueue_scripts');
     do_action('wp_enqueue_style');
 
-    ?>
+?>
     <!DOCTYPE html>
     <html <?php language_attributes(); ?>>
-        <head>
-            <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
-            <title><?php echo esc_attr($title);?></title>
-            <link rel="icon" type="image/x-icon" href="<?php echo get_site_icon_url();?>">
-            <?php
-            wp_print_scripts();
-            wp_print_styles();
-            ?>
-        </head>
+
+    <head>
+        <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
+        <title><?php echo esc_attr($title); ?></title>
+        <link rel="icon" type="image/x-icon" href="<?php echo get_site_icon_url(); ?>">
         <?php
+        wp_print_scripts();
+        wp_print_styles();
+        ?>
+    </head>
+<?php
 }

@@ -1,174 +1,194 @@
-import { 
-	startAuthentication,
-	WebAuthnError
-} from '@simplewebauthn/browser';
+import { startAuthentication, WebAuthnError } from "@simplewebauthn/browser";
 
-import {
-	showMessage,
-	showStatusMessage
-} from './shared.js';
+import { showMessage, showStatusMessage } from "./shared.js";
 
 window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
-	result => {
-	  if (!result) {
-		console.log("No platform authenticator found. If your OS does not come with one, try using devtools to set one up.");
-	  }
-	}
+  (result) => {
+    if (!result) {
+      console.log(
+        "No platform authenticator found. If your OS does not come with one, try using devtools to set one up.",
+      );
+    }
+  },
 );
 
 /**
  * Do a webauthn verification after loggin with username and password
- * 
+ *
  * @param {string} 	username 	The user name to authenticate
  * @param {bool} 	autofill 	Whether to use browser autofill
  * @param {object}	loginObj	Instance of a login class
  */
-export async function webAuthVerification(username, autofill = false, loginObj = undefined){
-	try {
-		// 1. Fetch authentication options from server
-		let formData				= new FormData();
+export async function webAuthVerification(
+  username,
+  autofill = false,
+  loginObj = undefined,
+) {
+  try {
+    // 1. Fetch authentication options from server
+    let formData = new FormData();
 
-		if(!autofill){
-			formData.append('username', username);
-		}
+    if (!autofill) {
+      formData.append("username", username);
+    }
 
-		const optionsJSON			= await FormSubmit.fetchRestApi('login/auth_start', formData);
-		if(!optionsJSON){
-			throw new Error('Fetching Server Challenge failed');
-		}
+    const optionsJSON = await FormSubmit.fetchRestApi(
+      "login/auth_start",
+      formData,
+    );
+    if (!optionsJSON) {
+      throw new Error("Fetching Server Challenge failed");
+    }
 
-		// Update message
-		if(loginObj != undefined && !autofill){
-			loginObj.loadingScreen('Preparing Passkey Verification...');
-		}
+    // Update message
+    if (loginObj != undefined && !autofill) {
+      loginObj.loadingScreen("Preparing Passkey Verification...");
+    }
 
-		let options					= { optionsJSON: optionsJSON };
-		if(autofill){
-			options.useBrowserAutofill	= true;
-		}
+    let options = { optionsJSON: optionsJSON };
+    if (autofill) {
+      options.useBrowserAutofill = true;
+    }
 
-		// 2. Start authentication
-		const assertionResponse 	= await startAuthentication(options);
+    // 2. Start authentication
+    const assertionResponse = await startAuthentication(options);
 
-		if(loginObj != undefined){
-			loginObj.loadingScreen('Validating Passkey...');
-		}
+    if (loginObj != undefined) {
+      loginObj.loadingScreen("Validating Passkey...");
+    }
 
-		// 3. Send to server for validation
-		let form 					= document.getElementById('loginform') ? document.getElementById('loginform') : undefined;
-		formData					= new FormData(form);
-		formData.append('publicKeyCredential', btoa(JSON.stringify(assertionResponse)));
-		
-		let response					= await FormSubmit.fetchRestApi('login/auth_finish', formData);
-		if(!response || response.verified){
-			throw new Error('Passkey Verification failed');
-		}
+    // 3. Send to server for validation
+    let form = document.getElementById("loginform")
+      ? document.getElementById("loginform")
+      : undefined;
+    formData = new FormData(form);
+    formData.append(
+      "publicKeyCredential",
+      btoa(JSON.stringify(assertionResponse)),
+    );
 
-		if(response){
-			showMessage('Passkey Verification Succesfull');
+    let response = await FormSubmit.fetchRestApi("login/auth_finish", formData);
+    if (!response || response.verified) {
+      throw new Error("Passkey Verification failed");
+    }
 
-			if(loginObj != undefined){
-				return await loginObj.requestLogin();
-			}
-		}else{
-			if(loginObj != undefined){
-				loginObj.reset();
-			}
+    if (response) {
+      showMessage("Passkey Verification Succesfull");
 
-			showMessage('Passkey Verification failed, try using your username and password');
+      if (loginObj != undefined) {
+        return await loginObj.requestLogin();
+      }
+    } else {
+      if (loginObj != undefined) {
+        loginObj.reset();
+      }
 
-			return false;
-		}
+      showMessage(
+        "Passkey Verification failed, try using your username and password",
+      );
 
-		return true;
-	} catch (error) {
-		// Ignore if the ceremony was aborted
-		if (!autofill || !(error instanceof WebAuthnError && error.code === 'ERROR_CEREMONY_ABORTED')) {
-			console.error('Passkey Verification Failed:', error);
+      return false;
+    }
 
-			showMessage(error);
+    return true;
+  } catch (error) {
+    // Ignore if the ceremony was aborted
+    if (
+      !autofill ||
+      !(
+        error instanceof WebAuthnError &&
+        error.code === "ERROR_CEREMONY_ABORTED"
+      )
+    ) {
+      console.error("Passkey Verification Failed:", error);
 
-			showStatusMessage('Passkey Verification Failed');
-		}
+      showMessage(error);
 
-		return false;
-	}
+      showStatusMessage("Passkey Verification Failed");
+    }
+
+    return false;
+  }
 }
 
-export async function checkWebauthnAvailable(){
-	let webauthnSupported	= false;
-	
-	if (window.PublicKeyCredential) {
-		let available	= await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-		if (available) {
-			webauthnSupported = true;
-		} else {
-			console.log("WebAuthn supported, Platform Authenticator not supported.");
-		}
-	} else {
-		console.log("Not supported.");
-	}
+export async function checkWebauthnAvailable() {
+  let webauthnSupported = false;
 
-	return webauthnSupported;
+  if (window.PublicKeyCredential) {
+    let available =
+      await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (available) {
+      webauthnSupported = true;
+    } else {
+      console.log("WebAuthn supported, Platform Authenticator not supported.");
+    }
+  } else {
+    console.log("Not supported.");
+  }
+
+  return webauthnSupported;
 }
 
 export async function checkImmediateMediationAvailability() {
-	try {
-		const capabilities = await PublicKeyCredential.getClientCapabilities();
+  try {
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
 
-		if (capabilities.immediateGet && window.PasswordCredential) {
-		 	console.log("Immediate Mediation with passwords supported.");
-			return true;
-		} else if (capabilities.immediateGet) {
-		 	console.log("Immediate Mediation without passwords supported.");
+    if (capabilities.immediateGet && window.PasswordCredential) {
+      console.log("Immediate Mediation with passwords supported.");
+      return true;
+    } else if (capabilities.immediateGet) {
+      console.log("Immediate Mediation without passwords supported.");
 
-			return true;
-		} else { 
-			console.log("Immediate Mediation unsupported."); 
+      return true;
+    } else {
+      console.log("Immediate Mediation unsupported.");
 
-			return false;
-		}
-	} catch (error) {
-		console.error("Error getting client capabilities:", error);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error getting client capabilities:", error);
 
-		return false;
-	}
+    return false;
+  }
 }
 
 /**
  * Initiates and verifies a webauthentication login
- * @param {*} methods 
- * @returns 
+ * @param {*} methods
+ * @returns
  */
-export async function verifyWebauthn(methods){	
-	//show webauthn messages
-	this.loadingScreen('Starting Passkey Verification');
+export async function verifyWebauthn(methods) {
+  //show webauthn messages
+  this.loadingScreen("Starting Passkey Verification");
 
-	try{
-		let result	= await webAuthVerification(this.username);
+  try {
+    let result = await webAuthVerification(this.username);
 
-		if(!result){
-			throw new Error( 'Passkey Verification failed' );
-		}
+    if (!result) {
+      throw new Error("Passkey Verification failed");
+    }
 
-		//authentication success
-		this.requestLogin(false);
-	}catch (error){		
-		if(methods.length == 1){
-			showMessage('Passkey Verification failed, please setup an additional login factor.');
-			this.requestLogin(true);
-		}else{
-			console.error(error);
-			let message;
-			if(error['message'] == "No authenticator available"){
-				message = "No biometric login for this device found. <br>Give verification code.";
-			}else{
-				message = 'Passkey Verification failed, please give verification code.';
-			}
-			showMessage(message);
+    //authentication success
+    this.requestLogin(false);
+  } catch (error) {
+    if (methods.length == 1) {
+      showMessage(
+        "Passkey Verification failed, please setup an additional login factor.",
+      );
+      this.requestLogin(true);
+    } else {
+      console.error(error);
+      let message;
+      if (error["message"] == "No authenticator available") {
+        message =
+          "No biometric login for this device found. <br>Give verification code.";
+      } else {
+        message = "Passkey Verification failed, please give verification code.";
+      }
+      showMessage(message);
 
-			//Show other 2fa fields
-			this.showTwoFaFields(methods);
-		}
-	}
+      //Show other 2fa fields
+      this.showTwoFaFields(methods);
+    }
+  }
 }

@@ -1,505 +1,547 @@
 import {
-	closeMobileMenu,
-	showMessage,
-	showStatusMessage,
-	togglePassworView
-} from './partials/shared.js';
+  closeMobileMenu,
+  showMessage,
+  showStatusMessage,
+  togglePassworView,
+} from "./partials/shared.js";
+
+import { showLoginQrCode, hideQrCode } from "./partials/qr_login.js";
 
 import {
-	showLoginQrCode,
-	hideQrCode
-} from './partials/qr_login.js';
+  checkWebauthnAvailable,
+  webAuthVerification,
+  checkImmediateMediationAvailability,
+  verifyWebauthn,
+} from "./partials/webauth.js";
 
-import {
-	checkWebauthnAvailable,
-	webAuthVerification,
-	checkImmediateMediationAvailability,
-	verifyWebauthn
-} from './partials/webauth.js';
-
-import { registerWebAuthn } from './partials/register_webauth.js'; 
+import { registerWebAuthn } from "./partials/register_webauth.js";
 
 //Add an event listener to the login or register button
 console.log("Login.js loaded");
 
-const login = class{
-	constructor() {
-		this.init();
-
-		let params = new Proxy(new URLSearchParams(window.location.search), {
-			get: (searchParams, prop) => searchParams.get(prop),
-		});
-
-		if(this.checkIsIOS){
-			this.addMaximumScaleToMetaViewport();
-		}
-
-		this.eventListeners();
-	};
-
-	eventListeners(){
-		document.addEventListener('keypress', (e) => {
-			if (e.key === 'Enter' && this.creds != null){
-				e.stopImmediatePropagation();
-
-				if(this.curScreen == this.creds && document.getElementById('check-cred').disabled == false){
-					this.verifyCreds();
-				}else if(this.curScreen == this.email || this.curScreen == this.twofa){
-					this.requestLogin(true);
-				}
-			}
-		});
-
-		document.addEventListener("click", async (event) => {
-			let target = event.target;
-
-			if(target.matches('.login')){
-				this.openLoginModal();
-			}else if(target.id == 'check-cred'){
-				// Check if a valid username and password is submitted
-				this.verifyCreds();
-			}else if(target.id == "login-button"){
-				// Submit the login form when everything is ok
-				this.requestLogin(true);
-			}else if(target.closest('.toggle-pwd-view') != null){
-				togglePassworView(event);
-			}else if(target.id == 'password-reset-form' || target.id == "lost-pwd-link"){
-				this.resetPassword(target);
-			}else if(target.name == 'request_account'){
-				this.requestAccount(target);
-			}else if(target.matches('.show-login-qr')){
-				showLoginQrCode();
-			}else if(target.matches('.close-qr')){
-				hideQrCode();
-			}else{
-				return;
-			}
-
-			event.stopImmediatePropagation();
-		});
-
-		document.addEventListener("input", event => {
-			if( event.target.name == 'username'){
-				this.username = event.target.value;
-			}
-		});
-	};
-
-	checkIsIOS(){
-		return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-	};
-
-	init(){
-		this.form			= document.getElementById('loginform');
-		this.msgScreen		= document.getElementById('message-wrapper');
-		this.creds			= document.getElementById('credentials-wrapper');
-		this.twofa			= document.getElementById('authenticator-wrapper');
-		this.email			= document.getElementById('email-wrapper');
-		this.login			= document.getElementById('login-button-wrapper');
-		this.passwordReset 	= document.getElementById('password-reset-form');
-		this.username		= '';
-
-		this.curScreen		= this.creds;
-		
-		if(this.msgScreen != null && this.msgScreen.querySelector('.loader') == null){
-			Main.showLoader(this.msgScreen.querySelector('.status-message'), false, 75);
-		}
-	}
-
-	/**
-	 * Clear all inputs and shows the first screen
-	 */
-	resetForm(){		
-		this.reset();
-
-		this.showScreen(this.creds);
-		
-		this.curScreen		= this.creds;
-	}
-
-	/**
-	 * Show the loading screen
-	 */
-	loadingScreen(message){
-		showStatusMessage(message);
-
-		this.curScreen.classList.add('hidden');
-		this.login.classList.add('hidden');
-		this.passwordReset.classList.add('hidden');
-
-		this.msgScreen.classList.remove('hidden');
-	}
-
-	/**
-	 * Resets the screen to the original login screen
-	 */
-	reset(){
-		if(this.curScreen == undefined){
-			return;
-		}
-
-		this.curScreen.classList.remove('hidden');
-		this.msgScreen.classList.add('hidden');
-
-		this.passwordReset.classList.remove('hidden');
-	}
-
-	/**
-	 * Shows a particular screen
-	 */
-	showScreen(screen){
-		if(this.curScreen != undefined){
-			this.curScreen.classList.add('hidden');
-			this.msgScreen.classList.add('hidden');
-		}
-
-		screen.classList.remove('hidden');
-
-		if(screen == this.twofa || screen == this.email){
-			this.login.classList.remove('hidden');
-		}else{
-			this.login.classList.add('hidden');
-		}
-
-		screen.querySelectorAll('input').forEach(el=>window.setTimeout(() => el.focus(), 0));
-
-		this.curScreen	= screen;
-		
-		//hide messsages
-		showMessage('');
-	}
-	
-	/**
-	 * Check if a valid username and password is submitted
-	 */
-	async verifyCreds(){
-		this.username	= document.getElementById('username').value;
-		let password	= document.getElementById('password').value;
-
-		// Check if the fields are filled
-		if(this.username != '' && password != ''){
-			this.passwordReset.classList.add('hidden');
-
-			this.loadingScreen( 'Verifying Credentials');
-		}else{
-			showMessage('Please give an username and password!');
-			return;
-		}	
-
-		// Make sure we have a internet connection
-		await Main.waitForInternet();
-
-		let formData	= new FormData(this.form);
-
-		let response	= await FormSubmit.fetchRestApi('login/check-cred', formData);
-
-		if(response){
-			if(response  && response != false){
-				response	= this.addMethods(response);
-			}else{
-				response 	= false;
-			}
-
-			if(!response) {
-				this.reset();
-
-				showMessage('Invalid login, try again');
-			}
-		}else{
-			this.reset();
-		}
-	}
-
-	addMethods(result){			
-		if(typeof(result) != 'object'){
-			//something went wrong, reload the page
-			location.reload();
-		}
-
-		if('redirect' in result){
-			//redirect to the returned webpage
-			location.href	= result.redirect;
-
-			return true;
-		}
-
-		if(result instanceof Array){
-
-			if(result.find(element => element == 'webauthn')){
-				if(checkWebauthnAvailable()){
-					//correct creds and webauthn enabled
-					this.verifyWebauthn(result);
-				}else if(result.length == 1){
-					showMessage('You do not have a valid second login method for this device, please add one.');
-					this.requestLogin(true);
-				}else{
-					this.showTwoFaFields(result);
-				}
-			}else{
-				//correct creds and 2fa enabled
-				this.showTwoFaFields(result);
-			}
-
-			return true;
-		}
-	}
-
-	/**
-	 * Performs the login action
-	 */
-	//show loader
-	async requestLogin(createWebAuthn){
-		this.loadingScreen('Logging in...');
-
-		let formData	= new FormData(this.form);
-		this.form.querySelectorAll('.hidden [required]').forEach(el => {el.required = false});
-		let validity	= this.form.reportValidity();
-
-		//if not valid return
-		if(!validity){
-			this.reset();
-
-			return false;
-		}
-
-		await Main.waitForInternet();
-
-		let response	= await FormSubmit.fetchRestApi('login/request_login', formData);
-
-		if(!response){
-			this.reset();
-
-			return false;
-		}
-
-		this.loadingScreen('Succesfully logged in');
-		
-		// We are logging in from an iframe
-		if(window.self !== window.top){
-
-			// change message
-			console.log(window.parent.document.getElementById('iframe-loader'));
-			console.log(window.parent.document);
-			console.log(window.parent);
-			window.parent.document.getElementById('iframe-loader').textContent	= 'Succesfully logged in, you may now close this popup';
-
-			// Refresh the rest api nonce
-			window.parent.restNonce	= response.nonce;
-
-			// Update user id
-			window.parent.userId	= response.id;
-
-			console.log(window.parent.document.getElementById('iframe-loader'));
-
-			// close all iframes
-			window.parent.document.querySelectorAll('iframe').forEach(el=>el.remove());
-		}else{
-			// Update the tsjippy variable with new values
-			tsjippy.restNonce	= response.nonce;
-			tsjippy.userId		= response.id;
-
-			// first register a webauthn if needed
-			if(createWebAuthn){
-				await registerWebAuthn();
-			}
-
-			this.loadingScreen('Redirecting...');
-
-			if(response.redirect == ''){
-				// refresh the page
-				location.reload();
-			}else{
-				// go to the redirect page
-				location.href = response.redirect;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Display the form for the 2fa email or authenticator code
-	 */
-	showTwoFaFields(methods){
-		if(methods.includes('email')){
-			this.requestEmailCode();
-		}
-
-		//show 2fa fields
-		for(const method of methods){
-			//do not show webauthn
-			if(method == 'webauthn'){
-				continue;
-			}
-
-			if(method == 'email'){
-				this.showScreen(this.email);
-			}else{
-				this.showScreen(this.twofa);
-			}
-		}
-	}
-
-	/**
-	 * Request email code for 2fa login
-	 */
-	async requestEmailCode(){
-		// Show the email screen
-		this.showScreen(this.email);
-
-		let loader				= Main.showLoader(null, false, 20, '', true);
-		showMessage(`Sending e-mail... ${loader}`);
-
-		let formData	= new FormData();
-		formData.append('username', this.username);
-	
-		let response	= await FormSubmit.fetchRestApi('login/request_email_code', formData, false);
-		
-		if(response){
-			showMessage(response);
-		}else{
-			showMessage(`Sending e-mail failed`);
-		}
-	}
-
-	//request password reset e-mail
-	async resetPassword(target){
-		let form 			= target.closest('form');
-
-		let button			= form.querySelector('#lost-pwd-link');
-
-		let extraElements	= form.querySelector('div.form-elements');
-
-		// If the extra elements are not present, create them
-		if(extraElements != null && extraElements.innerHTML != '' && extraElements.classList.contains('hidden')){
-			// Hide the login form
-			document.getElementById('loginform').classList.add('hidden');
-
-			if(form.querySelector(`[name='username']`) == null){
-				extraElements.innerHTML	= `<label class="form-label">
+const login = class {
+  constructor() {
+    this.init();
+
+    let params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    if (this.checkIsIOS) {
+      this.addMaximumScaleToMetaViewport();
+    }
+
+    this.eventListeners();
+  }
+
+  eventListeners() {
+    document.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && this.creds != null) {
+        e.stopImmediatePropagation();
+
+        if (
+          this.curScreen == this.creds &&
+          document.getElementById("check-cred").disabled == false
+        ) {
+          this.verifyCreds();
+        } else if (
+          this.curScreen == this.email ||
+          this.curScreen == this.twofa
+        ) {
+          this.requestLogin(true);
+        }
+      }
+    });
+
+    document.addEventListener("click", async (event) => {
+      let target = event.target;
+
+      if (target.matches(".login")) {
+        this.openLoginModal();
+      } else if (target.id == "check-cred") {
+        // Check if a valid username and password is submitted
+        this.verifyCreds();
+      } else if (target.id == "login-button") {
+        // Submit the login form when everything is ok
+        this.requestLogin(true);
+      } else if (target.closest(".toggle-pwd-view") != null) {
+        togglePassworView(event);
+      } else if (
+        target.id == "password-reset-form" ||
+        target.id == "lost-pwd-link"
+      ) {
+        this.resetPassword(target);
+      } else if (target.name == "request_account") {
+        this.requestAccount(target);
+      } else if (target.matches(".show-login-qr")) {
+        showLoginQrCode();
+      } else if (target.matches(".close-qr")) {
+        hideQrCode();
+      } else {
+        return;
+      }
+
+      event.stopImmediatePropagation();
+    });
+
+    document.addEventListener("input", (event) => {
+      if (event.target.name == "username") {
+        this.username = event.target.value;
+      }
+    });
+  }
+
+  checkIsIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
+
+  init() {
+    this.form = document.getElementById("loginform");
+    this.msgScreen = document.getElementById("message-wrapper");
+    this.creds = document.getElementById("credentials-wrapper");
+    this.twofa = document.getElementById("authenticator-wrapper");
+    this.email = document.getElementById("email-wrapper");
+    this.login = document.getElementById("login-button-wrapper");
+    this.passwordReset = document.getElementById("password-reset-form");
+    this.username = "";
+
+    this.curScreen = this.creds;
+
+    if (
+      this.msgScreen != null &&
+      this.msgScreen.querySelector(".loader") == null
+    ) {
+      Main.showLoader(
+        this.msgScreen.querySelector(".status-message"),
+        false,
+        75,
+      );
+    }
+  }
+
+  /**
+   * Clear all inputs and shows the first screen
+   */
+  resetForm() {
+    this.reset();
+
+    this.showScreen(this.creds);
+
+    this.curScreen = this.creds;
+  }
+
+  /**
+   * Show the loading screen
+   */
+  loadingScreen(message) {
+    showStatusMessage(message);
+
+    this.curScreen.classList.add("hidden");
+    this.login.classList.add("hidden");
+    this.passwordReset.classList.add("hidden");
+
+    this.msgScreen.classList.remove("hidden");
+  }
+
+  /**
+   * Resets the screen to the original login screen
+   */
+  reset() {
+    if (this.curScreen == undefined) {
+      return;
+    }
+
+    this.curScreen.classList.remove("hidden");
+    this.msgScreen.classList.add("hidden");
+
+    this.passwordReset.classList.remove("hidden");
+  }
+
+  /**
+   * Shows a particular screen
+   */
+  showScreen(screen) {
+    if (this.curScreen != undefined) {
+      this.curScreen.classList.add("hidden");
+      this.msgScreen.classList.add("hidden");
+    }
+
+    screen.classList.remove("hidden");
+
+    if (screen == this.twofa || screen == this.email) {
+      this.login.classList.remove("hidden");
+    } else {
+      this.login.classList.add("hidden");
+    }
+
+    screen
+      .querySelectorAll("input")
+      .forEach((el) => window.setTimeout(() => el.focus(), 0));
+
+    this.curScreen = screen;
+
+    //hide messsages
+    showMessage("");
+  }
+
+  /**
+   * Check if a valid username and password is submitted
+   */
+  async verifyCreds() {
+    this.username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+
+    // Check if the fields are filled
+    if (this.username != "" && password != "") {
+      this.passwordReset.classList.add("hidden");
+
+      this.loadingScreen("Verifying Credentials");
+    } else {
+      showMessage("Please give an username and password!");
+      return;
+    }
+
+    // Make sure we have a internet connection
+    await Main.waitForInternet();
+
+    let formData = new FormData(this.form);
+
+    let response = await FormSubmit.fetchRestApi("login/check-cred", formData);
+
+    if (response) {
+      if (response && response != false) {
+        response = this.addMethods(response);
+      } else {
+        response = false;
+      }
+
+      if (!response) {
+        this.reset();
+
+        showMessage("Invalid login, try again");
+      }
+    } else {
+      this.reset();
+    }
+  }
+
+  addMethods(result) {
+    if (typeof result != "object") {
+      //something went wrong, reload the page
+      location.reload();
+    }
+
+    if ("redirect" in result) {
+      //redirect to the returned webpage
+      location.href = result.redirect;
+
+      return true;
+    }
+
+    if (result instanceof Array) {
+      if (result.find((element) => element == "webauthn")) {
+        if (checkWebauthnAvailable()) {
+          //correct creds and webauthn enabled
+          this.verifyWebauthn(result);
+        } else if (result.length == 1) {
+          showMessage(
+            "You do not have a valid second login method for this device, please add one.",
+          );
+          this.requestLogin(true);
+        } else {
+          this.showTwoFaFields(result);
+        }
+      } else {
+        //correct creds and 2fa enabled
+        this.showTwoFaFields(result);
+      }
+
+      return true;
+    }
+  }
+
+  /**
+   * Performs the login action
+   */
+  //show loader
+  async requestLogin(createWebAuthn) {
+    this.loadingScreen("Logging in...");
+
+    let formData = new FormData(this.form);
+    this.form.querySelectorAll(".hidden [required]").forEach((el) => {
+      el.required = false;
+    });
+    let validity = this.form.reportValidity();
+
+    //if not valid return
+    if (!validity) {
+      this.reset();
+
+      return false;
+    }
+
+    await Main.waitForInternet();
+
+    let response = await FormSubmit.fetchRestApi(
+      "login/request_login",
+      formData,
+    );
+
+    if (!response) {
+      this.reset();
+
+      return false;
+    }
+
+    this.loadingScreen("Succesfully logged in");
+
+    // We are logging in from an iframe
+    if (window.self !== window.top) {
+      // change message
+      console.log(window.parent.document.getElementById("iframe-loader"));
+      console.log(window.parent.document);
+      console.log(window.parent);
+      window.parent.document.getElementById("iframe-loader").textContent =
+        "Succesfully logged in, you may now close this popup";
+
+      // Refresh the rest api nonce
+      window.parent.restNonce = response.nonce;
+
+      // Update user id
+      window.parent.userId = response.id;
+
+      console.log(window.parent.document.getElementById("iframe-loader"));
+
+      // close all iframes
+      window.parent.document
+        .querySelectorAll("iframe")
+        .forEach((el) => el.remove());
+    } else {
+      // Update the tsjippy variable with new values
+      tsjippy.restNonce = response.nonce;
+      tsjippy.userId = response.id;
+
+      // first register a webauthn if needed
+      if (createWebAuthn) {
+        await registerWebAuthn();
+      }
+
+      this.loadingScreen("Redirecting...");
+
+      if (response.redirect == "") {
+        // refresh the page
+        location.reload();
+      } else {
+        // go to the redirect page
+        location.href = response.redirect;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Display the form for the 2fa email or authenticator code
+   */
+  showTwoFaFields(methods) {
+    if (methods.includes("email")) {
+      this.requestEmailCode();
+    }
+
+    //show 2fa fields
+    for (const method of methods) {
+      //do not show webauthn
+      if (method == "webauthn") {
+        continue;
+      }
+
+      if (method == "email") {
+        this.showScreen(this.email);
+      } else {
+        this.showScreen(this.twofa);
+      }
+    }
+  }
+
+  /**
+   * Request email code for 2fa login
+   */
+  async requestEmailCode() {
+    // Show the email screen
+    this.showScreen(this.email);
+
+    let loader = Main.showLoader(null, false, 20, "", true);
+    showMessage(`Sending e-mail... ${loader}`);
+
+    let formData = new FormData();
+    formData.append("username", this.username);
+
+    let response = await FormSubmit.fetchRestApi(
+      "login/request_email_code",
+      formData,
+      false,
+    );
+
+    if (response) {
+      showMessage(response);
+    } else {
+      showMessage(`Sending e-mail failed`);
+    }
+  }
+
+  //request password reset e-mail
+  async resetPassword(target) {
+    let form = target.closest("form");
+
+    let button = form.querySelector("#lost-pwd-link");
+
+    let extraElements = form.querySelector("div.form-elements");
+
+    // If the extra elements are not present, create them
+    if (
+      extraElements != null &&
+      extraElements.innerHTML != "" &&
+      extraElements.classList.contains("hidden")
+    ) {
+      // Hide the login form
+      document.getElementById("loginform").classList.add("hidden");
+
+      if (form.querySelector(`[name='username']`) == null) {
+        extraElements.innerHTML =
+          `<label class="form-label">
 					Username<br>
 					<input type="text" name="username" class="form-control" value="${this.username}" required>
-				</label><br>`+extraElements.innerHTML;
-			}else{
-				form.querySelector(`[name='username']`).value = this.username;
-			}
+				</label><br>` + extraElements.innerHTML;
+      } else {
+        form.querySelector(`[name='username']`).value = this.username;
+      }
 
-			// Show the form
-			extraElements.classList.remove('hidden');
+      // Show the form
+      extraElements.classList.remove("hidden");
 
-			button.dataset.orghtml	= button.innerHTML;
-			button.innerHTML	= 'Request Password Reset';
+      button.dataset.orghtml = button.innerHTML;
+      button.innerHTML = "Request Password Reset";
 
-			button.classList.add('button');
+      button.classList.add("button");
 
-			return;
-		}
+      return;
+    }
 
-		if(this.username == ''){
-			Main.displayMessage('Specify your username first', 'error');
-			return;
-		}
-		
-		button.classList.add('hidden');
-		let loader = Main.showLoader(button, false, 50, 'Requesting Password Reset...   ');
+    if (this.username == "") {
+      Main.displayMessage("Specify your username first", "error");
+      return;
+    }
 
-		let formData	= new FormData(form);
-		formData.append('username', this.username);
-		
-		let response	= await FormSubmit.fetchRestApi('login/request_pwd_reset', formData);
+    button.classList.add("hidden");
+    let loader = Main.showLoader(
+      button,
+      false,
+      50,
+      "Requesting Password Reset...   ",
+    );
 
-		if (response) {
-			Main.displayMessage(response);
-			
-			// Show the login form
-			document.getElementById('loginform').classList.remove('hidden');
+    let formData = new FormData(form);
+    formData.append("username", this.username);
 
-			extraElements.classList.add('hidden');
+    let response = await FormSubmit.fetchRestApi(
+      "login/request_pwd_reset",
+      formData,
+    );
 
-			button.innerHTML	= button.dataset.orghtml;
-			button.classList.remove('button');
-		}
+    if (response) {
+      Main.displayMessage(response);
 
-		loader.remove();
-		button.classList.remove('hidden');
+      // Show the login form
+      document.getElementById("loginform").classList.remove("hidden");
 
-	}
+      extraElements.classList.add("hidden");
 
-	// request a new user account
-	async requestAccount(target){
-		let form 		= target.closest('form');
+      button.innerHTML = button.dataset.orghtml;
+      button.classList.remove("button");
+    }
 
-		// Show loader
-		form.querySelector('.loader-wrapper').classList.remove('hidden');
+    loader.remove();
+    button.classList.remove("hidden");
+  }
 
-		let formData	= new FormData(form);
+  // request a new user account
+  async requestAccount(target) {
+    let form = target.closest("form");
 
-		let response	= await FormSubmit.fetchRestApi('login/request_user_account', formData);
-		
-		if(response){
-			Main.displayMessage(response);
-		}
+    // Show loader
+    form.querySelector(".loader-wrapper").classList.remove("hidden");
 
-		// reset form 
-		form.reset();
+    let formData = new FormData(form);
 
-		// Hide loader
-		form.querySelector('.loader-wrapper').classList.add('hidden');
-	}
+    let response = await FormSubmit.fetchRestApi(
+      "login/request_user_account",
+      formData,
+    );
 
-	// Show the modal with the login form
-	openLoginModal(){
-		// Make sure the menu is closed
-		closeMobileMenu();
+    if (response) {
+      Main.displayMessage(response);
+    }
 
-		//prevent page scrolling
-		document.querySelector('body').style.overflowY = 'hidden';
+    // reset form
+    form.reset();
 
-		this.modal	= document.getElementById('login-modal');
-		this.modal.style.display = 'block';
+    // Hide loader
+    form.querySelector(".loader-wrapper").classList.add("hidden");
+  }
 
-		this.modal.classList.remove('hidden');
+  // Show the modal with the login form
+  openLoginModal() {
+    // Make sure the menu is closed
+    closeMobileMenu();
 
-		this.resetForm();		
-	}
-	
-	//prevent zoom in on login form on a iphone
-	addMaximumScaleToMetaViewport(){
-		let el = document.querySelector('meta[name=viewport]');
-	
-		if (el !== null) {
-			let content	= el.getAttribute('content');
-			let re 		= /maximum\-scale=[0-9\.]+/g;
-		
-			if (re.test(content)) {
-				content = content.replace(re, 'maximum-scale=1.0');
-			} else {
-				content = [content, 'maximum-scale=1.0'].join(', ')
-			}
-		
-			el.setAttribute('content', content);
-		}
-	};
-}
+    //prevent page scrolling
+    document.querySelector("body").style.overflowY = "hidden";
+
+    this.modal = document.getElementById("login-modal");
+    this.modal.style.display = "block";
+
+    this.modal.classList.remove("hidden");
+
+    this.resetForm();
+  }
+
+  //prevent zoom in on login form on a iphone
+  addMaximumScaleToMetaViewport() {
+    let el = document.querySelector("meta[name=viewport]");
+
+    if (el !== null) {
+      let content = el.getAttribute("content");
+      let re = /maximum\-scale=[0-9\.]+/g;
+
+      if (re.test(content)) {
+        content = content.replace(re, "maximum-scale=1.0");
+      } else {
+        content = [content, "maximum-scale=1.0"].join(", ");
+      }
+
+      el.setAttribute("content", content);
+    }
+  }
+};
 
 // Show the login button
-document.addEventListener('DOMContentLoaded', async () => {
-	// Add the verifyWebauthn method to the login class
-	login.prototype.verifyWebauthn = verifyWebauthn;
+document.addEventListener("DOMContentLoaded", async () => {
+  // Add the verifyWebauthn method to the login class
+  login.prototype.verifyWebauthn = verifyWebauthn;
 
-	document.querySelectorAll('.login.hidden').forEach(el=>{
-		el.classList.remove('hidden');
-	});	
+  document.querySelectorAll(".login.hidden").forEach((el) => {
+    el.classList.remove("hidden");
+  });
 
-	// Instantiate the login class
-	let loginObj = new login();
+  // Instantiate the login class
+  let loginObj = new login();
 
-	checkImmediateMediationAvailability();
+  checkImmediateMediationAvailability();
 
-	// Prepare webauthn autofill
-	let result = await webAuthVerification('', true, loginObj);
+  // Prepare webauthn autofill
+  let result = await webAuthVerification("", true, loginObj);
 
-	/* if(!result){
+  /* if(!result){
 		loginObj.reset();
 
 		showMessage('Passkey Verification failed, try using your username and password');

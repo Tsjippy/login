@@ -1,11 +1,13 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -17,19 +19,21 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addBioUrls');
  * @param array $urls The list of allowed REST API URLs
  * @return array The updated list of allowed REST API URLs
  */
-function addBioUrls($urls) {
-    $urls[]    = RESTAPIPREFIX. '/login/auth_finish';
-    $urls[]    = RESTAPIPREFIX. '/login/auth_start';
-    $urls[] = RESTAPIPREFIX. '/login/request_email_code';
+function addBioUrls($urls)
+{
+    $urls[]    = RESTAPIPREFIX . '/login/auth_finish';
+    $urls[]    = RESTAPIPREFIX . '/login/auth_start';
+    $urls[] = RESTAPIPREFIX . '/login/request_email_code';
 
     return $urls;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\bioRestApi');
-function bioRestApi() {
+function bioRestApi()
+{
     // Send authentication request for storing fingerprint
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/fingerprint_options',
         array(
             'methods'               => 'POST',
@@ -38,12 +42,12 @@ function bioRestApi() {
                 return $ceremony->createOptions();
             },
             'permission_callback'   => '__return_true'
-       )
-   );
+        )
+    );
 
     // Verify and store fingerprint
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/store_fingerprint',
         array(
             'methods'               => 'POST,GET',
@@ -62,14 +66,14 @@ function bioRestApi() {
             'args'                    => array(
                 'publicKeyCredential'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     // Send authentication request for login
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/auth_start',
         array(
             'methods' => 'POST',
@@ -79,12 +83,12 @@ function bioRestApi() {
             },
             'permission_callback' => '__return_true',
 
-       )
-   );
+        )
+    );
 
     //verify fingerprint for login
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/auth_finish',
         array(
             'methods' => 'POST,GET',
@@ -108,14 +112,14 @@ function bioRestApi() {
             'args'                    => array(
                 'publicKeyCredential'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     // send email code
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/request_email_code',
         array(
             'methods'                 => 'POST, GET',
@@ -124,14 +128,14 @@ function bioRestApi() {
             'args'                    => array(
                 'username'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     // save_2fa_settings
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/save_2fa_settings',
         array(
             'methods'                 => 'GET,POST',
@@ -145,14 +149,14 @@ function bioRestApi() {
                     'validate_callback' => function ($param) {
                         return is_array($param);
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     // remove_web_authenticator
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/remove_web_authenticator',
         array(
             'methods'                 => 'POST',
@@ -163,17 +167,18 @@ function bioRestApi() {
             'args'                    => array(
                 'key'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 }
 
-function requestEmailCode() {
+function requestEmailCode()
+{
     $username   = sanitize_text_field(wp_unslash($_REQUEST['username']));
     if (is_numeric($username)) {
         $user       = get_user_by('id', $username);
-    }else{
+    } else {
         $user       = get_user_by('login', $username);
     }
 
@@ -181,15 +186,16 @@ function requestEmailCode() {
         $result = sendEmailCode($user);
 
         if ($result) {
-            return "E-mail sent to " .$user->user_email;
+            return "E-mail sent to " . $user->user_email;
         }
         return new WP_Error('login', 'Sending e-mail failed');
-    }else{
+    } else {
         return new WP_Error('login', 'Invalid username given');
     }
 }
 
-function removeWebAuthenticator() {
+function removeWebAuthenticator()
+{
     $key        = sanitize_text_field(wp_unslash($_POST['userHandle']));
 
     // store id for keypasslogin without username
@@ -213,20 +219,21 @@ add_filter('check_password', __NAMESPACE__ . '\checkBioPassword', 10, 4);
  * @param int $userId
  * @return bool
  */
-function checkBioPassword($check, $password, $storedHash, $userId) {
+function checkBioPassword($check, $password, $storedHash, $userId)
+{
     if (empty($check) && empty($storedHash)) {
         $user           = get_user_by('id', $userId);
         $storedHash    = $user->data->user_pass;
 
         global $wp_hasher;
 
-        if ( empty($wp_hasher)) {
+        if (empty($wp_hasher)) {
             require_once ABSPATH . WPINC . '/class-phpass.php';
             // By default, use the portable hash from phpass.
             $wp_hasher = new \PasswordHash(8, true);
         }
 
-        if ( strlen($password) > 4096) {
+        if (strlen($password) > 4096) {
             return false;
         }
 
@@ -245,7 +252,8 @@ function checkBioPassword($check, $password, $storedHash, $userId) {
 }
 
 // Save 2fa options
-function saveTwoFaSettings() {
+function saveTwoFaSettings()
+{
     $userId         = get_current_user_id();
 
     $newMethods     = $_POST['2fa-methods'];
@@ -258,18 +266,18 @@ function saveTwoFaSettings() {
     if (in_array('authenticator', $newMethods) && !in_array('authenticator', $oldMethods)) {
         $secret     = $_POST['auth-secret'];
         $secretkey  = $_POST['secretkey'];
-        $hash       = get_user_meta($userId,'2fa_hash',true);
+        $hash       = get_user_meta($userId, '2fa_hash', true);
 
         $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
 
         //we should have submitted a secret
         if (empty($secret)) {
-            return new WP_Error('No code',"You have to submit a code when setting up the authenticator");
+            return new WP_Error('No code', "You have to submit a code when setting up the authenticator");
         }
 
         //we should not have changed the secretkey
         if (!password_verify($secretkey, $hash)) {
-            return new WP_Error('Secretkey error',"Why do you try to hack me?");
+            return new WP_Error('Secretkey error', "Why do you try to hack me?");
         }
 
         $last2fa        = 0; // variable will be updated by the verifyCode function
@@ -277,7 +285,7 @@ function saveTwoFaSettings() {
             //store in usermeta
             update_user_meta($userId, '2fa_key', $secretkey);
             update_user_meta($userId, '2fa_last', $last2fa);
-        }else{
+        } else {
             return new WP_Error('Invalid 2fa code', "Your code is expired");
         }
         addMethod('authenticator', $userId);
@@ -298,7 +306,7 @@ function saveTwoFaSettings() {
             wp_mail($userdata->user_email, $emailVerfEnabled->subject, $emailVerfEnabled->message);
 
             $message    = 'Enabled e-mail verification';
-        }else{
+        } else {
             return new WP_Error('login', 'Invalid e-mail code');
         }
 

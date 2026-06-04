@@ -1,9 +1,11 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -15,21 +17,23 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addLoginUrls');
  * @param array $urls The list of allowed REST API URLs
  * @return array The updated list of allowed REST API URLs
  */
-function addLoginUrls($urls) {
-    $urls[] = RESTAPIPREFIX. '/login/check-cred';
-    $urls[] = RESTAPIPREFIX. '/login/request_login';
-    $urls[] = RESTAPIPREFIX. '/login/request_pwd_reset';
-    $urls[] = RESTAPIPREFIX. '/login/update_password';
-    $urls[] = RESTAPIPREFIX. '/login/request_user_account';
+function addLoginUrls($urls)
+{
+    $urls[] = RESTAPIPREFIX . '/login/check-cred';
+    $urls[] = RESTAPIPREFIX . '/login/request_login';
+    $urls[] = RESTAPIPREFIX . '/login/request_pwd_reset';
+    $urls[] = RESTAPIPREFIX . '/login/update_password';
+    $urls[] = RESTAPIPREFIX . '/login/request_user_account';
 
     return $urls;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\loginRestApi');
-function loginRestApi() {
+function loginRestApi()
+{
     // check credentials
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/check-cred',
         array(
             'methods'                 => 'POST,GET',
@@ -38,17 +42,17 @@ function loginRestApi() {
             'args'                    => array(
                 'username'        => array(
                     'required'    => true
-               ),
+                ),
                 'password'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     // request_login
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/request_login',
         array(
             'methods'                 => 'POST',
@@ -57,17 +61,17 @@ function loginRestApi() {
             'args'                    => array(
                 'username'        => array(
                     'required'    => true
-               ),
+                ),
                 'password'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     // logout
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/logout',
         array(
             'methods'                 => 'POST',
@@ -78,12 +82,12 @@ function loginRestApi() {
             'permission_callback'     => function () {
                 return current_user_can('read');        // Allow access to logged in users
             },
-       )
-   );
+        )
+    );
 
     // request_pwd_reset
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/request_pwd_reset',
         array(
             'methods'                 => 'POST',
@@ -92,14 +96,14 @@ function loginRestApi() {
             'args'                    => array(
                 'username'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     // update password
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/update_password',
         array(
             'methods'                 => 'POST',
@@ -113,20 +117,20 @@ function loginRestApi() {
                     'validate_callback' => function ($userId) {
                         return is_numeric($userId);
                     }
-               ),
+                ),
                 'pass1'        => array(
                     'required'    => true
-               ),
+                ),
                 'pass2'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     // request_user_account
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/request_user_account',
         array(
             'methods'                 => 'POST',
@@ -137,16 +141,16 @@ function loginRestApi() {
             'args'                    => array(
                 'first-name'        => array(
                     'required'    => true
-               ),
+                ),
                 'last-name'        => array(
                     'required'    => true
-               ),
+                ),
                 'email'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 }
 
 add_filter('check_password', __NAMESPACE__ . '\checkPassword', 10, 4);
@@ -159,20 +163,21 @@ add_filter('check_password', __NAMESPACE__ . '\checkPassword', 10, 4);
  * @param int $userId
  * @return bool
  */
-function checkPassword($check, $password, $storedHash, $userId) {
+function checkPassword($check, $password, $storedHash, $userId)
+{
     if (empty($check) && empty($storedHash)) {
         $user           = get_user_by('id', $userId);
         $storedHash    = $user->data->user_pass;
 
         global $wp_hasher;
 
-        if ( empty($wp_hasher)) {
+        if (empty($wp_hasher)) {
             require_once ABSPATH . WPINC . '/class-phpass.php';
             // By default, use the portable hash from phpass.
             $wp_hasher = new \PasswordHash(8, true);
         }
 
-        if ( strlen($password) > 4096) {
+        if (strlen($password) > 4096) {
             return false;
         }
 
@@ -191,7 +196,8 @@ function checkPassword($check, $password, $storedHash, $userId) {
 }
 
 // Verify username and password
-function checkCredentials() {
+function checkCredentials()
+{
     $username   = sanitize_text_field(wp_unslash($_POST['username']));
     $password   = sanitize_text_field(wp_unslash($_POST['password']));
 
@@ -211,8 +217,8 @@ function checkCredentials() {
         //return the methods
         if (!empty($methods)) {
             return array_values($methods);
-        //no 2fa setup yet, login straight away
-        }else{
+            //no 2fa setup yet, login straight away
+        } else {
             return userLogin();
         }
     }
@@ -233,10 +239,11 @@ function checkCredentials() {
  * @param string $token The token used for authentication (if applicable)
  * @return void
  */
-function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type, $token) {
+function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type, $token)
+{
     // make sure we only write the right cookie
     //if (get_current_user_id() == $userId) {
-        $_COOKIE[ LOGGED_IN_COOKIE ] = $loggedInCookie;
+    $_COOKIE[LOGGED_IN_COOKIE] = $loggedInCookie;
     //}
 }
 
@@ -245,7 +252,8 @@ function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type,
  *
  * @return array        Array of 'redirect'  => $redirect,  'message'   => $message, 'nonce'     => wp_create_nonce('wp_rest'),  'id'        => $user->ID
  **/
-function userLogin() {
+function userLogin()
+{
     $username       = sanitize_text_field(wp_unslash($_REQUEST['username'] ?? ''));
     $password       = sanitize_text_field(wp_unslash($_REQUEST['password'] ?? ''));
     $remember       = sanitize_text_field(wp_unslash($_REQUEST['rememberme'] ?? true));
@@ -254,7 +262,7 @@ function userLogin() {
         'user_login'    => $username,
         'user_password' => $password,
         'remember'      => $remember
-   );
+    );
 
     // add a filter to allow passwordless sign in
     add_filter('authenticate', __NAMESPACE__ . '\allowPasswordlessLogin', 999, 3);
@@ -271,7 +279,7 @@ function userLogin() {
     // remove the filter to allow passwordless sign in
     remove_filter('authenticate', __NAMESPACE__ . '\allowPasswordlessLogin', 999);
 
-    if ( is_wp_error($user)) {
+    if (is_wp_error($user)) {
         return new WP_Error('Login error', $user->get_error_message());
     }
 
@@ -282,7 +290,7 @@ function userLogin() {
     $currentLoginCount = get_user_meta($user->ID, 'login_count', true);
     if (is_numeric($currentLoginCount)) {
         $loginCount = intval($currentLoginCount) + 1;
-    }else{
+    } else {
         //it is the first time a user logs in
         $loginCount = 1;
 
@@ -352,7 +360,8 @@ function userLogin() {
 }
 
 // Send password reset e-mail
-function requestPasswordReset() {
+function requestPasswordReset()
+{
     $username   = sanitize_text_field(wp_unslash($_POST['username']));
 
     $user    = get_user_by('login', $username);
@@ -368,7 +377,7 @@ function requestPasswordReset() {
     $errors = new \WP_Error();
     $errors = apply_filters('lostpassword_errors', $errors, $user);
 
-    if ( $errors->has_errors()) {
+    if ($errors->has_errors()) {
         return $errors;
     }
 
@@ -382,12 +391,13 @@ function requestPasswordReset() {
 }
 
 //Save a new password
-function processPasswordUpdate() {
+function processPasswordUpdate()
+{
     $userId    = $_POST['user-id'];
 
     $user   = get_userdata($userId);
     if (!$user) {
-        return new WP_Error('user-id error','Invalid user id given');
+        return new WP_Error('user-id error', 'Invalid user id given');
     }
 
     if ($_POST['pass1'] != $_POST['pass2']) {
@@ -402,28 +412,29 @@ function processPasswordUpdate() {
     if (is_user_logged_in()) {
         if (get_current_user_id() == $userId) {
             $message .= ', please login again';
-        }else{
+        } else {
             $message .= " for $user->display_name";
         }
     }
     return [
         'message'    => $message,
-        'redirect'    => SITEURL. "/?showlogin=$user->user_login"
+        'redirect'    => SITEURL . "/?showlogin=$user->user_login"
     ];
 }
 
 /**
-  * An 'authenticate' filter callback that authenticates the user using only the username.
-  *
-  * To avoid potential security vulnerabilities, this should only be used in the context of a programmatic login,
-  * and unhooked immediately after it fires.
-  *
-  * @param \WP_User $user
-  * @param string $username
-  * @param string $password
-  * @return bool|\WP_User a WP_User object if the username matched an existing user, or false if it didn't
-*/
-function allowPasswordlessLogin($user, $username, $password) {
+ * An 'authenticate' filter callback that authenticates the user using only the username.
+ *
+ * To avoid potential security vulnerabilities, this should only be used in the context of a programmatic login,
+ * and unhooked immediately after it fires.
+ *
+ * @param \WP_User $user
+ * @param string $username
+ * @param string $password
+ * @return bool|\WP_User a WP_User object if the username matched an existing user, or false if it didn't
+ */
+function allowPasswordlessLogin($user, $username, $password)
+{
 
     $ignoreCodes    = [
         "invalid_username",
@@ -457,9 +468,10 @@ function allowPasswordlessLogin($user, $username, $password) {
  *
  * @return  string|bool         Returns a url to redirect to or false if check is not needed
  */
-function checkAdminDetails($user) {
+function checkAdminDetails($user)
+{
     // Check if it is time to add a redirect to the admin email confirmation screen.
-    if ( $user instanceof \WP_User && $user->exists() && $user->has_cap('manage_options')) {
+    if ($user instanceof \WP_User && $user->exists() && $user->has_cap('manage_options')) {
         $adminEmailLifespan = (int) get_option('admin_email_lifespan');
 
         /*
@@ -469,8 +481,8 @@ function checkAdminDetails($user) {
         /** This filter is documented in wp-login.php */
         $adminEmailCheckInterval = (int) apply_filters('admin_email_check_interval', 6 * MONTH_IN_SECONDS);
 
-        if ( $adminEmailCheckInterval > 0 && time() > $adminEmailLifespan) {
-            if ( isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])) {
+        if ($adminEmailCheckInterval > 0 && time() > $adminEmailLifespan) {
+            if (isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])) {
                 $redirectTo = $_REQUEST['redirect_to'];
             } else {
                 $redirectTo = admin_url();
@@ -493,9 +505,9 @@ function checkAdminDetails($user) {
                 array(
                     'action'  => 'confirm_admin_email',
                     'wp_lang' => get_user_locale($user),
-               ),
+                ),
                 site_url('wp-login.php', 'login')
-           );
+            );
 
             return $redirectTo;
         }

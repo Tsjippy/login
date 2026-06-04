@@ -1,17 +1,21 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class EmailVerfEnabled extends ADMIN\MailSetting{
+class EmailVerfEnabled extends ADMIN\MailSetting
+{
 
     public $user;
 
-    public function __construct($user) {
+    public function __construct($user)
+    {
         // call parent constructor
         parent::__construct('email_enabled', PLUGINSLUG);
 

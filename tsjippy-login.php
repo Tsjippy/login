@@ -1,4 +1,5 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
 
 /**
@@ -19,7 +20,7 @@ namespace TSJIPPY\LOGIN;
  *
  * @author Ewald Harmsen
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -48,7 +49,6 @@ register_activation_hook(__FILE__, function () {
     $settings['2fa-page']                 = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[twofa_setup]');
 
     update_option('tsjippy_login_settings', $settings);
-
 });
 
 // run on deactivation
@@ -73,4 +73,3 @@ register_deactivation_hook(__FILE__, function () {
         wp_delete_post($page, true);
     }
 });
-

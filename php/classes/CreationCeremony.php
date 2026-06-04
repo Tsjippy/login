@@ -1,9 +1,10 @@
 <?php
 
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -18,13 +19,15 @@ use Cose\Algorithms;
 use Webauthn\PublicKeyCredentialParameters;
 
 /**
-* Register a webauthn method
-*/
-class CreationCeremony extends WebAuthCeremony{
+ * Register a webauthn method
+ */
+class CreationCeremony extends WebAuthCeremony
+{
     public $verificationType;
     public $ceremonyRequestManager;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->ceremonyRequestManager = $this->factory->creationCeremony();
@@ -33,7 +36,8 @@ class CreationCeremony extends WebAuthCeremony{
     /**
      * Creates the options needed to start creating a webauthn credtial
      */
-    public function createOptions() {
+    public function createOptions()
+    {
         $excludedPublicKeyDescriptors = [];
 
         $existingCredentials = $this->getOSCredentials();
@@ -41,12 +45,12 @@ class CreationCeremony extends WebAuthCeremony{
             $excludedPublicKeyDescriptors[] = PublicKeyCredentialDescriptor::create('public-key', $credential->publicKeyCredentialId);
         }
 
-         // Set authenticator type
+        // Set authenticator type
         $authenticatorSelectionCriteria = AuthenticatorSelectionCriteria::create(
             authenticatorAttachment: AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_PLATFORM,
             userVerification: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
-            residentKey:AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
-       );
+            residentKey: AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED,
+        );
 
         $publicKeyCredentialParametersList = [
             PublicKeyCredentialParameters::create('public-key', Algorithms::COSE_ALGORITHM_ES256K), // More interesting algorithm
@@ -64,8 +68,7 @@ class CreationCeremony extends WebAuthCeremony{
                 pubKeyCredParams: $publicKeyCredentialParametersList,
                 excludeCredentials: $excludedPublicKeyDescriptors,
                 authenticatorSelection: $authenticatorSelectionCriteria
-           )
-        ;
+            );
 
         $jsonObject = $this->serializer->serialize(
             $publicKeyCredentialCreationOptions,
@@ -74,7 +77,7 @@ class CreationCeremony extends WebAuthCeremony{
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true, // Highly recommended!
                 JsonEncode::OPTIONS => JSON_THROW_ON_ERROR, // Optional
             ]
-       );
+        );
 
         // store in session
         TSJIPPY\storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
@@ -85,10 +88,11 @@ class CreationCeremony extends WebAuthCeremony{
     /**
      * Verifies a credential creation response
      */
-    public function verifyResponse($response, $identifier) {
+    public function verifyResponse($response, $identifier)
+    {
         $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
             $this->ceremonyRequestManager
-       );
+        );
 
         // Parse the response to PublicKeyCredential Instance
         $this->loadPublicKey($response);
@@ -100,13 +104,13 @@ class CreationCeremony extends WebAuthCeremony{
         }
 
         // validate the response
-        try{
+        try {
             $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
                 $this->publicKeyCredential->response,
                 TSJIPPY\getFromTransient('publicKeyCredentialCreationOptions'),
                 $this->domain
-           );
-        }catch(\Exception $e) {
+            );
+        } catch (\Exception $e) {
             TSJIPPY\printArray($e->getMessage());
 
             return new \WP_Error('tsjippy-login', $e->getMessage());
@@ -118,7 +122,8 @@ class CreationCeremony extends WebAuthCeremony{
         return "Succesfully Stored The Credential";
     }
 
-    protected function storeCredential($data, $identifier): void {
+    protected function storeCredential($data, $identifier): void
+    {
         $meta = array(
             'cred_id'       => $data->publicKeyCredentialId,
             "identifier"    => $identifier,
@@ -126,7 +131,7 @@ class CreationCeremony extends WebAuthCeremony{
             "added"         => gmdate('Y-m-d H:i:s', current_time('timestamp')),
             "userHandle"    => $data->userHandle,
             "last_used"     => "-"
-       );
+        );
 
         /**
          * Store the Webauthn Credential data

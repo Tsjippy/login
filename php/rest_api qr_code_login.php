@@ -1,9 +1,11 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -15,29 +17,31 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addQrLoginUrls');
  * @param array $urls The list of allowed REST API URLs
  * @return array The updated list of allowed REST API URLs
  */
-function addQrLoginUrls($urls) {
-    $urls[] = RESTAPIPREFIX. '/login/get_login_qr_code';
-    $urls[] = RESTAPIPREFIX. '/login/qr_code_scanned';
+function addQrLoginUrls($urls)
+{
+    $urls[] = RESTAPIPREFIX . '/login/get_login_qr_code';
+    $urls[] = RESTAPIPREFIX . '/login/qr_code_scanned';
 
     return $urls;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\qrLoginRestApi');
-function qrLoginRestApi() {
+function qrLoginRestApi()
+{
     // request qr image for login
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/get_login_qr_code',
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\getLoginQrCode',
             'permission_callback'     => '__return_true'
-       )
-   );
+        )
+    );
 
     // check if qr code has been scanned
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/qr_code_scanned',
         array(
             'methods'                 => 'POST',
@@ -46,17 +50,17 @@ function qrLoginRestApi() {
             'args'                    => array(
                 'token'        => array(
                     'required'    => true
-               ),
+                ),
                 'key'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     // Stores the username for login
     register_rest_route(
-        RESTAPIPREFIX. '/login',
+        RESTAPIPREFIX . '/login',
         '/qr_code_username',
         array(
             'methods'                 => 'POST, GET',
@@ -65,19 +69,20 @@ function qrLoginRestApi() {
             'args'                    => array(
                 'token'        => array(
                     'required'    => true
-               ),
+                ),
                 'key'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 }
 
 /**
  * Retrieves a login qr code
  */
-function getLoginQrCode() {
+function getLoginQrCode()
+{
     // check if previous qr code has been scanned
     if (!empty($_POST['token'])) {
         $result = isQrCodeScanned();
@@ -96,7 +101,8 @@ function getLoginQrCode() {
 /**
  * Check if qr code has been scanned
  */
-function isQrCodeScanned() {
+function isQrCodeScanned()
+{
     $oldToken       = $_POST['old-token'];
     $token          = $_POST['token'];
     $key            = $_POST['key'];
@@ -129,7 +135,8 @@ function isQrCodeScanned() {
 /**
  * Sends the username to use for a qr code login
  */
-function submitUsernameForQrCode() {
+function submitUsernameForQrCode()
+{
     if (!is_user_logged_in()) {
         if (!isset($_COOKIE[LOGGED_IN_COOKIE])) {
             return new WP_Error('no_cookie', 'Authentication cookie is missing. ', array('status' => 401));
@@ -168,9 +175,9 @@ function submitUsernameForQrCode() {
 
     // 5 minutes
     if (set_transient($token, $username, 300)) {
-        wp_redirect(get_home_url(). '?message=QR code login succesfull!');
+        wp_redirect(get_home_url() . '?message=QR code login succesfull!');
         exit;
-    }else{
+    } else {
         return false;
     }
 }

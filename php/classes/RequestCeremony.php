@@ -1,6 +1,7 @@
 <?php
 
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
 use Webauthn\AuthenticatorAssertionResponseValidator;
@@ -12,17 +13,19 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 /**
-* Register a webauthn method
-*/
-class RequestCeremony extends WebAuthCeremony{
+ * Register a webauthn method
+ */
+class RequestCeremony extends WebAuthCeremony
+{
     public $ceremonyRequestManager;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->ceremonyRequestManager = $this->factory->requestCeremony();
@@ -31,14 +34,15 @@ class RequestCeremony extends WebAuthCeremony{
     /**
      * Creates and stores
      */
-    public function createOptions() {
+    public function createOptions()
+    {
 
         $allowedCredentials = [];
 
         if (!empty($_POST['username'])) {
             if (is_numeric($_POST['username'])) {
                 $this->user = get_user_by('ID', sanitize_text_field(wp_unslash($_POST['username'])));
-            }else{
+            } else {
                 $this->user = get_user_by('login', sanitize_text_field(wp_unslash($_POST['username'])));
             }
 
@@ -50,7 +54,7 @@ class RequestCeremony extends WebAuthCeremony{
                     return $credential->getPublicKeyCredentialDescriptor();
                 },
                 $registeredAuthenticators
-           ); // should be null for login without username
+            ); // should be null for login without username
         }
 
         // Public Key Credential Request Options
@@ -60,8 +64,7 @@ class RequestCeremony extends WebAuthCeremony{
                 $this->domain,
                 allowCredentials: $allowedCredentials,
                 userVerification: $this->verificationType
-           )
-        ;
+            );
 
         TSJIPPY\storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions);
 
@@ -72,12 +75,13 @@ class RequestCeremony extends WebAuthCeremony{
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true, // Highly recommended!
                 JsonEncode::OPTIONS => JSON_THROW_ON_ERROR, // Optional
             ]
-       );
+        );
 
         return json_decode($jsonObject);
     }
 
-    public function passkeyLogin() {
+    public function passkeyLogin()
+    {
         // get all passkey login users
         $usedIds    = get_option('tsjippy-webauth-user-handles', []);
 
@@ -96,7 +100,7 @@ class RequestCeremony extends WebAuthCeremony{
 
         if (empty($this->user)) {
 
-            return new \WP_Error('webauthn',"User not found");
+            return new \WP_Error('webauthn', "User not found");
         }
 
         $userNameAuth   = $this->user->user_login;
@@ -105,10 +109,11 @@ class RequestCeremony extends WebAuthCeremony{
         TSJIPPY\storeInTransient("allow_passwordless_login", true);
     }
 
-    public function verifyResponse($response, $isPassKeyLogin) {
+    public function verifyResponse($response, $isPassKeyLogin)
+    {
         $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
             $this->ceremonyRequestManager
-       );
+        );
 
         $this->loadPublicKey($response);
 
@@ -119,16 +124,16 @@ class RequestCeremony extends WebAuthCeremony{
 
         if ($isPassKeyLogin) {
             $this->passkeyLogin();
-        }else{
+        } else {
             $this->user = get_user_by('login', sanitize_text_field(wp_unslash($_POST['username'])));
         }
 
         $prevCredential = $this->getCredential($this->publicKeyCredential->rawId);
 
         if (empty($prevCredential)) {
-           // Throw an exception if the credential is not found.
-           // It can also be rejected depending on your security policy (e.g. disabled by the user because of loss)
-           return new WP_Error('tsjippy-login', 'Credential not found!');
+            // Throw an exception if the credential is not found.
+            // It can also be rejected depending on your security policy (e.g. disabled by the user because of loss)
+            return new WP_Error('tsjippy-login', 'Credential not found!');
         }
 
         // Needed after the upgrade to v5.2
@@ -137,17 +142,16 @@ class RequestCeremony extends WebAuthCeremony{
             $prevCredential->aaguid         = new \Symfony\Component\Uid\UuidV4();
 
             $prevCredential->uvInitialized  = true;
-
         }
 
-        try{
+        try {
             $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
                 clone $prevCredential,
                 $this->publicKeyCredential->response,
                 TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions'),
                 $this->domain,
                 $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
-           );
+            );
 
             /** @disregard P1080 */
             if ($publicKeyCredentialSource->counter < $prevCredential->counter) {
@@ -176,8 +180,7 @@ class RequestCeremony extends WebAuthCeremony{
             }
 
             return "Verified";
-
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             return new \WP_Error('tsjippy-login', $e->getMessage());
         }
     }

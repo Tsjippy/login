@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -12,14 +14,15 @@ use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
 use Webauthn\AuthenticatorSelectionCriteria;
 use DeviceDetector\Parser\OperatingSystem as OS_info;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 /**
-* Register a webauthn method
-*/
-class WebAuthCeremony{
+ * Register a webauthn method
+ */
+class WebAuthCeremony
+{
     public $verificationType;
     public $rpEntity;
     public $manager;
@@ -32,7 +35,8 @@ class WebAuthCeremony{
     public $domain;
     public $userEntity;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user = wp_get_current_user();
 
         $this->verificationType = AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED;
@@ -59,7 +63,8 @@ class WebAuthCeremony{
      *
      * @return  object the rprntity
      */
-    public function getRpEntity() {
+    public function getRpEntity()
+    {
         if (!empty($this->rpEntity)) {
             return $this->rpEntity;
         }
@@ -70,23 +75,24 @@ class WebAuthCeremony{
         if (!empty($path)) {
             $data = file_get_contents($path);
             if (!empty($contents)) {
-                $logo   = "data:image/$type;base64," .base64_encode($data);
+                $logo   = "data:image/$type;base64," . base64_encode($data);
             }
         }
 
         return $this->rpEntity = new PublicKeyCredentialRpEntity(
-            get_bloginfo('name'). ' Webauthn Server', // The application name
+            get_bloginfo('name') . ' Webauthn Server', // The application name
             $this->domain,       // The application ID = the domain
             //$logo
             //picture from example on https://webauthn-doc.spomky-labs.com/prerequisites/the-relying-party , does not work
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAwFBMVEXm7NK41k3w8fDv7+q01Tyy0zqv0DeqyjOszDWnxjClxC6iwCu11z6y1DvA2WbY4rCAmSXO3JZDTxOiwC3q7tyryzTs7uSqyi6tzTCmxSukwi9aaxkWGga+3FLv8Ozh6MTT36MrMwywyVBziSC01TbT5ZW9z3Xi6Mq2y2Xu8Oioxy7f572qxzvI33Tb6KvR35ilwTmvykiwzzvV36/G2IPw8O++02+btyepyDKvzzifvSmw0TmtzTbw8PAAAADx8fEC59dUAAAA50lEQVQYV13RaXPCIBAG4FiVqlhyX5o23vfVqUq6mvD//1XZJY5T9xPzzLuwgKXKslQvZSG+6UXgCnFePtBE7e/ivXP/nRvUUl7UqNclvO3rpLqofPDAD8xiu2pOntjamqRy/RqZxs81oeVzwpCwfyA8A+8mLKFku9XfI0YnSKXnSYZ7ahSII+AwrqoMmEFKriAeVrqGM4O4Z+ADZIhjg3R6LtMpWuW0ERs5zunKVHdnnnMLNQqaUS0kyKkjE1aE98b8y9x9JYHH8aZXFMKO6JFMEvhucj3Wj0kY2D92HlHbE/9Vk77mD6srRZqmVEAZAAAAAElFTkSuQmCC'
-       );
+        );
     }
 
     /**
      * Get the profile picture for use in the request
      */
-    public function getProfilePicture($userId) {
+    public function getProfilePicture($userId)
+    {
         $attachmentId  = get_user_meta($userId, 'profile_picture', true);
         $image          = null;
 
@@ -96,7 +102,7 @@ class WebAuthCeremony{
                 $type       = pathinfo($path, PATHINFO_EXTENSION);
                 $contents   = file_get_contents(get_attached_file($attachmentId));
                 if (!empty($contents)) {
-                    $image = "data:image/$type;base64," .base64_encode($contents);
+                    $image = "data:image/$type;base64," . base64_encode($contents);
                 }
             }
         }
@@ -114,16 +120,17 @@ class WebAuthCeremony{
      *
      * @return  string  the string
      */
-    public function getChallenge($length = 10) {
+    public function getChallenge($length = 10)
+    {
         // Use cryptographically secure pseudo-random generator in PHP 7+
         if (function_exists('random_bytes')) {
-            $bytes = random_bytes(round($length/2));
+            $bytes = random_bytes(round($length / 2));
             return bin2hex($bytes);
-        }else{
+        } else {
             // Not supported, use normal random generator instead
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
             $randomString = '';
-            for($i = 0; $i < $length; $i++) {
+            for ($i = 0; $i < $length; $i++) {
                 $randomString .= $characters[rand(0, strlen($characters) - 1)];
             }
             return $randomString;
@@ -133,7 +140,8 @@ class WebAuthCeremony{
     /**
      *  Get user ID or create one
      */
-    public function getUserIdentity() {
+    public function getUserIdentity()
+    {
         if (isset($this->userEntity)) {
             return $this->userEntity;
         }
@@ -141,7 +149,7 @@ class WebAuthCeremony{
         $webauthnKey = get_user_meta($this->user->ID, '2fa_webauthn_key', true);
 
         if (!$webauthnKey) {
-            $webauthnKey = hash("sha256", $this->user->user_login. "-" .$this->user->display_name. "-" .$this->getChallenge(10));
+            $webauthnKey = hash("sha256", $this->user->user_login . "-" . $this->user->display_name . "-" . $this->getChallenge(10));
             update_user_meta($this->user->ID, '2fa_webauthn_key', $webauthnKey);
         }
 
@@ -150,25 +158,27 @@ class WebAuthCeremony{
             $webauthnKey,
             $this->user->display_name,
             null
-       );
+        );
     }
 
     /**
      * Unserializes a public key json and converts it to a PublicKeyCredential instance
      */
-    public function loadPublicKey($data) {
+    public function loadPublicKey($data)
+    {
         // $data corresponds to the JSON object showed above
         $this->publicKeyCredential = $this->serializer->deserialize(
             $data,
             PublicKeyCredential::class,
             'json'
-       );
+        );
     }
 
     /**
-    * Get all credentials
-    */
-    protected function getCredentials(): array {
+     * Get all credentials
+     */
+    protected function getCredentials(): array
+    {
         if (isset($this->credentials)) {
             return $this->credentials;
         }
@@ -177,9 +187,9 @@ class WebAuthCeremony{
 
         $userCreds  = (array)get_user_meta($this->user->ID, "2fa_webautn_cred");
         foreach ($userCreds as $userCred) {
-            try{
+            try {
                 $this->credentials[] = unserialize(base64_decode($userCred));
-            }catch(\Throwable $exception) {
+            } catch (\Throwable $exception) {
                 continue;
             }
         }
@@ -194,7 +204,8 @@ class WebAuthCeremony{
      *
      * @return  object|false    The credential or false if no credential found
      */
-    public function getCredential($id) {
+    public function getCredential($id)
+    {
         foreach ($this->getCredentials() as $credential) {
             if ($credential && $credential->publicKeyCredentialId == $id) {
                 return $credential;
@@ -206,9 +217,10 @@ class WebAuthCeremony{
     }
 
     /**
-    * Get all credential meta
-    */
-    protected function getCredentialMetas($userId=''): array {
+     * Get all credential meta
+     */
+    protected function getCredentialMetas($userId = ''): array
+    {
         if (empty($userId) && isset($this->credentialMetas)) {
             return $this->credentialMetas;
         }
@@ -221,12 +233,12 @@ class WebAuthCeremony{
 
         $credMetas  = get_user_meta($userId, "2fa_webautn_cred_meta");
         foreach ($credMetas as $credMeta) {
-            try{
+            try {
                 $unserialized   = unserialize(base64_decode($credMeta));
                 if ($unserialized) {
                     $this->credentialMetas[] = $unserialized;
                 }
-            }catch(\Throwable $exception) {
+            } catch (\Throwable $exception) {
                 continue;
             }
         }
@@ -235,13 +247,14 @@ class WebAuthCeremony{
     }
 
     /**
-    * Get credential meta for a specific credential
-    *
-    * @param    string  $credId     The id of the credential
-    *
-    * @return   array|false         The credential meta array
-    */
-    protected function getCredentialMetaById($credId): array|bool {
+     * Get credential meta for a specific credential
+     *
+     * @param    string  $credId     The id of the credential
+     *
+     * @return   array|false         The credential meta array
+     */
+    protected function getCredentialMetaById($credId): array|bool
+    {
         $this->getCredentialMetas();
 
         foreach ($this->credentialMetas as $credMeta) {
@@ -256,7 +269,8 @@ class WebAuthCeremony{
     /**
      * Prses os info from user agent
      */
-    protected function getOsInfo() {
+    protected function getOsInfo()
+    {
         $userAgent = $_SERVER['HTTP_USER_AGENT']; // change this to the useragent you want to parse
 
         $info = new OS_info($userAgent);
@@ -264,9 +278,10 @@ class WebAuthCeremony{
     }
 
     /**
-    * Get all credentials for this OS
-    */
-    public function getOSCredentials() {
+     * Get all credentials for this OS
+     */
+    public function getOSCredentials()
+    {
         $credentials = [];
 
         //check if the platform matches
@@ -274,7 +289,7 @@ class WebAuthCeremony{
 
         foreach ($this->getCredentials() as $data) {
             $credentialMeta = $this->getCredentialMetaById($data->publicKeyCredentialId);
-            if ( $credentialMeta && $os == ($credentialMeta['os_info']['name'] ?? '')) {
+            if ($credentialMeta && $os == ($credentialMeta['os_info']['name'] ?? '')) {
                 $credentials[] = $data;
             }
         }
@@ -285,7 +300,8 @@ class WebAuthCeremony{
     /**
      * Delete a credential
      */
-    public function removeCredential($id) {
+    public function removeCredential($id)
+    {
         // remove the credential
         $this->getCredential($id);
 
@@ -307,7 +323,8 @@ class WebAuthCeremony{
      * @param   object|array    $value      The new value
      * @param   object|array    $oldValue   The previous value
      */
-    public function updateUserMeta($key, $value, $oldValue) {
+    public function updateUserMeta($key, $value, $oldValue)
+    {
         update_user_meta($this->user->ID, $key, base64_encode(serialize($value)), base64_encode(serialize($oldValue)));
     }
 
@@ -318,12 +335,13 @@ class WebAuthCeremony{
      *
      * @return  string              The table html
      */
-    public function authTable($userId='') {
+    public function authTable($userId = '')
+    {
         $this->getCredentialMetas($userId);
 
         ob_start();
         if (!empty($this->credentialMetas)) {
-            ?>
+?>
             <div id='webautn-devices-wrapper'>
                 <h4>Biometric authenticators overview</h4>
                 <table class='tsjippy table'>
@@ -355,26 +373,26 @@ class WebAuthCeremony{
                             if ($meta['cred_id'] == TSJIPPY\getFromTransient('last-used-cred-id')) {
                                 $lastUsed   = 'Now';
                                 echo "<tr class='current-device' style='background: beige;'>";
-                            }else{
+                            } else {
                                 echo "<tr>";
                             }
 
-                            ?>
-                                <td><?php echo esc_attr($identifier);?></td>
-                                <td><?php echo esc_attr($osName);?></td>
-                                <td><?php echo esc_attr($added);?></td>
-                                <td><?php echo esc_attr($lastUsed);?></td>
-                                <td>
-                                    <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id'];?>'>-</button>
-                                </td>
+                        ?>
+                            <td><?php echo esc_attr($identifier); ?></td>
+                            <td><?php echo esc_attr($osName); ?></td>
+                            <td><?php echo esc_attr($added); ?></td>
+                            <td><?php echo esc_attr($lastUsed); ?></td>
+                            <td>
+                                <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id']; ?>'>-</button>
+                            </td>
                             </tr>
-                            <?php
+                        <?php
                         }
                         ?>
                     </tbody>
                 </table>
             </div>
-            <?php
+<?php
         }
 
         return ob_get_clean();
