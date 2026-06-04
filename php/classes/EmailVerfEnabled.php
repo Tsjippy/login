@@ -3,8 +3,8 @@ namespace TSJIPPY\LOGIN;
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class EmailVerfEnabled extends ADMIN\MailSetting{
@@ -13,7 +13,7 @@ class EmailVerfEnabled extends ADMIN\MailSetting{
 
     public function __construct($user) {
         // call parent constructor
-		parent::__construct('email_enabled', PLUGINSLUG);
+        parent::__construct('email_enabled', PLUGINSLUG);
 
         $this->addUser($user);
 
@@ -22,6 +22,6 @@ class EmailVerfEnabled extends ADMIN\MailSetting{
         $this->defaultSubject               = "E-mail verification enabled";
 
         $this->defaultMessage               = 'Hi %first_name%,<br><br>';
-		$this->defaultMessage              .= "This is to confirm that you have enabled e-mail verification for login on %site_name%.";
+        $this->defaultMessage              .= "This is to confirm that you have enabled e-mail verification for login on %site_name%. ";
     }
 }

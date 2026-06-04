@@ -3,8 +3,8 @@ namespace TSJIPPY\LOGIN;
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class PasswordResetMail extends ADMIN\MailSetting{
@@ -14,7 +14,7 @@ class PasswordResetMail extends ADMIN\MailSetting{
 
     public function __construct($user, $url='') {
         // call parent constructor
-		parent::__construct('password_reset', PLUGINSLUG);
+        parent::__construct('password_reset', PLUGINSLUG);
 
         $this->addUser($user);
 
@@ -24,7 +24,7 @@ class PasswordResetMail extends ADMIN\MailSetting{
 
         $this->defaultMessage    = 'Hi %first_name%,<br><br>';
         $this->defaultMessage    = "Someone requested a password reset for you.<br>";
-        $this->defaultMessage	.= "If that was not you, please ignore this e-mail.<br>";
-        $this->defaultMessage	.= "Otherwise, follow this <a href='%url%'>link</a> to reset your password.<br>";
+        $this->defaultMessage    .= "If that was not you, please ignore this e-mail.<br>";
+        $this->defaultMessage    .= "Otherwise, follow this <a href='%url%'>link</a> to reset your password.<br>";
     }
 }

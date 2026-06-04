@@ -2,30 +2,30 @@
 namespace TSJIPPY\LOGIN;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 $standAlone = false;
 
-if ( !defined( 'ABSPATH' ) ) {
+if ( !defined('ABSPATH')) {
     require_once(__DIR__ . '/wordpress_loader.php');
     loadWordpress('Login');
-    
+
     $required   = true;
     $standAlone = true;
-}elseif(!isset($required)){
+}elseif (!isset($required)) {
     return;
 }
 
-if(!isset($username)){
+if (!isset($username)) {
     $username   = '';
 }
-if(!isset($message)){
+if (!isset($message)) {
     $message    = '';
 }
 
-if($standAlone && is_user_logged_in()){
+if ($standAlone && is_user_logged_in()) {
     ?>
     <body>
         <div style='text-align:center;margin-top:20px;'>
@@ -40,10 +40,10 @@ if($standAlone && is_user_logged_in()){
 loadAssets();
 
 ?>
-<div id="login-modal" class="modal <?php if(!$required){echo 'hidden';}?>" style="display:unset;">
+<div id="login-modal" class="modal <?php if (!$required) {echo 'hidden';}?>" style="display:unset;">
     <div class="modal-content" style="min-width:500px;">
         <?php
-        if(!$required){
+        if (!$required) {
             echo '<span class="close">×</span>';
         }
         ?>
@@ -52,12 +52,12 @@ loadAssets();
                 Login form
             </h3>
             <p id="message"><?php
-                if(is_wp_error($message)){
+                if (is_wp_error($message)) {
                     TSJIPPY\printArray($message);
                     /** @var \WP_Error $message */
-                    echo '<span class="error">'.$message->get_error_message().'</span>';
-                }elseif(!empty($message)){
-                    echo '<span class="message">'.$message.'</span>';
+                    echo '<span class="error">' .$message->get_error_message(). '</span>';
+                }elseif (!empty($message)) {
+                    echo '<span class="message">' .$message. '</span>';
                 }
             ?></p>
 
@@ -65,7 +65,7 @@ loadAssets();
 
             <form id="loginform" action="login" method="post">
                 <input type='hidden' class='no-reset' name='action' value='request_login'>
-                
+
                 <div id='message-wrapper' class='hidden'>
                     <h4 class='status-message'></h4>
                 </div>
@@ -82,7 +82,7 @@ loadAssets();
                             <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn">
                         </label>
                         <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
-                            <img src="<?php echo TSJIPPY\PICTURESURL.'/invisible.png';?>" loading='lazy' alt='togglepasword'>
+                            <img src="<?php echo TSJIPPY\PICTURESURL. '/invisible.png';?>" loading='lazy' alt='togglepasword'>
                         </button>
                     </div>
                     <div id='check-cred-wrapper'>
@@ -91,8 +91,8 @@ loadAssets();
                             Remember Me
                         </label>
                     </div>
-                    <?php do_action( 'login_form' );?>
-                    
+                    <?php do_action('login_form');?>
+
                     <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
                     <button type='button' id='check-cred' class='button'>Login</button>
                 </div>
@@ -129,7 +129,7 @@ loadAssets();
 </div>
 <?php
 
-if($standAlone){
+if ($standAlone) {
     print_footer_scripts();
 
     exit;

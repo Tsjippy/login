@@ -3,8 +3,8 @@ namespace TSJIPPY\LOGIN;
 use TSJIPPY;
 use TSJIPPY\ADMIN;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class TwoFaEmail extends ADMIN\MailSetting{
@@ -14,7 +14,7 @@ class TwoFaEmail extends ADMIN\MailSetting{
 
     public function __construct($user, $emailCode='') {
         // call parent constructor
-		parent::__construct( 'email_code', PLUGINSLUG);
+        parent::__construct('email_code', PLUGINSLUG);
 
         $this->addUser($user);
 
@@ -23,7 +23,7 @@ class TwoFaEmail extends ADMIN\MailSetting{
         $this->defaultSubject    = "Verification code for %site_name% login";
 
         $this->defaultMessage    = 'Hi %first_name%,<br><br>';
-		$this->defaultMessage   .= "Your requested a verification code for login on %site_name%.<br>";
-		$this->defaultMessage   .= "Please use this code: <code>%email_code%</code>.";
+        $this->defaultMessage   .= "Your requested a verification code for login on %site_name%.<br>";
+        $this->defaultMessage   .= "Please use this code: <code>%email_code%</code>. ";
     }
 }

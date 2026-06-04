@@ -4,23 +4,23 @@ namespace TSJIPPY\LOGIN;
 use function TSJIPPY\addElement;
 use function TSJIPPY\addRawHtml;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
     /**
      * AdminMenu constructor.
-     * 
+     *
      * @param array $settings The settings for the plugin
      * @param string $name The name of the plugin
      */
-    public function __construct($settings, $name){
+    public function __construct($settings, $name) {
         parent::__construct($settings, $name);
     }
 
-    public function settings($parent){
+    public function settings($parent) {
         ob_start();
         ?>
         <p>
@@ -29,21 +29,21 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             Once that account is approved they will be able to login.<br>
         </p>
         <label>
-            <input type="checkbox" name="user-registration" value="enabled" <?php if($this->settings['user-registration']){echo 'checked';}?>>
+            <input type="checkbox" name="user-registration" value="enabled" <?php if ($this->settings['user-registration']) {echo 'checked';}?>>
             Enable user registration
         </label>
-        <?php 
-        if($this->settings['user-registration']){
-            $url	= get_permalink(SETTINGS['register-page'] ?? '');
+        <?php
+        if ($this->settings['user-registration']) {
+            $url    = get_permalink(SETTINGS['register-page'] ?? '');
 
-            if($url){
+            if ($url) {
                 ?>
                 <a href="<?php echo esc_url($url);?>" target="_blank">View registration page</a>
                 <?php
             }
         }
 
-        if(wp_is_block_theme()){
+        if (wp_is_block_theme()) {
             ?>
             <div class='warning' style='max-width: 500px;'>
                 This site has an active block theme.<br>
@@ -57,18 +57,18 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             </div>
             <?php
             addRawHtml(ob_get_clean(), $parent);
-        
+
             return true;
         }
 
         // Classic menus's
-        $menus	= wp_get_nav_menus();
-        
+        $menus    = wp_get_nav_menus();
 
-        if(empty($menus)){
+
+        if (empty($menus)) {
             ?>
             <div class='warning' style='max-width: 500px;'>
-                You do not have any active menu's. Please add one 
+                You do not have any active menu's. Please add one
             </div>
             <?php
 
@@ -85,22 +85,22 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         <table style="border: none;">
             <?php
 
-            if(!isset($this->settings['visibilty-login-menu'])){
-                $this->settings['visibilty-login-menu']	= [];
+            if (!isset($this->settings['visibilty-login-menu'])) {
+                $this->settings['visibilty-login-menu']    = [];
             }
 
-            if(!isset($this->settings['visibilty-logout-menu'])){
-                $this->settings['visibilty-logout-menu']	= [];
+            if (!isset($this->settings['visibilty-logout-menu'])) {
+                $this->settings['visibilty-logout-menu']    = [];
             }
 
-            foreach($menus as $menu){
-                $checked	= '';
-                if(isset($this->settings['login-menu']) && in_array($menu->term_id, $this->settings['login-menu'])){
-                    $checked	= 'checked';
+            foreach ($menus as $menu) {
+                $checked    = '';
+                if (isset($this->settings['login-menu']) && in_array($menu->term_id, $this->settings['login-menu'])) {
+                    $checked    = 'checked';
                 }
 
-                if(!isset($this->settings['visibilty-login-menu'][$menu->term_id])){
-                    $this->settings['visibilty-login-menu'][$menu->term_id]	= '';
+                if (!isset($this->settings['visibilty-login-menu'][$menu->term_id])) {
+                    $this->settings['visibilty-login-menu'][$menu->term_id]    = '';
                 }
                 echo "<tr>";
                     echo "<td>";
@@ -110,27 +110,27 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                         echo "</label>";
                     echo "</td>";
 
-                    $checked	= '';
-                    if($this->settings['visibilty-login-menu'][$menu->term_id] == ''){
-                        $checked	= 'checked';
+                    $checked    = '';
+                    if ($this->settings['visibilty-login-menu'][$menu->term_id] == '') {
+                        $checked    = 'checked';
                     }
                     echo "<td>";
                         echo "<input type='radio' id='$menu->term_id' name='visibilty-login-menu[$menu->term_id]' value='' $checked>";
                         echo "<label>Always</label>";
                     echo "</td>";
 
-                    $checked	= '';
-                    if($this->settings['visibilty-login-menu'][$menu->term_id] == 'mobile'){
-                        $checked	= 'checked';
+                    $checked    = '';
+                    if ($this->settings['visibilty-login-menu'][$menu->term_id] == 'mobile') {
+                        $checked    = 'checked';
                     }
                     echo "<td>";
                         echo "<input type='radio' id='$menu->term_id' name='visibilty-login-menu[$menu->term_id]' value='mobile' $checked>";
                         echo "<label>Mobile only</label>";
                     echo "</td>";
 
-                    $checked	= '';
-                    if($this->settings['visibilty-login-menu'][$menu->term_id] == 'desktop'){
-                        $checked	= 'checked';
+                    $checked    = '';
+                    if ($this->settings['visibilty-login-menu'][$menu->term_id] == 'desktop') {
+                        $checked    = 'checked';
                     }
                     echo "<td>";
                         echo "<input type='radio' id='$menu->term_id' name='visibilty-login-menu[$menu->term_id]' value='desktop' $checked>";
@@ -145,10 +145,10 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         <br>
         <table>
             <?php
-            foreach($menus as $menu){
-                $checked	= '';
-                if(isset($this->settings['logout-menu']) && in_array($menu->term_id, $this->settings['logout-menu'])){
-                    $checked	= 'checked';
+            foreach ($menus as $menu) {
+                $checked    = '';
+                if (isset($this->settings['logout-menu']) && in_array($menu->term_id, $this->settings['logout-menu'])) {
+                    $checked    = 'checked';
                 }
                 echo "<tr>";
                     echo "<td>";
@@ -158,27 +158,27 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                         echo "</label>";
                     echo "</td>";
 
-                    $checked	= '';
-                    if($this->settings['visibilty-logout-menu'][$menu->term_id] == ''){
-                        $checked	= 'checked';
+                    $checked    = '';
+                    if ($this->settings['visibilty-logout-menu'][$menu->term_id] == '') {
+                        $checked    = 'checked';
                     }
                     echo "<td>";
                         echo "<input type='radio' id='$menu->term_id' name='visibilty-logout-menu[$menu->term_id]' value='' $checked>";
                         echo "<label>Always</label>";
                     echo "</td>";
 
-                    $checked	= '';
-                    if($this->settings['visibilty-logout-menu'][$menu->term_id] == 'mobile'){
-                        $checked	= 'checked';
+                    $checked    = '';
+                    if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'mobile') {
+                        $checked    = 'checked';
                     }
                     echo "<td>";
                         echo "<input type='radio' id='$menu->term_id' name='visibilty-logout-menu[$menu->term_id]' value='mobile' $checked>";
                         echo "<label>Mobile only</label>";
                     echo "</td>";
 
-                    $checked	= '';
-                    if($this->settings['visibilty-logout-menu'][$menu->term_id] == 'desktop'){
-                        $checked	= 'checked';
+                    $checked    = '';
+                    if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'desktop') {
+                        $checked    = 'checked';
                     }
                     echo "<td>";
                         echo "<input type='radio' id='$menu->term_id' name='visibilty-logout-menu[$menu->term_id]' value='desktop' $checked>";
@@ -190,14 +190,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         echo "</table>";
 
         addRawHtml(ob_get_clean(), $parent);
-        
+
         return true;
     }
 
-    public function emails($parent){
+    public function emails($parent) {
         $tab      = 'twofa-email';
-        if(isset($_GET['second-tab'])){
-            $tab  = sanitize_key( wp_unslash( $_GET['second-tab']));
+        if (isset($_GET['second-tab'])) {
+            $tab  = sanitize_key(wp_unslash($_GET['second-tab']));
         }
 
         $tablinkWrapper = addElement('div', $parent, ['class' => 'tablink-wrapper']);
@@ -210,7 +210,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             'pwd-reset-email'           => 'Password Reset',
         ];
 
-        foreach($buttons as $id => $text){
+        foreach ($buttons as $id => $text) {
             $attributes = [
                 'class'       => 'tablink' . ($tab == $id ? ' active' : ''),
                 'id'          => "show-$id",
@@ -280,12 +280,12 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         return true;
     }
 
-    public function data($parent=''){
+    public function data($parent='') {
 
         return false;
     }
 
-    public function functions($parent){
+    public function functions($parent) {
 
         return false;
     }
@@ -293,21 +293,21 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     /**
      * Adds a login/logout block to all nvigation blocks
      */
-    public function postSettingsSave(){
-        if(isset($_POST['addLoginLogout'])){
+    public function postSettingsSave() {
+        if (isset($_POST['addLoginLogout'])) {
             $posts = get_posts(
-				array(
-					'numberposts'	=> -1,
-					'post_type'      => 'wp_navigation',
-					'post_status'    => array( 'publish', 'inherit' ),
-				)
-			);
+                array(
+                    'numberposts'    => -1,
+                    'post_type'      => 'wp_navigation',
+                    'post_status'    => array('publish', 'inherit'),
+               )
+           );
 
-            foreach($posts as $post){
-                if(!str_contains($post->post_content, 'wp:loginout')){
+            foreach ($posts as $post) {
+                if (!str_contains($post->post_content, 'wp:loginout')) {
                     $post->post_content .= "<!-- wp:loginout /-->";
 
-                    wp_update_post( ['ID' => $post->ID, 'post_content' => $post->post_content] );
+                    wp_update_post(['ID' => $post->ID, 'post_content' => $post->post_content]);
                 }
             }
 

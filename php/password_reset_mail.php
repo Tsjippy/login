@@ -2,48 +2,48 @@
 namespace TSJIPPY\LOGIN;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 /**
  * sends the password reset e-mail
- * 
- * @param	object	$user	WP_User
- * 
- * @param	true|WP_Error	true on success, error on failure
+ *
+ * @param    object    $user    WP_User
+ *
+ * @param    true|WP_Error    true on success, error on failure
  */
-function sendPasswordResetMessage($user){
-	$key		 = get_password_reset_key($user);
-	if(is_wp_error($key)){
-		return $key;
-	}
+function sendPasswordResetMessage($user) {
+    $key         = get_password_reset_key($user);
+    if (is_wp_error($key)) {
+        return $key;
+    }
 
-	$pageurl	 = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
-	$url		 = "$pageurl?key=$key&login=$user->user_login";
+    $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
+    $url         = "$pageurl?key=$key&login=$user->user_login";
 
-	//Send e-mail
-	$mail	= new PasswordResetMail($user, $url);
-	$mail->filterMail();
-						
-	$result				= wp_mail( $user->user_email, $mail->subject, $mail->message);
+    //Send e-mail
+    $mail    = new PasswordResetMail($user, $url);
+    $mail->filterMail();
 
-	if(!$result){
-		return new \WP_Error('sending email failed', 'Sending e-mail failed');
-	}
+    $result                = wp_mail($user->user_email, $mail->subject, $mail->message);
+
+    if (!$result) {
+        return new \WP_Error('sending email failed', 'Sending e-mail failed');
+    }
 }
 
-add_filter( 'retrieve_password_message', __NAMESPACE__.'\passwordMessage', 10, 4);
-function passwordMessage($message, $key, $userLogin, $user){
-	$pageurl	 = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
+add_filter('retrieve_password_message', __NAMESPACE__ . '\passwordMessage', 10, 4);
+function passwordMessage($message, $key, $userLogin, $user) {
+    $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
 
-	if(!$pageurl){
-		return $message;
-	}
-	
-	$url		 = "$pageurl?key=$key&login=$userLogin";
-	$mail		= new PasswordResetMail($user, $url);
-	$mail->filterMail();
+    if (!$pageurl) {
+        return $message;
+    }
 
-	return $mail->message;
+    $url         = "$pageurl?key=$key&login=$userLogin";
+    $mail        = new PasswordResetMail($user, $url);
+    $mail->filterMail();
+
+    return $mail->message;
 }

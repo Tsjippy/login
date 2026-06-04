@@ -2,70 +2,70 @@
 namespace TSJIPPY\LOGIN;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 //add login and logout buttons to menu's
-add_filter('wp_nav_menu_items', __NAMESPACE__.'\menuItems', 10, 2);
+add_filter('wp_nav_menu_items', __NAMESPACE__ . '\menuItems', 10, 2);
 function menuItems($items, $args) {
     $loginMenus     = SETTINGS['login-menu'] ?? [];
     $logoutMenus    = SETTINGS['logout-menu'] ?? [];
 
-    if(
+    if (
         !in_array($args->menu->term_id, $loginMenus)   &&  // Do not add when not in the list
         !in_array($args->menu->term_id, $logoutMenus)  &&
         !empty(SETTINGS['menu'] ?? false)
-    ){
+   ) {
         return $items;
     }
 
     // We should add a logout menu item
-    if(is_user_logged_in() && in_array($args->menu->term_id, $logoutMenus)){
+    if (is_user_logged_in() && in_array($args->menu->term_id, $logoutMenus)) {
         $class  = '';
-        if($args->menu->slug != 'footer'){
+        if ($args->menu->slug != 'footer') {
             $class  = 'button';
         }
 
         $visibilities   = SETTINGS['visibilty-logout-menu'] ?? [];
 
-        if(in_array($args->menu->term_id, array_keys($visibilities))){
-            if($visibilities[$args->menu->term_id] == 'mobile'){
+        if (in_array($args->menu->term_id, array_keys($visibilities))) {
+            if ($visibilities[$args->menu->term_id] == 'mobile') {
                 $class  .= " hide-on-desktop";
             }
 
-            if($visibilities[$args->menu->term_id] == 'desktop'){
+            if ($visibilities[$args->menu->term_id] == 'desktop') {
                 $class  .= " hide-on-mobile";
             }
         }
-        
+
         $items .= "<li class='menu-item logout hidden'><a href='#logout' class='logout $class'>Log out</a></li>";
     }
 
     // We should add a login menu item
-    if(
+    if (
         !is_user_logged_in() &&                     // we are not logged in
         in_array($args->menu->term_id, $loginMenus) // we should add it to the current menu
-    ){
+   ) {
         $shouldAdd  = apply_filters('tsjippy_add_login_button', true, $args->menu->term_id, $loginMenus);
 
-        if(!$shouldAdd){
+        if (!$shouldAdd) {
             return $items;
         }
 
         $class   = '';
-        if($args->menu->slug != 'footer'){
+        if ($args->menu->slug != 'footer') {
             $class  = 'button';
         }
 
         $visibilities   = SETTINGS['visibilty-login-menu'] ?? false;
 
-        if(in_array($args->menu->term_id, array_keys($visibilities))){
-            if($visibilities[$args->menu->term_id] == 'mobile'){
+        if (in_array($args->menu->term_id, array_keys($visibilities))) {
+            if ($visibilities[$args->menu->term_id] == 'mobile') {
                 $class  .= " hide-on-desktop";
             }
 
-            if($visibilities[$args->menu->term_id] == 'desktop'){
+            if ($visibilities[$args->menu->term_id] == 'desktop') {
                 $class  .= " hide-on-mobile";
             }
         }
