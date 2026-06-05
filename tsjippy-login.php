@@ -14,7 +14,7 @@ namespace TSJIPPY\LOGIN;
  * Plugin URI:            https://github.com/Tsjippy/login
  * Tested:                6.9
  * TextDomain:            tsjippy
- * Requires Plugins:    tsjippy-shared-functionality
+ * Requires Plugins:    
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
@@ -73,3 +73,8 @@ register_deactivation_hook(__FILE__, function () {
         wp_delete_post($page, true);
     }
 });
+
+// Load shared code
+if(file_exists(__DIR__  . '/shared_functionality/loader.php')){
+    require_once(__DIR__  . '/shared_functionality/loader.php');
+}
