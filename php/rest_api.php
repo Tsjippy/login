@@ -370,7 +370,7 @@ function requestPasswordReset()
     }
 
     $email  = $user->user_email;
-    if (!$email || str_contains(' .empty', $email)) {
+    if (!$email || str_contains('.empty', $email)) {
         return new WP_Error('email error', "No valid e-mail found for user $username");
     }
 
