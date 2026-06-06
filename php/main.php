@@ -28,7 +28,7 @@ function redirectToLogin()
         !is_user_logged_in()                                // we are not logged in
     ) {
         //redirect to login screen
-        wp_redirect(SITEURL . "/?showlogin");
+        wp_redirect(TSJIPPY\SITEURL . "/?showlogin");
         exit;
     }
 }

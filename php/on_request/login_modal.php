@@ -33,7 +33,7 @@ if ($standAlone && is_user_logged_in()) {
     <body>
         <div style='text-align:center;margin-top:20px;'>
             You are already logged in.<br><br>
-            <a href='<?php echo SITEURL; ?>'>Go Home</a>
+            <a href='<?php echo TSJIPPY\SITEURL; ?>'>Go Home</a>
     </body>
     </div>
     </body>

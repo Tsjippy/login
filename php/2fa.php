@@ -40,9 +40,9 @@ function setupTimeCode()
     update_user_meta($userId, '2fa_hash', password_hash($setupDetails->secretKey, PASSWORD_DEFAULT));
 
     if (!extension_loaded('imagick')) {
-        $setupDetails->imageHtml    = "<img src=" . $twofa->getQRCodeImageAsDataUri(SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey) . " loading='lazy'>";
+        $setupDetails->imageHtml    = "<img src=" . $twofa->getQRCodeImageAsDataUri(TSJIPPY\SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey) . " loading='lazy'>";
     } else {
-        $qrCodeUrl                  = $twofa->getQRText(SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey);
+        $qrCodeUrl                  = $twofa->getQRText(TSJIPPY\SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey);
 
         $renderer                   = new ImageRenderer(
             new RendererStyle(400),

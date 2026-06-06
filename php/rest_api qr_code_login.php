@@ -19,8 +19,8 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addQrLoginUrls');
  */
 function addQrLoginUrls($urls)
 {
-    $urls[] = RESTAPIPREFIX . '/login/get_login_qr_code';
-    $urls[] = RESTAPIPREFIX . '/login/qr_code_scanned';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/get_login_qr_code';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/qr_code_scanned';
 
     return $urls;
 }
@@ -30,7 +30,7 @@ function qrLoginRestApi()
 {
     // request qr image for login
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/get_login_qr_code',
         array(
             'methods'                 => 'POST',
@@ -41,7 +41,7 @@ function qrLoginRestApi()
 
     // check if qr code has been scanned
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/qr_code_scanned',
         array(
             'methods'                 => 'POST',
@@ -60,7 +60,7 @@ function qrLoginRestApi()
 
     // Stores the username for login
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/qr_code_username',
         array(
             'methods'                 => 'POST, GET',

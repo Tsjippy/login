@@ -21,9 +21,9 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addBioUrls');
  */
 function addBioUrls($urls)
 {
-    $urls[]    = RESTAPIPREFIX . '/login/auth_finish';
-    $urls[]    = RESTAPIPREFIX . '/login/auth_start';
-    $urls[] = RESTAPIPREFIX . '/login/request_email_code';
+    $urls[]    = TSJIPPY\RESTAPIPREFIX . '/login/auth_finish';
+    $urls[]    = TSJIPPY\RESTAPIPREFIX . '/login/auth_start';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/request_email_code';
 
     return $urls;
 }
@@ -33,7 +33,7 @@ function bioRestApi()
 {
     // Send authentication request for storing fingerprint
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/fingerprint_options',
         array(
             'methods'               => 'POST',
@@ -47,7 +47,7 @@ function bioRestApi()
 
     // Verify and store fingerprint
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/store_fingerprint',
         array(
             'methods'               => 'POST,GET',
@@ -73,7 +73,7 @@ function bioRestApi()
 
     // Send authentication request for login
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/auth_start',
         array(
             'methods' => 'POST',
@@ -88,7 +88,7 @@ function bioRestApi()
 
     //verify fingerprint for login
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/auth_finish',
         array(
             'methods' => 'POST,GET',
@@ -119,7 +119,7 @@ function bioRestApi()
 
     // send email code
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/request_email_code',
         array(
             'methods'                 => 'POST, GET',
@@ -135,7 +135,7 @@ function bioRestApi()
 
     // save_2fa_settings
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/save_2fa_settings',
         array(
             'methods'                 => 'GET,POST',
@@ -156,7 +156,7 @@ function bioRestApi()
 
     // remove_web_authenticator
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/remove_web_authenticator',
         array(
             'methods'                 => 'POST',

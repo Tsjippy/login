@@ -122,7 +122,7 @@ function twoFaSettingsForm($userId = '')
                     Insert the created code here.<br>
                     <input type='text' name='auth-secret' required>
                 </label>
-                <p>Not sure what to do? Check the <a href="<?php echo SITEURL; ?>'/manuals/">manuals!</a></p>
+                <p>Not sure what to do? Check the <a href="<?php echo TSJIPPY\SITEURL; ?>'/manuals/">manuals!</a></p>
             </div>
         <?php
         }

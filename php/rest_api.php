@@ -19,11 +19,11 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addLoginUrls');
  */
 function addLoginUrls($urls)
 {
-    $urls[] = RESTAPIPREFIX . '/login/check-cred';
-    $urls[] = RESTAPIPREFIX . '/login/request_login';
-    $urls[] = RESTAPIPREFIX . '/login/request_pwd_reset';
-    $urls[] = RESTAPIPREFIX . '/login/update_password';
-    $urls[] = RESTAPIPREFIX . '/login/request_user_account';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/check-cred';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/request_login';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/request_pwd_reset';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/update_password';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/request_user_account';
 
     return $urls;
 }
@@ -33,7 +33,7 @@ function loginRestApi()
 {
     // check credentials
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/check-cred',
         array(
             'methods'                 => 'POST,GET',
@@ -52,7 +52,7 @@ function loginRestApi()
 
     // request_login
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/request_login',
         array(
             'methods'                 => 'POST',
@@ -71,7 +71,7 @@ function loginRestApi()
 
     // logout
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/logout',
         array(
             'methods'                 => 'POST',
@@ -87,7 +87,7 @@ function loginRestApi()
 
     // request_pwd_reset
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/request_pwd_reset',
         array(
             'methods'                 => 'POST',
@@ -103,7 +103,7 @@ function loginRestApi()
 
     // update password
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/update_password',
         array(
             'methods'                 => 'POST',
@@ -130,7 +130,7 @@ function loginRestApi()
 
     // request_user_account
     register_rest_route(
-        RESTAPIPREFIX . '/login',
+        TSJIPPY\RESTAPIPREFIX . '/login',
         '/request_user_account',
         array(
             'methods'                 => 'POST',
@@ -418,7 +418,7 @@ function processPasswordUpdate()
     }
     return [
         'message'    => $message,
-        'redirect'    => SITEURL . "/?showlogin=$user->user_login"
+        'redirect'    => TSJIPPY\SITEURL . "/?showlogin=$user->user_login"
     ];
 }
 
