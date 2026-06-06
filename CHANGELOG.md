@@ -7,6 +7,7 @@
 ### Changed
 - comply to coding standards
 - code layout
+- migration from publicKeyCredentialSource to credentialRecord
 
 ### Fixed
 - spacing problem
