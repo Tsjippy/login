@@ -8,6 +8,7 @@
 - comply to coding standards
 - code layout
 - migration from publicKeyCredentialSource to credentialRecord
+- namespaced all constants
 
 ### Fixed
 - spacing problem
