@@ -7,7 +7,7 @@ use TSJIPPY;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Webauthn\PublicKeyCredentialSource;
+use Webauthn\CredentialRecord;
 use Webauthn\AuthenticatorAssertionResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
@@ -50,7 +50,7 @@ class RequestCeremony extends WebAuthCeremony
             $registeredAuthenticators = $this->getOSCredentials();
 
             $allowedCredentials = array_map(
-                static function (PublicKeyCredentialSource $credential): PublicKeyCredentialDescriptor {
+                static function (CredentialRecord $credential): PublicKeyCredentialDescriptor {
                     return $credential->getPublicKeyCredentialDescriptor();
                 },
                 $registeredAuthenticators
@@ -119,7 +119,7 @@ class RequestCeremony extends WebAuthCeremony
 
         if (!$this->publicKeyCredential->response instanceof AuthenticatorAssertionResponse) {
             //e.g. process here with a redirection to the public key login/MFA page.
-            return;
+            return new WP_Error('tsjippy-login', 'Credential not found!');
         }
 
         if ($isPassKeyLogin) {
@@ -145,31 +145,33 @@ class RequestCeremony extends WebAuthCeremony
         }
 
         try {
-            $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
+            $publicKeyCredentialRequestOptions   = TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions');
+
+            $credentialRecord = $authenticatorAssertionResponseValidator->check(
                 clone $prevCredential,
                 $this->publicKeyCredential->response,
-                TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions'),
+                $publicKeyCredentialRequestOptions,
                 $this->domain,
                 $this->getUserIdentity()?->id // Should be `null` if the user entity is not known before this step
             );
 
             /** @disregard P1080 */
-            if ($publicKeyCredentialSource->counter < $prevCredential->counter) {
+            if ($credentialRecord->counter < $prevCredential->counter) {
                 /** @disregard P1080 */
-                TSJIPPY\printArray("Current counter: $publicKeyCredentialSource->counter, previous counter: $prevCredential->counter");
+                TSJIPPY\printArray("Current counter: $credentialRecord->counter, previous counter: $prevCredential->counter");
                 //return new WP_Error('tsjippy-login', 'You cannot use this again, please refresh the page');
             }
 
             // Update the credential to keep track of the count
-            $this->updateUserMeta("2fa_webautn_cred", $publicKeyCredentialSource, $prevCredential);
+            $this->updateUserMeta("2fa_webautn_cred", $credentialRecord, $prevCredential);
 
             /** @disregard P1080 */
-            TSJIPPY\storeInTransient('last-used-cred-id', $publicKeyCredentialSource->publicKeyCredentialId);
+            TSJIPPY\storeInTransient('last-used-cred-id', $credentialRecord->publicKeyCredentialId);
 
             // Update the last used
             foreach ($this->getCredentialMetas() as $meta) {
                 /** @disregard P1080 */
-                if ($meta['cred_id'] == $publicKeyCredentialSource->publicKeyCredentialId) {
+                if ($meta['cred_id'] == $credentialRecord->publicKeyCredentialId) {
                     $newMeta    = $meta;
 
                     $newMeta['last_used']   = gmdate('Y-m-d H:i:s', current_time('timestamp'));

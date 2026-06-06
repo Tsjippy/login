@@ -105,7 +105,7 @@ class CreationCeremony extends WebAuthCeremony
 
         // validate the response
         try {
-            $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
+            $credentialRecord = $authenticatorAttestationResponseValidator->check(
                 $this->publicKeyCredential->response,
                 TSJIPPY\getFromTransient('publicKeyCredentialCreationOptions'),
                 $this->domain
@@ -117,7 +117,7 @@ class CreationCeremony extends WebAuthCeremony
         }
 
         // store in db
-        $this->storeCredential($publicKeyCredentialSource, $identifier);
+        $this->storeCredential($credentialRecord, $identifier);
 
         return "Succesfully Stored The Credential";
     }
