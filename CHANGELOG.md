@@ -9,6 +9,7 @@
 - code layout
 - migration from publicKeyCredentialSource to credentialRecord
 - namespaced all constants
+- sanitize all posts and get vars
 
 ### Fixed
 - spacing problem
