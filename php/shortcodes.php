@@ -85,7 +85,7 @@ function changePassword()
     $user    = '';
 
     if (!empty($_GET['key']) && !empty($_GET['login'])) {
-        $user    = check_password_reset_key($_GET['key'], esc_html($_GET['login']));
+        $user    = check_password_reset_key(TSJIPPY\sanitize($_GET['key']), esc_html(TSJIPPY\sanitize($_GET['login'])));
     }
 
     if (is_wp_error($user) || empty($user)) {

@@ -172,7 +172,7 @@ function authenticate($user)
         elseif (in_array('authenticator', $methods) && empty($_POST['email-code'])) {
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
             $secretKey  = get_user_meta($user->ID, '2fa_key', true);
-            $authcode   = $_POST['authcode'];
+            $authcode   = TSJIPPY\sanitize($_POST['authcode']);
             $last2fa    = get_user_meta($user->ID, '2fa_last', true);
             $timeslice  = 0; // will be filled by reference
 

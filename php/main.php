@@ -115,7 +115,7 @@ function loopEnd()
 
     if (!is_user_logged_in()) {
         if (isset($_GET['showlogin'])) {
-            loginModal('', true, $_GET['showlogin']);
+            loginModal('', true, TSJIPPY\sanitize($_GET['showlogin']));
         } else {
             loginModal();
         }

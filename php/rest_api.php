@@ -198,8 +198,8 @@ function checkPassword($check, $password, $storedHash, $userId)
 // Verify username and password
 function checkCredentials()
 {
-    $username   = sanitize_text_field(wp_unslash($_POST['username']));
-    $password   = sanitize_text_field(wp_unslash($_POST['password']));
+    $username   = TSJIPPY\sanitize($_POST['username']);
+    $password   = TSJIPPY\sanitize($_POST['password']);
 
     $user       = get_user_by('login', $username);
 
@@ -254,9 +254,9 @@ function storeInCookieVar($loggedInCookie, $expire, $expiration, $userId, $type,
  **/
 function userLogin()
 {
-    $username       = sanitize_text_field(wp_unslash($_REQUEST['username'] ?? ''));
-    $password       = sanitize_text_field(wp_unslash($_REQUEST['password'] ?? ''));
-    $remember       = sanitize_text_field(wp_unslash($_REQUEST['rememberme'] ?? true));
+    $username       = TSJIPPY\sanitize($_REQUEST['username'] ?? '');
+    $password       = TSJIPPY\sanitize($_REQUEST['password'] ?? '');
+    $remember       = TSJIPPY\sanitize($_REQUEST['rememberme'] ?? true);
 
     $creds = array(
         'user_login'    => $username,
@@ -337,7 +337,7 @@ function userLogin()
     }
     // Redirect from url
     elseif (!empty($_GET['redirect'])) {
-        $redirect   = $_GET['redirect'];
+        $redirect   = TSJIPPY\sanitize($_GET['redirect'], 'url');
     }
 
     $redirect   = apply_filters('login_redirect', $redirect, $redirect, $user);
@@ -362,7 +362,7 @@ function userLogin()
 // Send password reset e-mail
 function requestPasswordReset()
 {
-    $username   = sanitize_text_field(wp_unslash($_POST['username']));
+    $username   = TSJIPPY\sanitize($_POST['username']);
 
     $user    = get_user_by('login', $username);
     if (!$user) {

@@ -103,9 +103,9 @@ function getLoginQrCode()
  */
 function isQrCodeScanned()
 {
-    $oldToken       = $_POST['old-token'];
-    $token          = $_POST['token'];
-    $key            = $_POST['key'];
+    $oldToken       = TSJIPPY\sanitize($_POST['old-token']);
+    $token          = TSJIPPY\sanitize($_POST['token']);
+    $key            = TSJIPPY\sanitize($_POST['key']);
     $storedToken    = get_transient($key);
 
     $username   = get_transient($token);

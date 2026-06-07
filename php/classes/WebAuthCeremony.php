@@ -310,7 +310,7 @@ class WebAuthCeremony
         if (!$usedIds) {
             $usedIds    = [];
         }
-        unset($usedIds[$_POST['key']]);
+        unset($usedIds[TSJIPPY\sanitize($_POST['key'])]);
         update_option('tsjippy-webauth-user-handles', $usedIds);
 
         return 'Succesfull removed the authenticator';

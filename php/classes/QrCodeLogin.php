@@ -49,7 +49,7 @@ class QrCodeLogin
 
         // include the previous key and token
         if (!empty($_POST['token']) && !empty($_POST['key'])) {
-            $url    .= "&oldtoken={$_POST['token']}&oldkey={$_POST['key']}";
+            $url    .= "&oldtoken=".TSJIPPY\sanitize($_POST['token'])."&oldkey=".TSJIPPY\sanitize($_POST['key']);
         }
         return $url;
     }
