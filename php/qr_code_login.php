@@ -20,21 +20,8 @@ if (!is_user_logged_in() && !auth_redirect()) {
     die('<div style="text-align: center;"><p>You do not have permission to view this file!</p></div>');
 }
 
+wp_enqueue_style('tsjippy_style');
 ?>
-<style>
-    .hidden {
-        display: none;
-    }
-
-    body {
-        text-align: center;
-    }
-
-    main,
-    .loader-wrapper {
-        margin-top: 20px;
-    }
-</style>
 
 <body>
     <div class='loader-wrapper'>
