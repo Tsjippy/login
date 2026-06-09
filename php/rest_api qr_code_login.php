@@ -106,13 +106,13 @@ function isQrCodeScanned()
     $oldToken       = TSJIPPY\sanitize($_POST['old-token']);
     $token          = TSJIPPY\sanitize($_POST['token']);
     $key            = TSJIPPY\sanitize($_POST['key']);
-    $storedToken    = get_transient($key);
+    $storedToken    = get_transient("tsjippy_$key");
 
-    $username   = get_transient($token);
+    $username       = get_transient("tsjippy_$token");
 
     // check if previous token has been approved
     if (!$username) {
-        $username   = get_transient($oldToken);
+        $username   = get_transient("tsjippy_$oldToken");
     }
 
     // token expired or not qr code not yet scanned
@@ -142,7 +142,7 @@ function submitUsernameForQrCode()
             return new WP_Error('no_cookie', 'Authentication cookie is missing. ', array('status' => 401));
         }
 
-        $cookie = $_COOKIE[LOGGED_IN_COOKIE];
+        $cookie = TSJIPPY\sanitize($_COOKIE[LOGGED_IN_COOKIE]);
 
         $userId = wp_validate_auth_cookie($cookie, 'logged_in');
 
@@ -165,16 +165,16 @@ function submitUsernameForQrCode()
         return new WP_Error('Login', 'No user found!');
     }
 
-    $token          = $_REQUEST['token'];
-    $key            = $_REQUEST['key'];
-    $storedToken    = get_transient($key);
+    $token          = TSJIPPY\sanitize($_REQUEST['token']);
+    $key            = TSJIPPY\sanitize($_REQUEST['key']);
+    $storedToken    = get_transient("tsjippy_$key");
 
     if ($storedToken != $token) {
         return new WP_Error('login', 'Invalid login!');
     }
 
     // 5 minutes
-    if (set_transient($token, $username, 300)) {
+    if (set_transient("tsjippy_$token", $username, 300)) {
         wp_redirect(get_home_url() . '?message=QR code login succesfull!');
         exit;
     } else {

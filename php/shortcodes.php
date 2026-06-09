@@ -79,7 +79,7 @@ add_filter('password_reset_expiration', function () {
 });
 
 // Display password reset
-add_shortcode("change_password", __NAMESPACE__ . '\changePassword');
+add_shortcode("tsjippy_change_password", __NAMESPACE__ . '\changePassword');
 function changePassword()
 {
     $user    = '';
@@ -108,7 +108,7 @@ function changePassword()
  * ACCOUNT REQUEST
  */
 //Shortcode for people to register themselves
-add_shortcode('request_account', __NAMESPACE__ . '\requestAccount');
+add_shortcode('tsjippy_request_account', __NAMESPACE__ . '\requestAccount');
 function requestAccount()
 {
     ob_start();

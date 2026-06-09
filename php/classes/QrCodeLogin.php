@@ -39,7 +39,7 @@ class QrCodeLogin
 
         $this->token    = bin2hex(random_bytes(10));
         $this->key      = time();
-        set_transient($this->key, $this->token, 60); // one minute
+        set_transient("tsjippy_".$this->key, $this->token, 60); // one minute
 
         if (empty($url)) {
             $url    = get_home_url() . '?message=No%202fa%20Page%20found&type=error';

@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_shortcode('twofa_setup', __NAMESPACE__ . '\twoFaSettingsForm');
+add_shortcode('tsjippy_twofa_setup', __NAMESPACE__ . '\twoFaSettingsForm');
 function twoFaSettingsForm($userId = '')
 {
     //we need to approve a qr code login
