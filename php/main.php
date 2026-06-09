@@ -149,11 +149,11 @@ function postStates($states, $post)
 {
 
     if ($post->ID == (SETTINGS['password-reset-page'] ?? false)) {
-        $states[] = __('Password reset page', 'tsjippy');
+        $states[] = __('Password reset page', '%TEXTDOMAIN%');
     } elseif ($post->ID == (SETTINGS['register-page'] ?? false)) {
-        $states[] = __('User register page', 'tsjippy');
+        $states[] = __('User register page', '%TEXTDOMAIN%');
     } elseif ($post->ID == (SETTINGS['2fa-page'] ?? false)) {
-        $states[] = __('Two Factor Setup page', 'tsjippy');
+        $states[] = __('Two Factor Setup page', '%TEXTDOMAIN%');
     }
 
     return $states;
