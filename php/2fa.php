@@ -226,14 +226,14 @@ function redirectTo2fa()
         return;
     }
 
-    $user        = wp_get_current_user();
+    $user    = wp_get_current_user();
 
     //If 2fa not enabled and we are not on the account page
-    $methods    = get_user_meta($user->ID, 'tsjippy_2fa_methods');
+    $methods = get_user_meta($user->ID, 'tsjippy_2fa_methods');
 
     if (
         is_user_logged_in()                             &&    // we are logged in
-        !str_contains($user->user_email, '.empty')       &&     // we have a valid email
+        !str_contains($user->user_email, '.empty')      &&     // we have a valid email
         !is_admin()                                     &&  // we are not on an admin page
         (
             !$methods                                   ||    // and we have no 2fa enabled or
