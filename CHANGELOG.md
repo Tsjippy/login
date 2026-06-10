@@ -9,6 +9,7 @@
 - prefixed post metas and shortcodes
 
 ### Fixed
+- 2fa rederiction
 
 ### Updated
 
