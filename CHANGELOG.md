@@ -4,6 +4,7 @@
 ### Added
 - placeholder for textdomain
 - user, post and rest_meta prefixing
+- loader when setting emial code
 
 ### Changed
 - prefixed post metas and shortcodes
