@@ -13,6 +13,9 @@ async function saveTwofaSettings(target) {
 
   if (validity) {
     let formData = new FormData(form);
+
+    Main.showLoader(target, false, 50, 'Please Wait...', false, true);
+
     let response = await FormSubmit.fetchRestApi(
       "login/save_2fa_settings",
       formData,

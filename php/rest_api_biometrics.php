@@ -177,9 +177,9 @@ function requestEmailCode()
 {
     $username   = TSJIPPY\sanitize($_REQUEST['username']);
     if (is_numeric($username)) {
-        $user       = get_user_by('id', $username);
+        $user = get_user_by('id', $username);
     } else {
-        $user       = get_user_by('login', $username);
+        $user = get_user_by('login', $username);
     }
 
     if ($user) {
