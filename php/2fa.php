@@ -37,7 +37,7 @@ function setupTimeCode()
     $setupDetails                   = new stdClass();
     $setupDetails->secretKey        = $twofa->createSecret();
 
-    update_user_meta($userId, '2fa_hash', password_hash($setupDetails->secretKey, PASSWORD_DEFAULT));
+    update_user_meta($userId, 'tsjippy_2fa_hash', password_hash($setupDetails->secretKey, PASSWORD_DEFAULT));
 
     if (!extension_loaded('imagick')) {
         $setupDetails->imageHtml    = "<img src=" . $twofa->getQRCodeImageAsDataUri(TSJIPPY\SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey) . " loading='lazy'>";
@@ -104,7 +104,7 @@ function verifyEmailCode()
 function send2faWarningEmail($user)
 {
     //if this is the first time ever login we do not have to send a warning
-    if (!get_user_meta($user->id, 'login_count', true)) {
+    if (!get_user_meta($user->id, 'tsjippy_login_count', true)) {
         return;
     }
 
@@ -157,7 +157,7 @@ function authenticate($user)
         return $user;
     }
 
-    $methods    = get_user_meta($user->ID, '2fa_methods');
+    $methods    = get_user_meta($user->ID, 'tsjippy_2fa_methods');
     if (!empty($methods)) {
         //we did a succesfull webauthn or are on localhost
         if (
@@ -171,9 +171,9 @@ function authenticate($user)
         // We have an authenticator app set up and did not supply an e-mail code
         elseif (in_array('authenticator', $methods) && empty($_POST['email-code'])) {
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
-            $secretKey  = get_user_meta($user->ID, '2fa_key', true);
+            $secretKey  = get_user_meta($user->ID, 'tsjippy_2fa_key', true);
             $authcode   = TSJIPPY\sanitize($_POST['authcode']);
-            $last2fa    = get_user_meta($user->ID, '2fa_last', true);
+            $last2fa    = get_user_meta($user->ID, 'tsjippy_2fa_last', true);
             $timeslice  = 0; // will be filled by reference
 
             if (!is_numeric($authcode)) {
@@ -190,7 +190,7 @@ function authenticate($user)
                     );
                 } else {
                     //store last time
-                    update_user_meta($user->ID, '2fa_last', $last2fa);
+                    update_user_meta($user->ID, 'tsjippy_2fa_last', $last2fa);
                 }
             } else {
                 $user = new \WP_Error(
@@ -229,7 +229,7 @@ function redirectTo2fa()
     $user        = wp_get_current_user();
 
     //If 2fa not enabled and we are not on the account page
-    $methods    = get_user_meta($user->ID, '2fa_methods');
+    $methods    = get_user_meta($user->ID, 'tsjippy_2fa_methods');
 
     if (
         is_user_logged_in()                             &&    // we are logged in

@@ -212,7 +212,7 @@ function checkCredentials()
     //validate credentials
     if ($user && wp_check_password($password, $user->data->user_pass, $user->ID)) {
         //get 2fa methods for this user
-        $methods  = get_user_meta($user->ID, '2fa_methods');
+        $methods  = get_user_meta($user->ID, 'tsjippy_2fa_methods');
 
         //return the methods
         if (!empty($methods)) {
@@ -287,7 +287,7 @@ function userLogin()
     wp_set_current_user($user->ID);
 
     //Update the current logon count
-    $currentLoginCount = get_user_meta($user->ID, 'login_count', true);
+    $currentLoginCount = get_user_meta($user->ID, 'tsjippy_login_count', true);
     if (is_numeric($currentLoginCount)) {
         $loginCount = intval($currentLoginCount) + 1;
     } else {
@@ -295,10 +295,10 @@ function userLogin()
         $loginCount = 1;
 
         //Save the first login data
-        update_user_meta($user->ID, 'first_login', time());
+        update_user_meta($user->ID, 'tsjippy_first_login', time());
 
         //Get the account validity
-        $validity = get_user_meta($user->ID, 'account_validity', true);
+        $validity = get_user_meta($user->ID, 'tsjippy_account_validity', true);
 
         //If the validity is set in months
         if (is_numeric($validity)) {
@@ -309,13 +309,13 @@ function userLogin()
             $expiryDate = gmdate('Y-m-d', $expiryTime);
 
             //Save the date
-            update_user_meta($user->ID, 'account_validity', $expiryDate);
+            update_user_meta($user->ID, 'tsjippy_account_validity', $expiryDate);
         }
     }
-    update_user_meta($user->ID, 'login_count', $loginCount);
+    update_user_meta($user->ID, 'tsjippy_login_count', $loginCount);
 
     //store login date
-    update_user_meta($user->ID, 'last_login_date', gmdate('Y-m-d'));
+    update_user_meta($user->ID, 'tsjippy_last_login_date', gmdate('Y-m-d'));
 
     /* check if we should redirect */
     $redirect   = '';

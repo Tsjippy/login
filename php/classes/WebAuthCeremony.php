@@ -93,7 +93,7 @@ class WebAuthCeremony
      */
     public function getProfilePicture($userId)
     {
-        $attachmentId  = get_user_meta($userId, 'profile_picture', true);
+        $attachmentId  = get_user_meta($userId, 'tsjippy_profile_picture', true);
         $image          = null;
 
         if (is_numeric($attachmentId)) {
@@ -146,11 +146,11 @@ class WebAuthCeremony
             return $this->userEntity;
         }
 
-        $webauthnKey = get_user_meta($this->user->ID, '2fa_webauthn_key', true);
+        $webauthnKey = get_user_meta($this->user->ID, 'tsjippy_2fa_webauthn_key', true);
 
         if (!$webauthnKey) {
             $webauthnKey = hash("sha256", $this->user->user_login . "-" . $this->user->display_name . "-" . $this->getChallenge(10));
-            update_user_meta($this->user->ID, '2fa_webauthn_key', $webauthnKey);
+            update_user_meta($this->user->ID, 'tsjippy_2fa_webauthn_key', $webauthnKey);
         }
 
         return $this->userEntity = new PublicKeyCredentialUserEntity(
@@ -185,7 +185,7 @@ class WebAuthCeremony
 
         $this->credentials = [];
 
-        $userCreds  = (array)get_user_meta($this->user->ID, "2fa_webautn_cred");
+        $userCreds  = (array)get_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred");
         foreach ($userCreds as $userCred) {
             try {
                 $this->credentials[] = unserialize(base64_decode($userCred));
@@ -231,7 +231,7 @@ class WebAuthCeremony
 
         $this->credentialMetas = [];
 
-        $credMetas  = get_user_meta($userId, "2fa_webautn_cred_meta");
+        $credMetas  = get_user_meta($userId, "tsjippy_2fa_webautn_cred_meta");
         foreach ($credMetas as $credMeta) {
             try {
                 $unserialized   = unserialize(base64_decode($credMeta));

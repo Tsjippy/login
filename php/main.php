@@ -130,9 +130,9 @@ function loopEnd()
  */
 function addMethod($method, $userId)
 {
-    $methods    = (array)get_user_meta($userId, "2fa_methods");
+    $methods    = (array)get_user_meta($userId, "tsjippy_2fa_methods");
     if (!in_array($method, $methods)) {
-        add_user_meta($userId, "2fa_methods", $method);
+        add_user_meta($userId, "tsjippy_2fa_methods", $method);
     }
 }
 

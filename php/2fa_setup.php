@@ -37,7 +37,7 @@ function twoFaSettingsForm($userId = '')
     }
 
     ob_start();
-    $twoFaMethods    = get_user_meta($userId, '2fa_methods');
+    $twoFaMethods    = get_user_meta($userId, 'tsjippy_2fa_methods');
 
     if (!empty($_GET['redirected'])) {
     ?>

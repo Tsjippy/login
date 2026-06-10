@@ -136,9 +136,9 @@ class CreationCeremony extends WebAuthCeremony
         /**
          * Store the Webauthn Credential data
          */
-        add_user_meta($this->user->ID, "2fa_webautn_cred_meta", base64_encode(serialize($meta)));
+        add_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred_meta", base64_encode(serialize($meta)));
 
-        add_user_meta($this->user->ID, "2fa_webautn_cred", base64_encode(serialize($data)));
+        add_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred", base64_encode(serialize($data)));
 
         /**
          * Add the webauthn as a 2fa method
