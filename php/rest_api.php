@@ -321,7 +321,7 @@ function userLogin()
     $redirect   = '';
 
     // check url query arguments
-    $urlComp    = parse_url($_SERVER['HTTP_REFERER']);
+    $urlComp    = wp_parse_url($_SERVER['HTTP_REFERER']);
 
     // redirect to the current page if not the home page
     if (TSJIPPY\getCurrentUrl() != get_home_url()) {
