@@ -24,6 +24,11 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
+// Load shared code
+if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+    require_once(__DIR__  . '/shared-functionality/loader.php');
+}
+
 // Define constants
 define(__NAMESPACE__ . '\PLUGIN', plugin_basename(__FILE__));
 define(__NAMESPACE__ . '\PLUGINPATH', __DIR__ . '/');
@@ -33,18 +38,22 @@ define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_login_settings', []));
 
 // run right before activation
 register_activation_hook(__FILE__, function () {
+    // Load shared code
+    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+        require_once(__DIR__  . '/shared-functionality/loader.php');
+    }
+
     $publicCat    = get_cat_ID('Public');
 
     $settings    = SETTINGS;
 
     // Create password reset page
-    $settings['password-reset-page']     = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[change_password]', ['post_category' => [$publicCat]]);
+    $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[change_password]', ['post_category' => [$publicCat]]);
 
     // Registration page
-    $settings['register-page']             = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[request_account]', ['post_category' => [$publicCat]]);
-
+    $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[request_account]', ['post_category' => [$publicCat]]);
     // Add 2fa page
-    $settings['2fa-page']                 = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[twofa_setup]');
+    $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[twofa_setup]');
 
     update_option('tsjippy_login_settings', $settings);
 });
@@ -71,8 +80,3 @@ register_deactivation_hook(__FILE__, function () {
         wp_delete_post($page, true);
     }
 });
-
-// Load shared code
-if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
-    require_once(__DIR__  . '/shared-functionality/loader.php');
-}
