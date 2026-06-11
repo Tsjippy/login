@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.3] - 2026-06-11
+
+
+### Added
 - placeholder for textdomain
 - user, post and rest_meta prefixing
 - loader when setting emial code
@@ -11,8 +22,6 @@
 
 ### Fixed
 - 2fa rederiction
-
-### Updated
 
 ## [10.3.2] - 2026-06-09
 
