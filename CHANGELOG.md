@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- replaced parse_url with wp_parse_url
 
 ### Fixed
 - shared code loader
