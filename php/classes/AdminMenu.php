@@ -1,6 +1,7 @@
 <?php
 
 namespace TSJIPPY\LOGIN;
+use TSJIPPY;
 
 use function TSJIPPY\addElement;
 use function TSJIPPY\addRawHtml;
@@ -33,9 +34,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             Once that account is approved they will be able to login.<br>
         </p>
         <label>
-            <input type="checkbox" name="user-registration" value="enabled" <?php if ($this->settings['user-registration']) {
-                                                                                echo 'checked';
-                                                                            } ?>>
+            <input 
+                type="checkbox" 
+                name="user-registration" 
+                value="enabled" 
+                <?php if ($this->settings['user-registration'] ?? '') { echo 'checked'; } ?>>
             Enable user registration
         </label>
         <?php

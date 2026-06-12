@@ -48,12 +48,12 @@ register_activation_hook(__FILE__, function () {
     $settings    = SETTINGS;
 
     // Create password reset page
-    $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[change_password]', ['post_category' => [$publicCat]]);
+    $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[tsjippy_change_password]', ['post_category' => [$publicCat]]);
 
     // Registration page
-    $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[request_account]', ['post_category' => [$publicCat]]);
+    $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[tsjippy_request_account]', ['post_category' => [$publicCat]]);
     // Add 2fa page
-    $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[twofa_setup]');
+    $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[tsjippy_twofa_setup]');
 
     update_option('tsjippy_login_settings', $settings);
 });

@@ -38,6 +38,10 @@ function twoFaSettingsForm($userId = '')
         $userId = get_current_user_id();
     }
 
+    if(empty($userId)){
+        return "<div class='error'>You are not logged in</div>";
+    }
+
     $twoFaMethods    = get_user_meta($userId, 'tsjippy_2fa_methods');
 
     if (!empty($_GET['redirected'])) {
@@ -70,16 +74,22 @@ function twoFaSettingsForm($userId = '')
             }
             ?>
             <label>
-                <input type="radio" class="twofa-option-checkbox" name="2fa-methods[]" value="authenticator" <?php if (array_search('authenticator', $twoFaMethods) !== false) {
-                                                                                                                    echo "checked";
-                                                                                                                } ?>>
+                <input 
+                    type="radio" 
+                    class="twofa-option-checkbox" 
+                    name="2fa-methods[]" 
+                    value="authenticator" 
+                    <?php if (array_search('authenticator', $twoFaMethods) !== false) { echo "checked"; } ?>>
                 <span class="option-label">Authenticator app</span>
             </label>
             <br>
             <label>
-                <input type="radio" class="twofa-option-checkbox" name="2fa-methods[]" value="email" <?php if (array_search('email', $twoFaMethods) !== false) {
-                                                                                                            echo "checked";
-                                                                                                        } ?>>
+                <input 
+                    type="radio" 
+                    class="twofa-option-checkbox" 
+                    name="2fa-methods[]" 
+                    value="email" 
+                    <?php if (array_search('email', $twoFaMethods) !== false) { echo "checked"; } ?>>
                 <span class="option-label">E-mail</span>
             </label>
             <br>
