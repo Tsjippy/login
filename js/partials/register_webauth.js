@@ -17,9 +17,9 @@ export async function registerWebAuthn() {
 
   const deviceDetector = new DeviceDetector();
 
-  const device = deviceDetector.parse(window.navigator.userAgent);
+  const device         = deviceDetector.parse(window.navigator.userAgent);
 
-  let identifier = `${device.device.type}_${device.device.brand}_${device.device.model}_${device.client.name}`;
+  let identifier       = `${device.device.type}_${device.device.brand}_${device.device.model}_${device.client.name}`;
 
   showMessage("Please take a few seconds to setup your login token...");
   showStatusMessage("Preparing your Passkey...");

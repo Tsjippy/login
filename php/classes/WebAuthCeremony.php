@@ -80,7 +80,7 @@ class WebAuthCeremony
         }
 
         return $this->rpEntity = new PublicKeyCredentialRpEntity(
-            '',// depreciated get_bloginfo('name') . ' Webauthn Server', // The application name
+            get_bloginfo('name') . ' Webauthn Server', // The application name
             $this->domain,       // The application ID = the domain
             //$logo
             //picture from example on https://webauthn-doc.spomky-labs.com/prerequisites/the-relying-party , does not work
