@@ -7,6 +7,7 @@
 
 ### Fixed
 - use correct shortcodes on auto created pages
+- webauth creation
 
 ### Updated
 
