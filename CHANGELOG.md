@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- use correct shortcodes on auto created pages
 
 ### Updated
 
