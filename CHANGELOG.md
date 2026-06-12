@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.4] - 2026-06-12
+
+
+### Changed
 - replaced parse_url with wp_parse_url
 
 ### Fixed
 - shared code loader
 - activation hook
-
-### Updated
 
 ## [10.3.3] - 2026-06-11
 
