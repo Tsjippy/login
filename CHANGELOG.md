@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- use correct shortcodes on auto created pages
-- webauth creation
 
 ### Updated
+
+## [10.3.5] - 2026-06-13
+
+
+### Fixed
+- use correct shortcodes on auto created pages
+- webauth creation
 
 ## [10.3.4] - 2026-06-12
 
