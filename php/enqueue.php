@@ -36,7 +36,7 @@ function loadAssets()
             wp_enqueue_script('tsjippy_password_strength_script');
         }
 
-        if (get_the_ID() == SETTINGS['2fa-page'] ?? false) {
+        if (get_the_ID() == (SETTINGS['2fa-page'] ?? false)) {
             wp_enqueue_script('tsjippy_2fa_script');
         }
     }
