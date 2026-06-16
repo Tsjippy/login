@@ -10,7 +10,7 @@ if (! defined('ABSPATH')) {
 }
 
 // Allow rest api urls for non-logged in users
-add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addQrLoginUrls');
+add_filter('tsjippy-allowed-rest-api-urls', __NAMESPACE__ . '\addQrLoginUrls');
 /**
  * Adds QR login URLs to the list of allowed REST API URLs
  *

@@ -12,7 +12,7 @@ if (! defined('ABSPATH')) {
 }
 
 // Allow rest api urls for non-logged in users
-add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addBioUrls');
+add_filter('tsjippy-allowed-rest-api-urls', __NAMESPACE__ . '\addBioUrls');
 /**
  * Add biometric authentication URLs to the list of allowed REST API endpoints
  *

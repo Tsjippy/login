@@ -50,7 +50,7 @@ function menuItems($items, $args)
         !is_user_logged_in() &&                     // we are not logged in
         in_array($args->menu->term_id, $loginMenus) // we should add it to the current menu
     ) {
-        $shouldAdd  = apply_filters('tsjippy_add_login_button', true, $args->menu->term_id, $loginMenus);
+        $shouldAdd  = apply_filters('tsjippy-add-login-button', true, $args->menu->term_id, $loginMenus);
 
         if (!$shouldAdd) {
             return $items;
