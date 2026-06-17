@@ -203,7 +203,7 @@ function checkCredentials()
 
     $user       = get_user_by('login', $username);
 
-    $user       = apply_filters('tsjippy-after-user-check', $user);
+    $user       = apply_filters('tsjippy-login-after-user-check', $user);
 
     if (is_wp_error($user)) {
         return $user;

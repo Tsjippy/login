@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_filter('tsjippy-user-info-page', __NAMESPACE__ . '\userInfoPage', 10, 3);
+add_filter('tsjippy-user-management-user-info-page', __NAMESPACE__ . '\userInfoPage', 10, 3);
 function userInfoPage($html, $showCurrentUserData, $user)
 {
     /*
