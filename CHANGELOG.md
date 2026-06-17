@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- login data timespan
 
 ### Changed
 - hook and filter name update
