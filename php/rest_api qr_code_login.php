@@ -126,8 +126,8 @@ function isQrCodeScanned()
         return new WP_Error('login', 'Invalid login!');
     }
 
-    TSJIPPY\storeInTransient("username", $username);
-    TSJIPPY\storeInTransient("allow_passwordless_login", true);
+    TSJIPPY\storeInTransient("username", $username, MINUTE_IN_SECONDS);
+    TSJIPPY\storeInTransient("allow_passwordless_login", true, MINUTE_IN_SECONDS);
 
     return userLogin();
 }

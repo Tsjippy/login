@@ -80,7 +80,7 @@ class CreationCeremony extends WebAuthCeremony
         );
 
         // store in session
-        TSJIPPY\storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions);
+        TSJIPPY\storeInTransient('publicKeyCredentialCreationOptions', $publicKeyCredentialCreationOptions, MINUTE_IN_SECONDS);
 
         return json_decode($jsonObject);
     }

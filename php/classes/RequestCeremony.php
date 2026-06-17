@@ -66,7 +66,7 @@ class RequestCeremony extends WebAuthCeremony
                 userVerification: $this->verificationType
             );
 
-        TSJIPPY\storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions);
+        TSJIPPY\storeInTransient('publicKeyCredentialRequestOptions', $publicKeyCredentialRequestOptions, 5 * MINUTE_IN_SECONDS);
 
         $jsonObject = $this->serializer->serialize(
             $publicKeyCredentialRequestOptions,
@@ -105,8 +105,8 @@ class RequestCeremony extends WebAuthCeremony
 
         $userNameAuth   = $this->user->user_login;
 
-        TSJIPPY\storeInTransient("username", $userNameAuth);
-        TSJIPPY\storeInTransient("allow_passwordless_login", true);
+        TSJIPPY\storeInTransient("username", $userNameAuth, 5 * MINUTE_IN_SECONDS);
+        TSJIPPY\storeInTransient("allow_passwordless_login", true, 5 * MINUTE_IN_SECONDS);
     }
 
     public function verifyResponse($response, $isPassKeyLogin)
