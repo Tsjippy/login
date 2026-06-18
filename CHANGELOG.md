@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.4.0] - 2026-06-18
+
+
+### Added
 - login data timespan
 
 ### Changed
 - hook and filter name update
 - prefix all hooks with plugin name
-
-### Fixed
-
-### Updated
 
 ## [10.3.9] - 2026-06-15
 
