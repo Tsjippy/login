@@ -131,7 +131,7 @@ class WebAuthCeremony
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
             $randomString = '';
             for ($i = 0; $i < $length; $i++) {
-                $randomString .= $characters[rand(0, strlen($characters) - 1)];
+                $randomString .= $characters[wp_rand(0, strlen($characters) - 1)];
             }
             return $randomString;
         }

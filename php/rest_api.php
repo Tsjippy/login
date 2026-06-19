@@ -483,7 +483,7 @@ function checkAdminDetails($user)
 
         if ($adminEmailCheckInterval > 0 && time() > $adminEmailLifespan) {
             if (isset($_REQUEST['redirect_to']) && is_string($_REQUEST['redirect_to'])) {
-                $redirectTo = $_REQUEST['redirect_to'];
+                $redirectTo = TSJIPPY\sanitize($_REQUEST['redirect_to']);
             } else {
                 $redirectTo = admin_url();
             }
