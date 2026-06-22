@@ -127,11 +127,21 @@ function reset2fa($userId)
     //Remove all 2fa keys
     $wpdb->query(
         $wpdb->prepare(
-            "DELETE FROM %i WHERE meta_key LIKE '2fa%' AND user_id = %d",
+            "DELETE FROM %i WHERE meta_key LIKE %s AND user_id = %d",
             $wpdb->usermeta,
+            $wpdb->esc_like('2fa').'%',
             $userId
         )
     );
+
+    /**
+     * Flush db cache
+     */
+    if(wp_cache_supports( 'flush_group' )){
+        wp_cache_flush_group('login');
+    }else{
+        wp_cache_flush();
+    }
 
     $userdata = get_userdata($userId);
 
