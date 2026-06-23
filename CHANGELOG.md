@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- user meta bug
 
 ### Updated
+
+## [10.4.9] - 2026-06-23
+
+
+### Fixed
+- user meta bug
 
 ## [10.4.8] - 2026-06-23
 
