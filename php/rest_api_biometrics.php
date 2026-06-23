@@ -109,7 +109,7 @@ function bioRestApi()
                 return $ceremony->verifyResponse($credential, $isPassKeyLogin);
             },
             'permission_callback' => '__return_true',
-            'args'                    => array(
+            'args'                => array(
                 'publicKeyCredential'        => array(
                     'required'    => true
                 ),
@@ -122,10 +122,10 @@ function bioRestApi()
         TSJIPPY\RESTAPIPREFIX . '/login',
         '/request_email_code',
         array(
-            'methods'                 => 'POST, GET',
-            'callback'                 =>  __NAMESPACE__ . '\requestEmailCode',
-            'permission_callback'     => '__return_true',     // Allow public access
-            'args'                    => array(
+            'methods'             => 'POST, GET',
+            'callback'            =>  __NAMESPACE__ . '\requestEmailCode',
+            'permission_callback' => '__return_true',     // Allow public access
+            'args'                => array(
                 'username'        => array(
                     'required'    => true
                 ),
@@ -138,13 +138,13 @@ function bioRestApi()
         TSJIPPY\RESTAPIPREFIX . '/login',
         '/save_2fa_settings',
         array(
-            'methods'                 => 'GET,POST',
-            'callback'                 => __NAMESPACE__ . '\saveTwoFaSettings',
-            'permission_callback'     => function () {
+            'methods'             => 'GET,POST',
+            'callback'            => __NAMESPACE__ . '\saveTwoFaSettings',
+            'permission_callback' => function () {
                 return current_user_can('read');
             },
-            'args'                    => array(
-                '2fa-methods'        => array(
+            'args'                => array(
+                '2fa-methods'     => array(
                     'required'    => true,
                     'validate_callback' => function ($param) {
                         return is_array($param);
@@ -159,12 +159,12 @@ function bioRestApi()
         TSJIPPY\RESTAPIPREFIX . '/login',
         '/remove_web_authenticator',
         array(
-            'methods'                 => 'POST',
-            'callback'                 => __NAMESPACE__ . '\removeWebAuthenticator',
-            'permission_callback'     => function () {
+            'methods'             => 'POST',
+            'callback'            => __NAMESPACE__ . '\removeWebAuthenticator',
+            'permission_callback' => function () {
                 return current_user_can('read');
             },
-            'args'                    => array(
+            'args'                => array(
                 'key'        => array(
                     'required'    => true
                 ),
@@ -295,10 +295,10 @@ function saveTwoFaSettings()
 
     //we just enabled email verification
     if (in_array('email', $newMethods) && !in_array('email', $oldMethods)) {
-        // verify the code
-        if (verifyEmailCode()) {
-            $userdata   = get_userdata($userId);
+        $userdata   = get_userdata($userId);
 
+        // verify the code
+        if (verifyEmailCode($userdata)) {
             //Send e-mail
             $emailVerfEnabled    = new EmailVerfEnabled($userdata);
             $emailVerfEnabled->filterMail();

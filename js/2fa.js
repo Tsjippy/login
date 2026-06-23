@@ -14,7 +14,9 @@ async function saveTwofaSettings(target) {
   if (validity) {
     let formData = new FormData(form);
 
-    Main.showLoader(target, false, 50, 'Please Wait...', false, true);
+    let orgButtonText = target.innerHTML;
+
+    let loader  = Main.showLoader(target, false, 50, 'Please Wait...', false, true);
 
     let response = await FormSubmit.fetchRestApi(
       "login/save_2fa_settings",
@@ -33,6 +35,9 @@ async function saveTwofaSettings(target) {
         .closest("form")
         .querySelector(".form-submit")
         .classList.add("hidden");
+    }else{
+      Main.displayMessage("Invalid code supplied, try again", "error");
+      target.innerHTML  = orgButtonText;
     }
   }
 }
@@ -122,6 +127,8 @@ async function sendValidationEmail(target) {
       .classList.remove("hidden");
 
     document.getElementById("email-code-validation").focus();
+  }else{
+    loader.remove();
   }
 }
 

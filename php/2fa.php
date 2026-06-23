@@ -66,13 +66,13 @@ function setupTimeCode()
 /**
  * Create a randow code and send it via e-mail to an user
  *
- * @param   object  WP_User
+ * @param   object  $user \WP_User
  */
 function sendEmailCode($user)
 {
     $emailCode  = mt_rand(1000000000, 9999999999);
 
-    TSJIPPY\storeInTransient('2fa_email_key', $emailCode);
+    TSJIPPY\storeInTransient("2fa_email_key_$user->ID", $emailCode);
 
     $twoFaEmail = new TwoFaEmail($user, $emailCode);
     $twoFaEmail->filterMail();
@@ -82,13 +82,15 @@ function sendEmailCode($user)
 
 /**
  * Verify the submitted e-mail code
+ * 
+ * @param   object  $user \WP_User
  *
  * @return  bool    true if valid code false otherwise
  */
-function verifyEmailCode()
+function verifyEmailCode($user)
 {
-    if (TSJIPPY\getFromTransient('2fa_email_key') == $_POST['email-code']) {
-        TSJIPPY\deleteFromTransient('2fa_email_key');
+    if (TSJIPPY\getFromTransient("2fa_email_key_$user->ID") == $_POST['email-code']) {
+        TSJIPPY\deleteFromTransient("2fa_email_key_$user->ID");
 
         return true;
     }
@@ -209,7 +211,7 @@ function authenticate($user)
                 );
             }
         } elseif (in_array('email', $methods)) {
-            if (!verifyEmailCode()) {
+            if (!verifyEmailCode($user)) {
                 $user = new \WP_Error(
                     '2fa error',
                     'Invalid e-mail code given'
