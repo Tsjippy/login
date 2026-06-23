@@ -127,13 +127,16 @@ function reset2fa($userId)
     global $wpdb;
 
     //Remove all 2fa keys
-    $wpdb->query(
-        $wpdb->prepare(
+    TSJIPPY\removeFromDb(
+        $wpdb->usermeta,
+        [
             "DELETE FROM %i WHERE meta_key LIKE %s AND user_id = %d",
             $wpdb->usermeta,
             $wpdb->esc_like('2fa').'%',
             $userId
-        )
+        ],
+        [],
+        'login'
     );
 
     /**
