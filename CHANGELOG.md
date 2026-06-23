@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- bug when supllying invalid 2fa code
 
 ### Updated
+
+## [10.4.6] - 2026-06-23
+
+
+### Fixed
+- bug when supllying invalid 2fa code
 
 ## [10.4.5] - 2026-06-23
 
