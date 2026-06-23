@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- implemented db caching
 
 ### Fixed
 
 ### Updated
+
+## [10.4.4] - 2026-06-23
+
+
+### Changed
+- implemented db caching
 
 ## [10.4.3] - 2026-06-21
 
