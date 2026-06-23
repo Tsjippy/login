@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- bug when supllying invalid 2fa code
 
 ### Updated
 
