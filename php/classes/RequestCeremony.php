@@ -163,7 +163,7 @@ class RequestCeremony extends WebAuthCeremony
             }
 
             // Update the credential to keep track of the count
-            $this->updateUserMeta("2fa_webautn_cred", $credentialRecord, $prevCredential);
+            $this->updateUserMeta("tsjippy_2fa_webautn_cred", $credentialRecord, $prevCredential);
 
             /** @disregard P1080 */
             TSJIPPY\storeInTransient('last-used-cred-id', $credentialRecord->publicKeyCredentialId);
@@ -177,7 +177,7 @@ class RequestCeremony extends WebAuthCeremony
                     $newMeta['last_used']   = gmdate('Y-m-d H:i:s', current_time('timestamp'));
 
                     // Update the credential to keep track of the count
-                    $this->updateUserMeta("2fa_webautn_cred_meta", $newMeta, $meta);
+                    $this->updateUserMeta("tsjippy_2fa_webautn_cred_meta", $newMeta, $meta);
                 }
             }
 

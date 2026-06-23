@@ -325,6 +325,9 @@ class WebAuthCeremony
      */
     public function updateUserMeta($key, $value, $oldValue)
     {
+        if(!str_contains($key, 'tsjippy_')){
+            $key    = 'tsjippy_'.$key;
+        }
         update_user_meta($this->user->ID, $key, base64_encode(serialize($value)), base64_encode(serialize($oldValue)));
     }
 
