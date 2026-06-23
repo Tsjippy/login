@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- user meta bug
 
 ### Updated
 
