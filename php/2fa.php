@@ -132,7 +132,7 @@ function reset2fa($userId)
         [
             "DELETE FROM %i WHERE meta_key LIKE %s AND user_id = %d",
             $wpdb->usermeta,
-            $wpdb->esc_like('2fa').'%',
+            $wpdb->esc_like('tsjippy_2fa').'%',
             $userId
         ],
         [],

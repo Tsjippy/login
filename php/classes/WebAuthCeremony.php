@@ -185,7 +185,7 @@ class WebAuthCeremony
 
         $this->credentials = [];
 
-        $userCreds  = (array)get_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred");
+        $userCreds  = get_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred");
         foreach ($userCreds as $userCred) {
             try {
                 $this->credentials[] = unserialize(base64_decode($userCred));
@@ -364,10 +364,10 @@ class WebAuthCeremony
                                 continue;
                             }
 
-                            $identifier        = $meta['identifier'];
-                            $osName            = $meta['os_info']['name'];
-                            $added            = gmdate('jS M Y', strtotime($meta['added']));
-                            $lastUsed       = $meta['last_used'];
+                            $identifier = $meta['identifier'];
+                            $osName     = $meta['os_info']['name'];
+                            $added      = gmdate('jS M Y', strtotime($meta['added']));
+                            $lastUsed   = $meta['last_used'];
 
                             if ($lastUsed != '-') {
                                 $lastUsed        = gmdate('jS M Y', strtotime($meta['last_used']));
@@ -375,21 +375,23 @@ class WebAuthCeremony
 
                             if ($meta['cred_id'] == TSJIPPY\getFromTransient('last-used-cred-id')) {
                                 $lastUsed   = 'Now';
-                                echo "<tr class='current-device' style='background: beige;'>";
+                                ?>
+                                <tr class='current-device' style='background: beige;'>
+                                <?php
                             } else {
-                                echo "<tr>";
+                                ?><tr><?php
                             }
 
-                        ?>
-                            <td><?php echo esc_attr($identifier); ?></td>
-                            <td><?php echo esc_attr($osName); ?></td>
-                            <td><?php echo esc_attr($added); ?></td>
-                            <td><?php echo esc_attr($lastUsed); ?></td>
-                            <td>
-                                <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id']; ?>'>-</button>
-                            </td>
+                            ?>
+                                <td><?php echo esc_attr($identifier); ?></td>
+                                <td><?php echo esc_attr($osName); ?></td>
+                                <td><?php echo esc_attr($added); ?></td>
+                                <td><?php echo esc_attr($lastUsed); ?></td>
+                                <td>
+                                    <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id']; ?>'>-</button>
+                                </td>
                             </tr>
-                        <?php
+                            <?php
                         }
                         ?>
                     </tbody>
