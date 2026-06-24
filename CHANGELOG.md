@@ -7,6 +7,7 @@
 
 ### Fixed
 - reset 2fa
+- webauth bug
 
 ### Updated
 
