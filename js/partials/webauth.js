@@ -13,7 +13,7 @@ window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
 );
 
 /**
- * Do a webauthn verification after loggin with username and password
+ * Do a webauthn verification after login with username and password
  *
  * @param {string} 	username 	The user name to authenticate
  * @param {bool} 	autofill 	Whether to use browser autofill
