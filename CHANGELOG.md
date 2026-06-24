@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- reset 2fa
 
 ### Updated
 
