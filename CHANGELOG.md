@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- reset 2fa
-- webauth bug
 
 ### Updated
+
+## [10.5.0] - 2026-06-24
+
+
+### Fixed
+- reset 2fa
+- webauth bug
 
 ## [10.4.9] - 2026-06-23
 
