@@ -142,6 +142,10 @@ class RequestCeremony extends WebAuthCeremony
             $prevCredential->aaguid         = new \Symfony\Component\Uid\UuidV4();
 
             $prevCredential->uvInitialized  = true;
+
+            $prevCredential->backupEligible = false;
+
+            $prevCredential->backupStatus   = false;
         }
 
         try {
