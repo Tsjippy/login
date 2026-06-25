@@ -305,9 +305,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         /**
          * Adds a login/logout block to all nvigation blocks
          */
-        public function postSettingsSave()
+        public function postSettingsSave($request)
         {
-            if (isset($_POST['addLoginLogout'])) {
+            if (isset($$request['addLoginLogout'])) {
                 $posts = get_posts(
                     array(
                         'numberposts'    => -1,

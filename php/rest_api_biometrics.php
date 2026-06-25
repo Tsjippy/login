@@ -79,7 +79,7 @@ function bioRestApi()
             'methods' => 'POST',
             'callback' => function () {
                 $ceremony    = new RequestCeremony();
-                return $ceremony->createOptions();
+                return $ceremony->createOptions(TSJIPPY\sanitize($_POST));
             },
             'permission_callback' => '__return_true',
 
@@ -94,13 +94,14 @@ function bioRestApi()
             'methods' => 'POST,GET',
             'callback' => function () {
                 $credential  = base64_decode(TSJIPPY\sanitize($_POST["publicKeyCredential"]));
-
+                
                 // Check param
                 if (empty($credential)) {
                     return new WP_Error('Logged in error', "No credential data supplied");
                 }
 
                 $isPassKeyLogin = false;
+                // phpcs:ignore
                 if (empty($_POST['username'])) {
                     $isPassKeyLogin = true;
                 }

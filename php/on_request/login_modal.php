@@ -44,9 +44,12 @@ if ($standAlone && is_user_logged_in()) {
 loadAssets();
 
 ?>
-<div id="login-modal" class="modal <?php if (!$required) {
-                                        echo 'hidden';
-                                    } ?>" style="display:unset;">
+<div
+    id="login-modal"
+    class="modal 
+<?php if (!$required) {
+    echo 'hidden';
+} ?>" style="display:unset;">
     <div class="modal-content" style="min-width:500px;">
         <?php
         if (!$required) {
@@ -57,15 +60,27 @@ loadAssets();
             <h3>
                 Login form
             </h3>
-            <p id="message"><?php
-                            if (is_wp_error($message)) {
-                                TSJIPPY\printArray($message);
-                                /** @var \WP_Error $message */
-                                echo '<span class="error">' . $message->get_error_message() . '</span>';
-                            } elseif (!empty($message)) {
-                                echo '<span class="message">' . $message . '</span>';
-                            }
-                            ?></p>
+            <p id="message">
+                <?php
+                if (is_wp_error($message)) {
+                    TSJIPPY\printArray($message);
+                    /** @var \WP_Error $message */
+                ?>
+                    <span class="error">
+                        <?php echo wp_kses_post($message->get_error_message()); ?>
+                    </span>
+                <?php
+                } elseif (!empty($message)) {
+                ?>
+                    <span class="message">
+                        <?php
+                        echo wp_kses_post($message); ?>
+
+                    </span>
+                <?php
+                }
+                ?>
+            </p>
 
             <div id='qrcode-wrapper' style='margin-top: -30px;min-height: 30px;'><span></span></div>
 

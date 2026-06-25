@@ -34,16 +34,15 @@ class RequestCeremony extends WebAuthCeremony
     /**
      * Creates and stores
      */
-    public function createOptions()
+    public function createOptions($request)
     {
-
         $allowedCredentials = [];
 
-        if (!empty($_POST['username'])) {
-            if (is_numeric($_POST['username'])) {
-                $this->user = get_user_by('ID', TSJIPPY\sanitize($_POST['username']));
+        if (!empty($request['username'])) {
+            if (is_numeric($request['username'])) {
+                $this->user = get_user_by('ID', $request['username']);
             } else {
-                $this->user = get_user_by('login', TSJIPPY\sanitize($_POST['username']));
+                $this->user = get_user_by('login', $request['username']);
             }
 
             // List of registered PublicKeyCredentialDescriptor classes associated to the user
@@ -150,6 +149,10 @@ class RequestCeremony extends WebAuthCeremony
 
         try {
             $publicKeyCredentialRequestOptions   = TSJIPPY\getFromTransient('publicKeyCredentialRequestOptions');
+
+            if(get_class($publicKeyCredentialRequestOptions) == 'Webauthn\PublicKeyCredentialSource'){
+                TSJIPPY\printArray("Invalid type", $_POST);
+            }
 
             $credentialRecord = $authenticatorAssertionResponseValidator->check(
                 clone $prevCredential,
