@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.5.2] - 2026-06-26
+
+
+### Changed
 - sanitize post on original function
 
 ### Fixed
 - property bug
-
-### Updated
 
 ## [10.5.1] - 2026-06-25
 
