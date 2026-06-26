@@ -46,16 +46,10 @@ loadAssets();
 ?>
 <div
     id="login-modal"
-    class="modal 
-<?php if (!$required) {
-    echo 'hidden';
-} ?>" style="display:unset;">
+    class="modal <?php if (!$required) echo 'hidden'; ?>" style="display:unset;">
     <div class="modal-content" style="min-width:500px;">
         <?php
-        if (!$required) {
-            echo '<span class="close">×</span>';
-        }
-        ?>
+        if (!$required) ?><span class="close">×</span>
         <div id='login-wrapper'>
             <h3>
                 Login form

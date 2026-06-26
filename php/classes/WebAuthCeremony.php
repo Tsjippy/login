@@ -342,9 +342,8 @@ class WebAuthCeremony
     {
         $this->getCredentialMetas($userId);
 
-        ob_start();
         if (!empty($this->credentialMetas)) {
-?>
+            ?>
             <div id='webautn-devices-wrapper'>
                 <h4>Biometric authenticators overview</h4>
                 <table class='tsjippy table'>
@@ -388,7 +387,7 @@ class WebAuthCeremony
                                 <td><?php echo esc_attr($added); ?></td>
                                 <td><?php echo esc_attr($lastUsed); ?></td>
                                 <td>
-                                    <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo $meta['cred_id']; ?>'>-</button>
+                                    <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo esc_attr($meta['cred_id']); ?>'>-</button>
                                 </td>
                             </tr>
                             <?php
@@ -397,9 +396,7 @@ class WebAuthCeremony
                     </tbody>
                 </table>
             </div>
-<?php
+            <?php
         }
-
-        return ob_get_clean();
     }
 }

@@ -79,7 +79,7 @@ function twoFaSettingsForm($userId = '')
                     class="twofa-option-checkbox" 
                     name="2fa-methods[]" 
                     value="authenticator" 
-                    <?php if (array_search('authenticator', $twoFaMethods) !== false) { echo "checked"; } ?>>
+                    <?php if (array_search('authenticator', $twoFaMethods) !== false) echo "checked";  ?>>
                 <span class="option-label">Authenticator app</span>
             </label>
             <br>
@@ -89,7 +89,7 @@ function twoFaSettingsForm($userId = '')
                     class="twofa-option-checkbox" 
                     name="2fa-methods[]" 
                     value="email" 
-                    <?php if (array_search('email', $twoFaMethods) !== false) { echo "checked"; } ?>>
+                    <?php if (array_search('email', $twoFaMethods) !== false) echo "checked";  ?>>
                 <span class="option-label">E-mail</span>
             </label>
             <br>
@@ -118,7 +118,7 @@ function twoFaSettingsForm($userId = '')
                         This will open the app and create a code.<br>
                         You can also manually add an entry using this code: <code><?php echo esc_attr($secondFactor->secretKey); ?></code>.
                         Copy the code created by the authenticator app in the field below.<br>
-                        <?php echo $secondFactor->appLink; ?><br>
+                        <?php echo esc_attr($secondFactor->appLink); ?><br>
                     </p>
                 </div>
                 <div class='hidden desktop'>
@@ -165,7 +165,7 @@ function twoFaSettingsForm($userId = '')
     <div id='webauthn-wrapper' class='hidden'>
         <?php
         $webAuthCeremony    = new WebAuthCeremony();
-        echo $webAuthCeremony->authTable($userId);
+        $webAuthCeremony->authTable($userId);
         ?>
     </div>
 <?php
