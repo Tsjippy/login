@@ -82,11 +82,13 @@ function updateIndicator(indicator) {
 async function submitPasswordChange(event) {
   event.stopImmediatePropagation();
 
-  var form = event.target.closest("form");
+  let form = event.target.closest("form");
 
-  var formData = new FormData(form);
+  Main.showLoader(event.target, false, 30, 'Changing Password...', false, true);
 
-  var response = await FormSubmit.fetchRestApi(
+  let formData = new FormData(form);
+
+  let response = await FormSubmit.fetchRestApi(
     "login/update_password",
     formData,
   );

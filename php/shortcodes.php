@@ -32,7 +32,7 @@ function passwordResetForm($user)
     }
 
     ob_start();
-?>
+    ?>
 
     <form class="pwd-reset">
         <div class="login-info">
