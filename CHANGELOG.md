@@ -3,6 +3,7 @@
 
 ### Added
 - attribute escaping
+- change password loader
 
 ### Changed
 - plugin tested up to 7.0
