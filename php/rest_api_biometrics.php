@@ -257,14 +257,14 @@ function saveTwoFaSettings()
 {
     $userId         = get_current_user_id();
 
-    $newMethods     = TSJIPPY\sanitize($_POST['2fa-methods']);
+    $newMethods     = array_flip(TSJIPPY\sanitize($_POST['2fa-methods']));
 
     $oldMethods     = get_user_meta($userId, 'tsjippy_2fa_methods');
 
     $message        = 'Nothing to update';
 
     //we just enabled the authenticator
-    if (in_array('authenticator', $newMethods) && !in_array('authenticator', $oldMethods)) {
+    if (isset($newMethods['authenticator']) && !isset($oldMethods['authenticator'])) {
         $secret     = TSJIPPY\sanitize($_POST['auth-secret']);
         $secretkey  = TSJIPPY\sanitize($_POST['secretkey']);
         $hash       = get_user_meta($userId, 'tsjippy_2fa_hash', true);
@@ -295,7 +295,7 @@ function saveTwoFaSettings()
     }
 
     //we just enabled email verification
-    if (in_array('email', $newMethods) && !in_array('email', $oldMethods)) {
+    if (isset($newMethods['email']) && !isset($oldMethods['email'])) {
         $userdata   = get_userdata($userId);
 
         // verify the code

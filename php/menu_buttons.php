@@ -16,15 +16,15 @@ function menuItems($items, $args)
     $logoutMenus    = SETTINGS['logout-menu'] ?? [];
 
     if (
-        !in_array($args->menu->term_id, $loginMenus)   &&  // Do not add when not in the list
-        !in_array($args->menu->term_id, $logoutMenus)  &&
+        !isset($loginMenus[$args->menu->term_id])   &&  // Do not add when not in the list
+        !isset($logoutMenus[$args->menu->term_id])  &&
         !empty(SETTINGS['menu'] ?? false)
     ) {
         return $items;
     }
 
     // We should add a logout menu item
-    if (is_user_logged_in() && in_array($args->menu->term_id, $logoutMenus)) {
+    if (is_user_logged_in() && isset($logoutMenus[$args->menu->term_id])) {
         $class  = '';
         if ($args->menu->slug != 'footer') {
             $class  = 'button';
@@ -32,7 +32,7 @@ function menuItems($items, $args)
 
         $visibilities   = SETTINGS['visibilty-logout-menu'] ?? [];
 
-        if (in_array($args->menu->term_id, array_keys($visibilities))) {
+        if (isset($visibilities[$args->menu->term_id])) {
             if ($visibilities[$args->menu->term_id] == 'mobile') {
                 $class  .= " hide-on-desktop";
             }
@@ -48,7 +48,7 @@ function menuItems($items, $args)
     // We should add a login menu item
     if (
         !is_user_logged_in() &&                     // we are not logged in
-        in_array($args->menu->term_id, $loginMenus) // we should add it to the current menu
+        isset($loginMenus[$args->menu->term_id]) // we should add it to the current menu
     ) {
         $shouldAdd  = apply_filters('tsjippy-login-add-login-button', true, $args->menu->term_id, $loginMenus);
 
@@ -63,7 +63,7 @@ function menuItems($items, $args)
 
         $visibilities   = SETTINGS['visibilty-login-menu'] ?? false;
 
-        if (in_array($args->menu->term_id, array_keys($visibilities))) {
+        if (isset($visibilities[$args->menu->term_id])) {
             if ($visibilities[$args->menu->term_id] == 'mobile') {
                 $class  .= " hide-on-desktop";
             }

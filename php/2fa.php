@@ -172,7 +172,7 @@ function authenticate($user)
         return $user;
     }
 
-    $methods    = get_user_meta($user->ID, 'tsjippy_2fa_methods');
+    $methods    = array_flip(get_user_meta($user->ID, 'tsjippy_2fa_methods'));
     if (!empty($methods)) {
         //we did a succesfull webauthn or are on localhost
         if (
@@ -184,7 +184,7 @@ function authenticate($user)
         }
 
         // We have an authenticator app set up and did not supply an e-mail code
-        elseif (in_array('authenticator', $methods) && empty($_POST['email-code'])) {
+        elseif (isset($methods['authenticator']) && empty($_POST['email-code'])) {
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
             $secretKey  = get_user_meta($user->ID, 'tsjippy_2fa_key', true);
             $authcode   = TSJIPPY\sanitize($_POST['authcode']);
@@ -213,7 +213,7 @@ function authenticate($user)
                     'Invalid 2FA code given'
                 );
             }
-        } elseif (in_array('email', $methods)) {
+        } elseif (isset($methods['email'])) {
             if (!verifyEmailCode($user)) {
                 $user = new \WP_Error(
                     '2fa error',

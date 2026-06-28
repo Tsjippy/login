@@ -42,7 +42,7 @@ function twoFaSettingsForm($userId = '')
         return "<div class='error'>You are not logged in</div>";
     }
 
-    $twoFaMethods    = get_user_meta($userId, 'tsjippy_2fa_methods');
+    $twoFaMethods    = array_flip(get_user_meta($userId, 'tsjippy_2fa_methods'));
 
     if (!empty($_GET['redirected'])) {
     ?>
@@ -58,7 +58,7 @@ function twoFaSettingsForm($userId = '')
         <div id='2fa-options-wrapper' style='margin-bottom:20px;'>
             <h4>Second login factor</h4>
             <?php
-            if (empty($twoFaMethods) || in_array('webauthn', $twoFaMethods) && count($twoFaMethods) == 1) {
+            if (empty($twoFaMethods) || isset($twoFaMethods['webauthn']) && count($twoFaMethods) == 1) {
             ?>
                 <p>
                     Please setup an second login factor to keep this website safe.<br>
@@ -79,7 +79,7 @@ function twoFaSettingsForm($userId = '')
                     class="twofa-option-checkbox" 
                     name="2fa-methods[]" 
                     value="authenticator" 
-                    <?php if (array_search('authenticator', $twoFaMethods) !== false) echo "checked";  ?>>
+                    <?php if (isset($twoFaMethods['authenticator'])) echo "checked";  ?>>
                 <span class="option-label">Authenticator app</span>
             </label>
             <br>
@@ -89,7 +89,7 @@ function twoFaSettingsForm($userId = '')
                     class="twofa-option-checkbox" 
                     name="2fa-methods[]" 
                     value="email" 
-                    <?php if (array_search('email', $twoFaMethods) !== false) echo "checked";  ?>>
+                    <?php if (isset($twoFaMethods['email'])) echo "checked";  ?>>
                 <span class="option-label">E-mail</span>
             </label>
             <br>
@@ -97,7 +97,7 @@ function twoFaSettingsForm($userId = '')
 
         <?php
         // authenticator app not yet setup
-        if (empty($twoFaMethods) || !in_array('authenticator', $twoFaMethods)) {
+        if (empty($twoFaMethods) || !isset($twoFaMethods['authenticator'])) {
             $secondFactor    = setupTimeCode();
         ?>
             <input type='hidden' class='no-reset' name='secretkey' value='<?php echo esc_attr($secondFactor->secretKey); ?>'>
@@ -139,7 +139,7 @@ function twoFaSettingsForm($userId = '')
         }
 
         // E-mail not yet setup
-        if (empty($twoFaMethods) || !in_array('email', $twoFaMethods)) {
+        if (empty($twoFaMethods) || !isset($twoFaMethods['email'])) {
         ?>
             <div id='setup-email' class='twofa-option hidden'>
                 <input type='hidden' class='no-reset' id='username' value='<?php echo esc_attr($userId); ?>'>

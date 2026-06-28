@@ -110,11 +110,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     $this->settings['visibilty-login-menu'][$menu->term_id]    = '';
                 }
 
+                $loginMenus = $this->settings['login-menu'] ?? [];
+
                 ?>
                 <tr>
                     <td>
                         <label>
-                            <input type='checkbox' name='login-menu[]' value='<?php esc_attr($menu->term_id);?>' <?php if (in_array($menu->term_id, $this->settings['login-menu'] ?? [])) echo 'checked';?> >
+                            <input type='checkbox' name='login-menu[<?php esc_attr($menu->term_id);?>]' value='1' <?php if (isset($loginMenus[$menu->term_id])) echo 'checked';?> >
                             <?php echo esc_html($menu->name);?>
                         </label>
                     </td>
@@ -143,11 +145,12 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         <table>
             <?php
             foreach ($menus as $menu) {
+                $logOutMenus    = $this->settings['logout-menu'] ?? [];
                 ?>
                 <tr>
                     <td>
                         <label>
-                            <input type='checkbox' name='logout-menu[]' value='<?php esc_attr($menu->term_id);?>' <?php if (in_array($menu->term_id, $this->settings['logout-menu'] ?? [])) echo 'checked';?>>
+                            <input type='checkbox' name='logout-menu[<?php esc_attr($menu->term_id);?>]' value='1' <?php if (isset($logoutMenus[$menu->term_id])) echo 'checked';?>>
                             <?php echo esc_html($menu->name);?>
                         </label>
                     </td>                            
