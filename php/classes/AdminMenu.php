@@ -116,23 +116,30 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 <tr>
                     <td>
                         <label>
-                            <input type='checkbox' name='login-menu[<?php esc_attr($menu->term_id);?>]' value='1' <?php if (isset($loginMenus[$menu->term_id])) echo 'checked';?> >
+                            <input type='checkbox' name='login-menu[<?php echo esc_attr($menu->term_id);?>]' value='1' <?php if (isset($loginMenus[$menu->term_id])) echo 'checked';?> >
                             <?php echo esc_html($menu->name);?>
                         </label>
                     </td>
 
                     <td>
-                        <input type='radio' id='<?php esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php esc_attr($menu->term_id);?>]' value='' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == '') echo 'checked'; ?>>
-                        <label>Always</label>
+                        
+                        <label>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id);?>]' value='' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == '') echo 'checked'; ?>>
+                            Always
+                        </label>
                     </td>
                     <td>
-                        <input type='radio' id='<?php esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php esc_attr($menu->term_id);?>]' value='mobile' <?php  ?>>
-                        <label>Mobile only</label>
+                        <label>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id);?>]' value='mobile' <?php  ?>>
+                            Mobile only
+                        </label>
                     </td>
                                     
                     <td>
-                        <input type='radio' id='<?php esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php esc_attr($menu->term_id);?>]' value='desktop' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == 'desktop') echo 'checked'; ?>>
-                        <label>Desktop only </label>
+                        <label>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id);?>]' value='desktop' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == 'desktop') echo 'checked'; ?>>
+                            Desktop only 
+                        </label>
                     </td>
                 </tr>
                 <?php
@@ -150,26 +157,30 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 <tr>
                     <td>
                         <label>
-                            <input type='checkbox' name='logout-menu[<?php esc_attr($menu->term_id);?>]' value='1' <?php if (isset($logoutMenus[$menu->term_id])) echo 'checked';?>>
+                            <input type='checkbox' name='logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='1' <?php if (isset($logOutMenus[$menu->term_id])) echo 'checked';?>>
                             <?php echo esc_html($menu->name);?>
                         </label>
                     </td>                            
                                     
                     <td>
-                        <input type='radio' id='<?php esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php esc_attr($menu->term_id);?>]' value='' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == '') echo 'checked';?>>
                         <label>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == '') echo 'checked';?>>
                             Always
                         </label>
                     </td>
 
                     <td>
-                        <input type='radio' id='<?php esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php esc_attr($menu->term_id);?>]' value='mobile' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'mobile') echo 'checked';?>>
-                        <label>Mobile only</label>
+                        <label>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='mobile' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'mobile') echo 'checked';?>>
+                            Mobile only
+                        </label>
                     </td>
                     
                     <td>
-                        <input type='radio' id='<?php esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php esc_attr($menu->term_id);?>]' value='desktop' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'desktop') echo 'checked';?>>
-                        <label>Desktop only </label>
+                        <label>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='desktop' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'desktop') echo 'checked';?>>
+                            Desktop only 
+                        </label>
                     </td>
                 </tr>
                 <?php
