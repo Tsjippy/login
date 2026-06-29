@@ -69,7 +69,6 @@ loadAssets();
                     <span class="message">
                         <?php
                         echo wp_kses_post($message); ?>
-
                     </span>
                 <?php
                 }
