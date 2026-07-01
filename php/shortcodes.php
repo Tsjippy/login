@@ -32,7 +32,7 @@ function passwordResetForm($user)
     }
 
     ob_start();
-    ?>
+?>
 
     <form class="pwd-reset">
         <div class="login-info">
@@ -117,34 +117,44 @@ function requestAccount()
         <p>Please fill in the form to create an user account</p>
 
         <input type="hidden" class="no-reset" name="action" value="requestuseraccount">
-        <input type="hidden" class="no-reset" name="nonce"  value="<?php echo wp_create_nonce('account-creation'); ?>">
+        <input type="hidden" class="no-reset" name="nonce" value="<?php echo wp_create_nonce('account-creation'); ?>">
 
         <label>
-            <h4>First name<span class="required">*</span></h4>
+            <h4>
+                First name<span class="required">*</span>
+            </h4>
             <input type="text" class='wide' name="first-name" value="" required>
         </label>
 
         <label>
-            <h4>Last name<span class="required">*</span></h4>
+            <h4>
+                Last name<span class="required">*</span>
+            </h4>
             <input type="text" class='wide' name="last-name" required>
         </label>
 
         <label>
-            <h4>Desired Password</h4>
+            <h4>
+                Desired Password
+            </h4>
             <input type="password" class='changepass wide' name="pass1" size="16" autocomplete="off" />
         </label>
         <br>
         <span style="text-align: center;" class="pass-strength-result hidden" id="pass-strength-result1">Strength indicator</span>
         <br>
         <label>
-            <h4>Confirm Password</h4>
+            <h4>
+                Confirm Password
+            </h4>
             <input type="password" class='changepass wide' name="pass2" size="16" autocomplete="off" />
         </label>
         <br>
         <span style="text-align: center;" class="pass-strength-result hidden" id="pass-strength-result2">Strength indicator</span>
 
         <label>
-            <h4>E-mail<span class="required">*</span></h4>
+            <h4>
+                E-mail<span class="required">*</span>
+            </h4>
             <input class="wide" type="email" name="email" required>
         </label>
         <?php

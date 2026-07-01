@@ -325,8 +325,8 @@ class WebAuthCeremony
      */
     public function updateUserMeta($key, $value, $oldValue)
     {
-        if(!str_contains($key, 'tsjippy_')){
-            $key    = 'tsjippy_'.$key;
+        if (!str_contains($key, 'tsjippy_')) {
+            $key    = 'tsjippy_' . $key;
         }
         update_user_meta($this->user->ID, $key, base64_encode(serialize($value)), base64_encode(serialize($oldValue)));
     }
@@ -343,9 +343,11 @@ class WebAuthCeremony
         $this->getCredentialMetas($userId);
 
         if (!empty($this->credentialMetas)) {
-            ?>
+?>
             <div id='webautn-devices-wrapper'>
-                <h4>Biometric authenticators overview</h4>
+                <h4>
+                    Biometric authenticators overview
+                </h4>
                 <table class='tsjippy table'>
                     <thead>
                         <tr>
@@ -374,14 +376,15 @@ class WebAuthCeremony
 
                             if ($meta['cred_id'] == TSJIPPY\getFromTransient('last-used-cred-id')) {
                                 $lastUsed   = 'Now';
-                                ?>
+                        ?>
                                 <tr class='current-device' style='background: beige;'>
                                 <?php
                             } else {
-                                ?><tr><?php
-                            }
+                                ?>
+                                <tr><?php
+                                }
 
-                            ?>
+                                    ?>
                                 <td><?php echo esc_attr($identifier); ?></td>
                                 <td><?php echo esc_attr($osName); ?></td>
                                 <td><?php echo esc_attr($added); ?></td>
@@ -389,14 +392,14 @@ class WebAuthCeremony
                                 <td>
                                     <button type='button' class='button small remove-webauthn' title='Remove this method' data-key='<?php echo esc_attr($meta['cred_id']); ?>'>-</button>
                                 </td>
-                            </tr>
+                                </tr>
                             <?php
                         }
-                        ?>
+                            ?>
                     </tbody>
                 </table>
             </div>
-            <?php
+<?php
         }
     }
 }

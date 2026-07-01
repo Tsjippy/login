@@ -1,6 +1,7 @@
 <?php
 
 namespace TSJIPPY\LOGIN;
+
 use TSJIPPY;
 
 use function TSJIPPY\addElement;
@@ -27,17 +28,17 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     public function settings($parent)
     {
         ob_start();
-        ?>
+?>
         <p>
             You can enable user registration if you want.<br>
             If that's the case people can request an user account.<br>
             Once that account is approved they will be able to login.<br>
         </p>
         <label>
-            <input 
-                type="checkbox" 
-                name="user-registration" 
-                value="enabled" 
+            <input
+                type="checkbox"
+                name="user-registration"
+                value="enabled"
                 <?php if ($this->settings['user-registration'] ?? '') echo 'checked';  ?>>
             Enable user registration
         </label>
@@ -75,11 +76,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
 
         if (empty($menus)) {
-            ?>
+        ?>
             <div class='warning' style='max-width: 500px;'>
                 You do not have any active menu's. Please add one
             </div>
-            <?php
+        <?php
 
             addRawHtml(ob_get_clean(), $parent);
 
@@ -104,7 +105,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
             foreach ($menus as $menu) {
                 $checked    = '';
-                
+
 
                 if (!isset($this->settings['visibilty-login-menu'][$menu->term_id])) {
                     $this->settings['visibilty-login-menu'][$menu->term_id]    = '';
@@ -112,37 +113,37 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
                 $loginMenus = $this->settings['login-menu'] ?? [];
 
-                ?>
+            ?>
                 <tr>
                     <td>
                         <label>
-                            <input type='checkbox' name='login-menu[<?php echo esc_attr($menu->term_id);?>]' value='1' <?php if (isset($loginMenus[$menu->term_id])) echo 'checked';?> >
-                            <?php echo esc_html($menu->name);?>
+                            <input type='checkbox' name='login-menu[<?php echo esc_attr($menu->term_id); ?>]' value='1' <?php if (isset($loginMenus[$menu->term_id])) echo 'checked'; ?>>
+                            <?php echo esc_html($menu->name); ?>
                         </label>
                     </td>
 
                     <td>
-                        
+
                         <label>
-                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id);?>]' value='' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == '') echo 'checked'; ?>>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id); ?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id); ?>]' value='' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == '') echo 'checked'; ?>>
                             Always
                         </label>
                     </td>
                     <td>
                         <label>
-                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id);?>]' value='mobile' <?php  ?>>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id); ?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id); ?>]' value='mobile' <?php  ?>>
                             Mobile only
                         </label>
                     </td>
-                                    
+
                     <td>
                         <label>
-                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id);?>]' value='desktop' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == 'desktop') echo 'checked'; ?>>
-                            Desktop only 
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id); ?>' name='visibilty-login-menu[<?php echo esc_attr($menu->term_id); ?>]' value='desktop' <?php if ($this->settings['visibilty-login-menu'][$menu->term_id] == 'desktop') echo 'checked'; ?>>
+                            Desktop only
                         </label>
                     </td>
                 </tr>
-                <?php
+            <?php
             }
             ?>
         </table>
@@ -153,41 +154,41 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             <?php
             foreach ($menus as $menu) {
                 $logOutMenus    = $this->settings['logout-menu'] ?? [];
-                ?>
+            ?>
                 <tr>
                     <td>
                         <label>
-                            <input type='checkbox' name='logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='1' <?php if (isset($logOutMenus[$menu->term_id])) echo 'checked';?>>
-                            <?php echo esc_html($menu->name);?>
+                            <input type='checkbox' name='logout-menu[<?php echo esc_attr($menu->term_id); ?>]' value='1' <?php if (isset($logOutMenus[$menu->term_id])) echo 'checked'; ?>>
+                            <?php echo esc_html($menu->name); ?>
                         </label>
-                    </td>                            
-                                    
+                    </td>
+
                     <td>
                         <label>
-                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == '') echo 'checked';?>>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id); ?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id); ?>]' value='' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == '') echo 'checked'; ?>>
                             Always
                         </label>
                     </td>
 
                     <td>
                         <label>
-                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='mobile' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'mobile') echo 'checked';?>>
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id); ?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id); ?>]' value='mobile' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'mobile') echo 'checked'; ?>>
                             Mobile only
                         </label>
                     </td>
-                    
+
                     <td>
                         <label>
-                            <input type='radio' id='<?php echo esc_attr($menu->term_id);?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id);?>]' value='desktop' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'desktop') echo 'checked';?>>
-                            Desktop only 
+                            <input type='radio' id='<?php echo esc_attr($menu->term_id); ?>' name='visibilty-logout-menu[<?php echo esc_attr($menu->term_id); ?>]' value='desktop' <?php if ($this->settings['visibilty-logout-menu'][$menu->term_id] == 'desktop') echo 'checked'; ?>>
+                            Desktop only
                         </label>
                     </td>
                 </tr>
-                <?php
+            <?php
             }
-        ?>
+            ?>
         </table>
-        <?php
+    <?php
 
         addRawHtml(ob_get_clean(), $parent);
 
@@ -222,10 +223,12 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         }
 
         ob_start();
-        ?>
+    ?>
         <div id="twofa-email" class="tabcontent <?php echo $tab != 'twofa-email' ? 'hidden' : ''; ?>">
 
-            <h4>E-mail with the two factor login code</h4>
+            <h4>
+                E-mail with the two factor login code
+            </h4>
             <label>Define the e-mail people get when they requested a code for login.</label>
             <?php
             $twoFAEmail    = new TwoFaEmail(wp_get_current_user());
@@ -235,7 +238,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         </div>
 
         <div id="unsafe-login-email" class="tabcontent <?php echo $tab != 'unsafe-login-email' ? 'hidden' : ''; ?>">
-            <h4>Warning e-mail for unsafe login</h4>
+            <h4>
+                Warning e-mail for unsafe login
+            </h4>
             <label>Define the e-mail people get when they login to the website and they have not configured two factor authentication.</label>
             <?php
             $unsafeLogin    = new UnsafeLogin(wp_get_current_user());
@@ -246,7 +251,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
         <div id="twofa-reset-email" class="tabcontent <?php echo $tab != '2fa-reset-email' ? 'hidden' : ''; ?>">
 
-            <h4>Two factor login reset e-mail</h4>
+            <h4>
+                Two factor login reset e-mail
+            </h4>
             <label>Define the e-mail people get when their two factor login got reset by a user manager.</label>
             <?php
             $twoFaReset    = new TwoFaReset(wp_get_current_user());
@@ -256,7 +263,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         </div>
 
         <div id="twofa-confirmation-email" class="tabcontent <?php echo $tab != '2fa-confirmation-email' ? 'hidden' : ''; ?>">
-            <h4>Two factor login confirmation e-mail</h4>
+            <h4>
+                Two factor login confirmation e-mail
+            </h4>
             <label>Define the e-mail people get when they have just enabled email verification.</label>
             <?php
             $emailVerfEnabled    = new EmailVerfEnabled(wp_get_current_user());
@@ -266,7 +275,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         </div>
 
         <div id="pwd-reset-email" class="tabcontent <?php echo $tab != 'pwd-reset-email' ? 'hidden' : ''; ?>">
-            <h4>E-mail to people who requested a password reset</h4>
+            <h4>
+                E-mail to people who requested a password reset
+            </h4>
             <label>Define the e-mail people get when they requested a password reset</label>
             <?php
             $passwordResetMail    = new PasswordResetMail(wp_get_current_user());

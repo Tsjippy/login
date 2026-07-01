@@ -15,7 +15,7 @@ function twoFaSettingsForm($userId = '')
     //we need to approve a qr code login
     // phpcs:ignore
     if (!empty($_GET['token']) && !empty($_GET['key'])) {
-        ?>
+?>
         <div class='loader-wrapper'>
             <div class="loader-image-trigger"></div>
 
@@ -26,7 +26,7 @@ function twoFaSettingsForm($userId = '')
                 Please authenticate to approve the qr code login request
             </p>
         </div>
-        <?php
+    <?php
         wp_enqueue_script('tsjippy_qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login.min.js'), [], PLUGINVERSION, true);
         return ob_get_clean();
     }
@@ -38,7 +38,7 @@ function twoFaSettingsForm($userId = '')
         $userId = get_current_user_id();
     }
 
-    if(empty($userId)){
+    if (empty($userId)) {
         return "<div class='error'>You are not logged in</div>";
     }
 
@@ -56,7 +56,9 @@ function twoFaSettingsForm($userId = '')
     ?>
     <form id="2fa-setup-wrapper">
         <div id='2fa-options-wrapper' style='margin-bottom:20px;'>
-            <h4>Second login factor</h4>
+            <h4>
+                Second login factor
+            </h4>
             <?php
             if (empty($twoFaMethods) || isset($twoFaMethods['webauthn']) && count($twoFaMethods) == 1) {
             ?>
@@ -74,21 +76,21 @@ function twoFaSettingsForm($userId = '')
             }
             ?>
             <label>
-                <input 
-                    type="radio" 
-                    class="twofa-option-checkbox" 
-                    name="2fa-methods[]" 
-                    value="authenticator" 
+                <input
+                    type="radio"
+                    class="twofa-option-checkbox"
+                    name="2fa-methods[]"
+                    value="authenticator"
                     <?php if (isset($twoFaMethods['authenticator'])) echo "checked";  ?>>
                 <span class="option-label">Authenticator app</span>
             </label>
             <br>
             <label>
-                <input 
-                    type="radio" 
-                    class="twofa-option-checkbox" 
-                    name="2fa-methods[]" 
-                    value="email" 
+                <input
+                    type="radio"
+                    class="twofa-option-checkbox"
+                    name="2fa-methods[]"
+                    value="email"
                     <?php if (isset($twoFaMethods['email'])) echo "checked";  ?>>
                 <span class="option-label">E-mail</span>
             </label>
