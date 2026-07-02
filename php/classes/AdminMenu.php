@@ -43,7 +43,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             Enable user registration
         </label>
         <?php
-        if ($this->settings['user-registration']) {
+        if ($this->settings['user-registration'] ?? false) {
             $url    = get_permalink(SETTINGS['register-page'] ?? '');
 
             if ($url) {

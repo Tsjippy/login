@@ -186,6 +186,11 @@ class WebAuthCeremony
         $this->credentials = [];
 
         $userCreds  = get_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred");
+        if(!$userCreds){
+            TSJIPPY\printArray("Invalid user id ".$this->user->ID);
+
+            $userCreds = [];
+        }
         foreach ($userCreds as $userCred) {
             try {
                 $this->credentials[] = unserialize(base64_decode($userCred));
