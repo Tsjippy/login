@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.5.3] - 2026-07-02
+
+
+### Added
 - attribute escaping
 - change password loader
 - activate shared code function
@@ -9,10 +20,6 @@
 ### Changed
 - plugin tested up to 7.0
 - replaced in_array with isset
-
-### Fixed
-
-### Updated
 
 ## [10.5.2] - 2026-06-26
 
