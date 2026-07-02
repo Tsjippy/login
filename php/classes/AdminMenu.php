@@ -92,7 +92,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         Where should the login menu item be added?
         <br>
 
-        <table style="border: none;">
+        <table class='no-border'>
             <?php
 
             if (!isset($this->settings['visibilty-login-menu'])) {
