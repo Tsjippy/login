@@ -267,7 +267,7 @@ function saveTwoFaSettings()
     if (isset($newMethods['authenticator']) && !isset($oldMethods['authenticator'])) {
         $secret     = TSJIPPY\sanitize($_POST['auth-secret']);
         $secretkey  = TSJIPPY\sanitize($_POST['secretkey']);
-        $hash       = get_user_meta($userId, 'tsjippy_2fa_hash', true);
+        $hash       = get_user_meta($userId, '_tsjippy_2fa_hash', true);
 
         $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
 
@@ -284,8 +284,8 @@ function saveTwoFaSettings()
         $last2fa        = 0; // variable will be updated by the verifyCode function
         if ($twofa->verifyCode($secretkey, $secret, 1, null, $last2fa)) {
             //store in usermeta
-            update_user_meta($userId, 'tsjippy_2fa_key', $secretkey);
-            update_user_meta($userId, 'tsjippy_2fa_last', $last2fa);
+            update_user_meta($userId, '_tsjippy_2fa_key', $secretkey);
+            update_user_meta($userId, '_tsjippy_2fa_last', $last2fa);
         } else {
             return new WP_Error('Invalid 2fa code', "Your code is expired");
         }

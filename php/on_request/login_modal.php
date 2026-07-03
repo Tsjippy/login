@@ -60,16 +60,16 @@ loadAssets();
                     TSJIPPY\printArray($message);
                     /** @var \WP_Error $message */
                 ?>
-                    <span class="error">
+                    <div class="error">
                         <?php echo wp_kses_post($message->get_error_message()); ?>
-                    </span>
+                    </div>
                 <?php
                 } elseif (!empty($message)) {
                 ?>
-                    <span class="message">
+                    <div class="message">
                         <?php
                         echo wp_kses_post($message); ?>
-                    </span>
+                    </div>
                 <?php
                 }
                 ?>

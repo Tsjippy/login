@@ -146,11 +146,11 @@ class WebAuthCeremony
             return $this->userEntity;
         }
 
-        $webauthnKey = get_user_meta($this->user->ID, 'tsjippy_2fa_webauthn_key', true);
+        $webauthnKey = get_user_meta($this->user->ID, '_tsjippy_2fa_webauthn_key', true);
 
         if (!$webauthnKey) {
             $webauthnKey = hash("sha256", $this->user->user_login . "-" . $this->user->display_name . "-" . $this->getChallenge(10));
-            update_user_meta($this->user->ID, 'tsjippy_2fa_webauthn_key', $webauthnKey);
+            update_user_meta($this->user->ID, '_tsjippy_2fa_webauthn_key', $webauthnKey);
         }
 
         return $this->userEntity = new PublicKeyCredentialUserEntity(
@@ -185,7 +185,7 @@ class WebAuthCeremony
 
         $this->credentials = [];
 
-        $userCreds  = get_user_meta($this->user->ID, "tsjippy_2fa_webautn_cred");
+        $userCreds  = get_user_meta($this->user->ID, "_tsjippy_2fa_webauthn_cred");
         if(!$userCreds){
             TSJIPPY\printArray("Invalid user id ".$this->user->ID);
 
@@ -236,7 +236,7 @@ class WebAuthCeremony
 
         $this->credentialMetas = [];
 
-        $credMetas  = get_user_meta($userId, "tsjippy_2fa_webautn_cred_meta");
+        $credMetas  = get_user_meta($userId, "_tsjippy_2fa_webauthn_cred_meta");
         foreach ($credMetas as $credMeta) {
             try {
                 $unserialized   = unserialize(base64_decode($credMeta));

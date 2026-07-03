@@ -37,7 +37,7 @@ function setupTimeCode()
     $setupDetails                   = new stdClass();
     $setupDetails->secretKey        = $twofa->createSecret();
 
-    update_user_meta($userId, 'tsjippy_2fa_hash', password_hash($setupDetails->secretKey, PASSWORD_DEFAULT));
+    update_user_meta($userId, '_tsjippy_2fa_hash', password_hash($setupDetails->secretKey, PASSWORD_DEFAULT));
 
     if (!extension_loaded('imagick')) {
         $setupDetails->imageHtml    = "<img src=" . $twofa->getQRCodeImageAsDataUri(TSJIPPY\SITENAME . " (" . get_userdata($userId)->user_login . ")", $setupDetails->secretKey) . " loading='lazy'>";
@@ -186,9 +186,9 @@ function authenticate($user)
         // We have an authenticator app set up and did not supply an e-mail code
         elseif (isset($methods['authenticator']) && empty($_POST['email-code'])) {
             $twofa      = new TwoFactorAuth(new BaconQrCodeProvider());
-            $secretKey  = get_user_meta($user->ID, 'tsjippy_2fa_key', true);
+            $secretKey  = get_user_meta($user->ID, '_tsjippy_2fa_key', true);
             $authcode   = TSJIPPY\sanitize($_POST['authcode']);
-            $last2fa    = get_user_meta($user->ID, 'tsjippy_2fa_last', true);
+            $last2fa    = get_user_meta($user->ID, '_tsjippy_2fa_last', true);
             $timeslice  = 0; // will be filled by reference
 
             if (!is_numeric($authcode)) {
@@ -205,7 +205,7 @@ function authenticate($user)
                     );
                 } else {
                     //store last time
-                    update_user_meta($user->ID, 'tsjippy_2fa_last', $last2fa);
+                    update_user_meta($user->ID, '_tsjippy_2fa_last', $last2fa);
                 }
             } else {
                 $user = new \WP_Error(
