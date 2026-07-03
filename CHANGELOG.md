@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- add default pages when not present
 
 ### Fixed
 
