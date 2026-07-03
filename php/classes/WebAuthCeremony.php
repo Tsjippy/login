@@ -69,7 +69,6 @@ class WebAuthCeremony
             return $this->rpEntity;
         }
 
-        $logo       = null;
         $path       = get_attached_file(get_option('site_icon'));
         $type       = pathinfo($path, PATHINFO_EXTENSION);
         if (!empty($path)) {

@@ -148,11 +148,11 @@ add_filter('display_post_states', __NAMESPACE__ . '\postStates', 10, 2);
 function postStates($states, $post)
 {
 
-    if ($post->ID == (SETTINGS['password-reset-page'] ?? false)) {
+    if ($post->ID == (SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page'))) {
         $states[] = __('Password reset page', '%TEXTDOMAIN%');
-    } elseif ($post->ID == (SETTINGS['register-page'] ?? false)) {
+    } elseif ($post->ID == (SETTINGS['register-page'] ?? createDefaultPages('register-page'))) {
         $states[] = __('User register page', '%TEXTDOMAIN%');
-    } elseif ($post->ID == (SETTINGS['2fa-page'] ?? false)) {
+    } elseif ($post->ID == (SETTINGS['2fa-page'] ?? createDefaultPages('2fa-page'))) {
         $states[] = __('Two Factor Setup page', '%TEXTDOMAIN%');
     }
 
@@ -163,7 +163,7 @@ function postStates($states, $post)
  * Tweaks the lost password url to point to our custom password reset page if set
  */
 add_filter('lostpassword_url', function ($lostpasswordUrl) {
-    $pageUrl    = get_permalink(SETTINGS['password-reset-page'] ?? '');
+    $pageUrl    = get_permalink(SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page'));
     if ($pageUrl) {
         return $pageUrl;
     }

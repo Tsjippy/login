@@ -22,7 +22,7 @@ function sendPasswordResetMessage($user)
         return $key;
     }
 
-    $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
+    $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page'));
     $url         = "$pageurl?key=$key&login=$user->user_login";
 
     //Send e-mail
@@ -39,7 +39,7 @@ function sendPasswordResetMessage($user)
 add_filter('retrieve_password_message', __NAMESPACE__ . '\passwordMessage', 10, 4);
 function passwordMessage($message, $key, $userLogin, $user)
 {
-    $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? [][0]);
+    $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page'));
 
     if (!$pageurl) {
         return $message;

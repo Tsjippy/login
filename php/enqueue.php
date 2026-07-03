@@ -28,15 +28,15 @@ function loadAssets()
     wp_register_script('tsjippy_2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa.min.js'), array('tsjippy_table_script'), PLUGINVERSION, true);
 
     if (is_numeric(get_the_ID())) {
-        $passwordResetPage  = SETTINGS['password-reset-page'] ?? false;
-        $registerPage       = SETTINGS['register-page'] ?? false;
+        $passwordResetPage  = SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page');
+        $registerPage       = SETTINGS['register-page'] ?? createDefaultPages('register-page');
         if (get_the_ID() == $passwordResetPage || get_the_ID() == $registerPage) {
             wp_enqueue_style('tsjippy_pw_reset_style');
 
             wp_enqueue_script('tsjippy_password_strength_script');
         }
 
-        if (get_the_ID() == (SETTINGS['2fa-page'] ?? false)) {
+        if (get_the_ID() == (SETTINGS['2fa-page'] ?? createDefaultPages('2fa-page'))) {
             wp_enqueue_script('tsjippy_2fa_script');
         }
     }

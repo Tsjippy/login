@@ -102,7 +102,7 @@ function bioRestApi()
 
                 $isPassKeyLogin = false;
                 // phpcs:ignore
-                if (empty($_POST['username'])) {
+                if (empty($_POST['username']) || empty($_POST['password'])) {
                     $isPassKeyLogin = true;
                 }
 

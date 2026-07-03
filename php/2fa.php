@@ -259,7 +259,7 @@ function redirectTo2fa()
             )
         )
     ) {
-        $url        = get_permalink(SETTINGS['2fa-page'] ?? '');
+        $url        = get_permalink(SETTINGS['2fa-page'] ?? createDefaultPages('2fa-page'));
         if (!$url) {
             return;
         }

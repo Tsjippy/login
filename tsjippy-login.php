@@ -43,19 +43,7 @@ register_activation_hook(__FILE__, function () {
         require_once(__DIR__  . '/shared-functionality/loader.php');
     }
 
-    $publicCat    = get_cat_ID('Public');
-
-    $settings    = SETTINGS;
-
-    // Create password reset page
-    $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[tsjippy_change_password]', ['post_category' => [$publicCat]]);
-
-    // Registration page
-    $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[tsjippy_request_account]', ['post_category' => [$publicCat]]);
-    // Add 2fa page
-    $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[tsjippy_twofa_setup]');
-
-    update_option('tsjippy_login_settings', $settings);
+    createDefaultPages();
 
     if(function_exists('TSJIPPY\activate')){
         \TSJIPPY\activate();
@@ -84,3 +72,38 @@ register_deactivation_hook(__FILE__, function () {
         wp_delete_post($page, true);
     }
 });
+
+/**
+ * Creates default pages if needed
+ * 
+ * @param string    $returnKey  The key to return a value for, default empty
+ */
+function createDefaultPages($returnKey=''){
+    $publicCat    = get_cat_ID('Public');
+
+    /**
+     *  Default pages
+     */
+    $settings    = SETTINGS;
+
+    // Create password reset page
+    if(!isset($settings['password-reset-page'])){
+        $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[tsjippy_change_password]', ['post_category' => [$publicCat]]);
+    }
+
+    // Registration page
+    if(!isset($settings['register-page'])){
+        $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[tsjippy_request_account]', ['post_category' => [$publicCat]]);
+    }
+
+    // Add 2fa page
+    if(!isset($settings['2fa-page'])){
+        $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[tsjippy_twofa_setup]');
+    }
+
+    update_option('tsjippy_login_settings', $settings);
+
+    if(!empty($returnKey) && isset($settings[$returnKey])){
+        return $settings[$returnKey];
+    }
+}
