@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- store 2fa meta as private
 
 ### Fixed
 
