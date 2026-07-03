@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- store 2fa meta as private
 
 ### Fixed
 
 ### Updated
+
+## [10.5.5] - 2026-07-03
+
+
+### Changed
+- store 2fa meta as private
 
 ## [10.5.4] - 2026-07-02
 
