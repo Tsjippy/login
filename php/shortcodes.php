@@ -90,11 +90,11 @@ function changePassword()
 
     if (is_wp_error($user) || empty($user)) {
         if (!is_user_logged_in() && !empty($user)) {
-            if ($user->get_error_message() == "Invalid key. ") {
-                return "This link has expired, please request a new password using the login menu. ";
+            if ($user->get_error_message() == "Invalid key.") {
+                return "<div class='error'>This link has expired, please request a new password using the login menu.</div>";
             }
 
-            return $user->get_error_message() . "<br>Please try again. ";
+            return "<div class='error'>".$user->get_error_message() . "<br>Please try again.</div>";
         }
 
 
