@@ -81,6 +81,9 @@ class RequestCeremony extends WebAuthCeremony
         return json_decode($jsonObject);
     }
 
+    /**
+     * Prepares for passkey login
+     */
     public function passkeyLogin()
     {
         // get all passkey login users
@@ -110,6 +113,12 @@ class RequestCeremony extends WebAuthCeremony
         TSJIPPY\storeInTransient("allow_passwordless_login", true, 5 * MINUTE_IN_SECONDS);
     }
 
+    /**
+     * Veriefies a webauthn response
+     * 
+     * @param   $response
+     * @param   bool    $isPassKeyLogin Wheter this is a passkey login
+     */
     public function verifyResponse($response, $isPassKeyLogin)
     {
         $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
