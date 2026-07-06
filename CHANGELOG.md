@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- block namespace
 
 ### Fixed
 
 ### Updated
+
+## [10.5.7] - 2026-07-06
+
+
+### Changed
+- block namespace
 
 ## [10.5.6] - 2026-07-03
 
