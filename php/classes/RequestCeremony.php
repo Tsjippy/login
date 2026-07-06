@@ -33,6 +33,8 @@ class RequestCeremony extends WebAuthCeremony
 
     /**
      * Creates and stores
+     * 
+     * @param   array   $request The sanitized request data
      */
     public function createOptions($request)
     {
