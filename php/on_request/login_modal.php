@@ -107,7 +107,7 @@ loadAssets();
                     </div>
                     <?php do_action('login_form'); ?>
 
-                    <button class='sim small button show-login-qr' type='button'>Login using QR code</button>
+                    <button class='tsjippy small button show-login-qr' type='button'>Login using QR code</button>
                     <button type='button' id='check-cred' class='button'>Login</button>
                 </div>
 
