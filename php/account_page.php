@@ -13,7 +13,6 @@ function userInfoPage($html, $showCurrentUserData, $user)
 {
     /*
         Two FA Info
-
     */
     if ($showCurrentUserData) {
         //Add tab button

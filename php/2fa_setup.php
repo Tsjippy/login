@@ -8,14 +8,14 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_shortcode('tsjippy_twofa_setup', __NAMESPACE__ . '\twoFaSettingsForm');
+//add_shortcode('tsjippy_twofa_setup', __NAMESPACE__ . '\twoFaSettingsForm');
 function twoFaSettingsForm($userId = '')
 {
     ob_start();
     //we need to approve a qr code login
     // phpcs:ignore
     if (!empty($_GET['token']) && !empty($_GET['key'])) {
-?>
+        ?>
         <div class='loader-wrapper'>
             <div class="loader-image-trigger"></div>
 
@@ -26,7 +26,7 @@ function twoFaSettingsForm($userId = '')
                 Please authenticate to approve the qr code login request
             </p>
         </div>
-    <?php
+        <?php
         wp_enqueue_script('tsjippy_qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login.min.js'), [], PLUGINVERSION, true);
         return ob_get_clean();
     }
