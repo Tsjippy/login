@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- block icon
 
 ### Changed
-- removed shortcodes as they are replaced by blocks
 
 ### Fixed
 
 ### Updated
+
+## [10.5.8] - 2026-07-10
+
+
+### Added
+- block icon
+
+### Changed
+- removed shortcodes as they are replaced by blocks
 
 ## [10.5.7] - 2026-07-06
 
