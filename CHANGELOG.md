@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- block icon
 
 ### Changed
 - removed shortcodes as they are replaced by blocks
