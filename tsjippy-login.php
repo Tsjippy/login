@@ -88,17 +88,17 @@ function createDefaultPages($returnKey=''){
 
     // Create password reset page
     if(!isset($settings['password-reset-page'])){
-        $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '[tsjippy_change_password]', ['post_category' => [$publicCat]]);
+        $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '<!-- wp:tsjippy-login/change-password /-->', ['post_category' => [$publicCat]]);
     }
 
     // Registration page
     if(!isset($settings['register-page'])){
-        $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '[tsjippy_request_account]', ['post_category' => [$publicCat]]);
+        $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '<!-- wp:tsjippy-login/request-user-account /-->', ['post_category' => [$publicCat]]);
     }
 
     // Add 2fa page
     if(!isset($settings['2fa-page'])){
-        $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '[tsjippy_twofa_setup]');
+        $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '<!-- wp:tsjippy-login/twofa-setup /-->');
     }
 
     update_option('tsjippy_login_settings', $settings);
