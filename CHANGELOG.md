@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- default page content
 
 ### Fixed
 
 ### Updated
+
+## [10.6.0] - 2026-07-10
+
+
+### Changed
+- default page content
 
 ## [10.5.9] - 2026-07-10
 
