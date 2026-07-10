@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- default page content
 
 ### Fixed
 
