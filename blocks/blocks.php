@@ -12,7 +12,7 @@ function initBlocks()
     register_block_type(
         'tsjippy-login/twofa-setup',
         array(
-            'title'           => __( 'Two Factor Setup', 'tsjippy' ),
+            'title'           => __( 'Two Factor Setup', '%TEXTDOMAIN%' ),
             'render_callback' => __NAMESPACE__.'\twoFaSettingsForm',
             'supports'        => array(
                 'autoRegister' => true,
@@ -24,7 +24,7 @@ function initBlocks()
     register_block_type(
         'tsjippy-login/change-password',
         array(
-            'title'           => __( 'Change Password Form', 'tsjippy' ),
+            'title'           => __( 'Change Password Form', '%TEXTDOMAIN%' ),
             'render_callback' => __NAMESPACE__.'\changePassword',
             'supports'        => array(
                 'autoRegister' => true,
@@ -36,7 +36,7 @@ function initBlocks()
     register_block_type(
         'tsjippy-login/request-user-account',
         array(
-            'title'           => __( 'Request User Account Form', 'tsjippy' ),
+            'title'           => __( 'Request User Account Form', '%TEXTDOMAIN%' ),
             'render_callback' => __NAMESPACE__.'\requestAccount',
             'supports'        => array(
                 'autoRegister' => true,
@@ -48,7 +48,7 @@ function initBlocks()
 	register_block_type(
         'tsjippy-login/login-count',
         array(
-            'title'           => __( 'User Login Count', 'tsjippy' ),
+            'title'           => __( 'User Login Count', '%TEXTDOMAIN%' ),
             'render_callback' => function(){
                 return "<span>".loginCount()."</span>";
             },
