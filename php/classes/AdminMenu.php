@@ -28,13 +28,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     /**
      * Add the settings page to the admin menu
      *
-     * @param string $parent The parent menu slug
+     * @param \DOMElement $parent The parent menu slug
+     * 
      * @return bool True if the settings page was added, false otherwise
      */
     public function settings($parent)
     {
         ob_start();
-?>
+        ?>
         <p>
             You can enable user registration if you want.<br>
             If that's the case people can request an user account.<br>
