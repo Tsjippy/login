@@ -143,7 +143,7 @@ function reset2fa($userId)
      * Flush db cache
      */
     if(wp_cache_supports( 'flush_group' )){
-        wp_cache_flush_group('login');
+        wp_cache_flush_group('tsjippy_login');
     }else{
         wp_cache_flush();
     }
