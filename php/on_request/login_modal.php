@@ -92,7 +92,7 @@ loadAssets();
 
                     <div class="password">
                         <label style='width:100%'>
-                            Password
+                            Password<br>
                             <input id="password" type="password" class='wide' name="password" autocomplete="password webauthn">
                         </label>
                         <button type="button" class='toggle-pwd-view' data-toggle="0" title="Show password">
@@ -113,14 +113,14 @@ loadAssets();
 
                 <div id='authenticator-wrapper' class='authenticator-wrapper hidden'>
                     <label>
-                        Please enter the two-factor authentication (2FA) verification code below to login.
+                        Please enter the two-factor authentication (2FA) verification code below to login.<br>
                         <input type="number" name="authcode" class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
 
                 <div id='email-wrapper' class='authenticator-wrapper hidden'>
                     <label>
-                        Please enter the code sent to your e-mail below to login.
+                        Please enter the code sent to your e-mail below to login.<br>
                         <input type="number" name="email-code" class='wide' size="20" pattern="[0-9]*" required>
                     </label>
                 </div>
