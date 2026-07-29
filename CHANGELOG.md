@@ -7,6 +7,7 @@
 - prefixed cache group
 
 ### Fixed
+- new lines
 
 ### Updated
 
