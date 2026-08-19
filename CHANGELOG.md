@@ -8,6 +8,7 @@
 
 ### Fixed
 - new lines
+- login modal layout
 
 ### Updated
 
