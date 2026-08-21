@@ -9,6 +9,7 @@
 ### Fixed
 - new lines
 - login modal layout
+- password reset when not logged
 
 ### Updated
 
