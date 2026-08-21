@@ -108,9 +108,7 @@ function loginRestApi()
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\processPasswordUpdate',
-            'permission_callback'     => function () {
-                return current_user_can('read');        // Allow access to logged in users, we
-            },
+            'permission_callback'     => '__return_true',
             'args'                    => array(
                 'user-id'        => array(
                     'required'    => true,
