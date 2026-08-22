@@ -4,14 +4,21 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.7.1] - 2026-08-22
+
+
+### Changed
 - prefixed cache group
 
 ### Fixed
 - new lines
 - login modal layout
 - password reset when not logged
-
-### Updated
 
 ## [10.7.0] - 2026-07-15
 
