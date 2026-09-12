@@ -22,8 +22,11 @@ if (! defined('ABSPATH')) {
  */
 class RequestCeremony extends WebAuthCeremony
 {
-    public $ceremonyRequestManager;
+    public object $ceremonyRequestManager;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
