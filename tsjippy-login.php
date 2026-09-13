@@ -10,9 +10,9 @@ namespace TSJIPPY\LOGIN;
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
  * Requires PHP:         8.3
- * Plugin URI:            https://github.com/Tsjippy/login
+ * Plugin URI:           https://github.com/Tsjippy/login
  * Tested:               7.1
- * TextDomain:            tsjippy
+ * TextDomain:           tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -24,7 +24,7 @@ if (! defined('ABSPATH')) {
 }
 
 // Load shared code
-if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+if (file_exists(__DIR__  . '/shared-functionality/loader.php')) {
     require_once(__DIR__  . '/shared-functionality/loader.php');
 }
 
@@ -38,13 +38,13 @@ define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_login_settings', []));
 // run right before activation
 register_activation_hook(__FILE__, function () {
     // Load shared code
-    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+    if (file_exists(__DIR__  . '/shared-functionality/loader.php')) {
         require_once(__DIR__  . '/shared-functionality/loader.php');
     }
 
     createDefaultPages();
 
-    if(function_exists('TSJIPPY\activate')){
+    if (function_exists('TSJIPPY\activate')) {
         \TSJIPPY\activate();
     }
 });
@@ -77,7 +77,8 @@ register_deactivation_hook(__FILE__, function () {
  * 
  * @param string    $returnKey  The key to return a value for, default empty
  */
-function createDefaultPages($returnKey=''){
+function createDefaultPages($returnKey = '')
+{
     $publicCat    = get_cat_ID('Public');
 
     /**
@@ -86,23 +87,23 @@ function createDefaultPages($returnKey=''){
     $settings    = SETTINGS;
 
     // Create password reset page
-    if(!isset($settings['password-reset-page'])){
+    if (!isset($settings['password-reset-page'])) {
         $settings['password-reset-page'] = \TSJIPPY\ADMIN\createDefaultPage('Change password', '<!-- wp:tsjippy-login/change-password /-->', ['post_category' => [$publicCat]]);
     }
 
     // Registration page
-    if(!isset($settings['register-page'])){
+    if (!isset($settings['register-page'])) {
         $settings['register-page']       = \TSJIPPY\ADMIN\createDefaultPage('Request user account', '<!-- wp:tsjippy-login/request-user-account /-->', ['post_category' => [$publicCat]]);
     }
 
     // Add 2fa page
-    if(!isset($settings['2fa-page'])){
+    if (!isset($settings['2fa-page'])) {
         $settings['2fa-page']            = \TSJIPPY\ADMIN\createDefaultPage('Two Factor Authentication', '<!-- wp:tsjippy-login/twofa-setup /-->');
     }
 
     update_option('tsjippy_login_settings', $settings);
 
-    if(!empty($returnKey) && isset($settings[$returnKey])){
+    if (!empty($returnKey) && isset($settings[$returnKey])) {
         return $settings[$returnKey];
     }
 }
