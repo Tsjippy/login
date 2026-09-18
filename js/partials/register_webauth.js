@@ -9,7 +9,7 @@ import { showMessage, showStatusMessage } from "./shared.js";
 
 import{
   fetchRestApi
-} from "../../tsjippy-forms/js/form_submit_functions.js";
+} from "../../../tsjippy-forms/js/form_submit_functions.js";
 
 
 export async function registerWebAuthn() {
