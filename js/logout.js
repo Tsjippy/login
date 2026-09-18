@@ -1,5 +1,10 @@
 import { closeMobileMenu } from "./partials/shared.js";
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 console.log("logout.js loaded");
 
 //Logout user
@@ -28,7 +33,7 @@ async function logout(event) {
 
     var formData = new FormData();
 
-    var response = await FormSubmit.fetchRestApi("login/logout", formData);
+    var response = await fetchRestApi("login/logout", formData);
 
     if (response) {
       Main.displayMessage(response);

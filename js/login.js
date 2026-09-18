@@ -5,6 +5,11 @@ import {
   togglePassworView,
 } from "./partials/shared.js";
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 import { showLoginQrCode, hideQrCode } from "./partials/qr_login.js";
 
 import {
@@ -206,7 +211,7 @@ const login = class {
 
     let formData = new FormData(this.form);
 
-    let response = await FormSubmit.fetchRestApi("login/check-cred", formData);
+    let response = await fetchRestApi("login/check-cred", formData);
 
     if (response) {
       if (response && response != false) {
@@ -282,7 +287,7 @@ const login = class {
 
     await Main.waitForInternet();
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/request_login",
       formData,
     );
@@ -376,7 +381,7 @@ const login = class {
     let formData = new FormData();
     formData.append("username", this.username);
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/request_email_code",
       formData,
       false,
@@ -443,7 +448,7 @@ const login = class {
     let formData = new FormData(form);
     formData.append("username", this.username);
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/request_pwd_reset",
       formData,
     );
@@ -473,7 +478,7 @@ const login = class {
 
     let formData = new FormData(form);
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/request_user_account",
       formData,
     );

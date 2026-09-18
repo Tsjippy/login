@@ -1,5 +1,10 @@
 import { showMessage } from "./shared.js";
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 let intervalId;
 let checkCount = 5;
 
@@ -52,7 +57,7 @@ async function refreshQrCode() {
     }
 
     // Use AJAX to get the qr code
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/get_login_qr_code",
       formData,
     );
@@ -84,7 +89,7 @@ async function refreshQrCode() {
     formData.append("token", qrCodeImage.dataset.token);
     formData.append("key", qrCodeImage.dataset.key);
     formData.append("old-token", qrCodeImage.dataset.oldtoken);
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/qr_code_scanned",
       formData,
     );

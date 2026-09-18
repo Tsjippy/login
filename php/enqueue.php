@@ -16,16 +16,16 @@ function loadAssets()
         wp_register_style('tsjippy_login_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/login.min.css'), array(), PLUGINVERSION);
         wp_enqueue_style('tsjippy_login_style');
 
-        wp_enqueue_script('tsjippy_login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login.min.js'), array('tsjippy_script', 'tsjippy_purify', 'tsjippy_formsubmit_script'), PLUGINVERSION, true);
+        wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login.min.js'), array('@tsjippy/main', '@tsjippy/purify', '@tsjippy/formsubmit_script'), PLUGINVERSION);
     } else {
-        wp_enqueue_script('tsjippy_logout_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/logout.min.js'), array('tsjippy_script', 'tsjippy_formsubmit_script'), PLUGINVERSION, true);
+        wp_enqueue_script_module('@tsjippy/logout_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/logout.min.js'), array('@tsjippy/main', '@tsjippy/formsubmit_script'), PLUGINVERSION);
     }
 
     wp_register_style('tsjippy_pw_reset_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/pw_reset.min.css'), array(), PLUGINVERSION);
 
-    wp_register_script('tsjippy_password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength.min.js'), array('password-strength-meter'), PLUGINVERSION, true);
+    wp_register_script_module('@tsjippy/password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength.min.js'), array(), PLUGINVERSION);
 
-    wp_register_script('tsjippy_2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa.min.js'), array('tsjippy_table_script'), PLUGINVERSION, true);
+    wp_register_script_module('@tsjippy/2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa.min.js'), array('@tsjippy/table_script'), PLUGINVERSION);
 
     if (is_numeric(get_the_ID())) {
         $passwordResetPage  = SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page');
@@ -33,11 +33,11 @@ function loadAssets()
         if (get_the_ID() == $passwordResetPage || get_the_ID() == $registerPage) {
             wp_enqueue_style('tsjippy_pw_reset_style');
 
-            wp_enqueue_script('tsjippy_password_strength_script');
+            wp_enqueue_script_module('@tsjippy/password_strength_script');
         }
 
         if (get_the_ID() == (SETTINGS['2fa-page'] ?? createDefaultPages('2fa-page'))) {
-            wp_enqueue_script('tsjippy_2fa_script');
+            wp_enqueue_script_module('@tsjippy/2fa_script');
         }
     }
 }

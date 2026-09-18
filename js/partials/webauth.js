@@ -1,6 +1,17 @@
-import { startAuthentication, WebAuthnError } from "@simplewebauthn/browser";
+import { 
+  startAuthentication, 
+  WebAuthnError 
+} from "@simplewebauthn/browser";
 
-import { showMessage, showStatusMessage } from "./shared.js";
+import { 
+  showMessage, 
+  showStatusMessage 
+} from "./shared.js";
+
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
 
 window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
   (result) => {
@@ -32,7 +43,7 @@ export async function webAuthVerification(
       formData.append("username", username);
     }
 
-    const optionsJSON = await FormSubmit.fetchRestApi(
+    const optionsJSON = await fetchRestApi(
       "login/auth_start",
       formData,
     );
@@ -67,7 +78,7 @@ export async function webAuthVerification(
       btoa(JSON.stringify(assertionResponse)),
     );
 
-    let response = await FormSubmit.fetchRestApi("login/auth_finish", formData);
+    let response = await fetchRestApi("login/auth_finish", formData);
     if (!response || response.verified) {
       throw new Error("Passkey Verification failed");
     }

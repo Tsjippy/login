@@ -1,5 +1,10 @@
 console.log("2fa.js loaded");
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 async function saveTwofaSettings(target) {
   let form = target.closest("form");
 
@@ -18,7 +23,7 @@ async function saveTwofaSettings(target) {
 
     let loader  = Main.showLoader(target, false, 50, 'Please Wait...', false, true);
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "login/save_2fa_settings",
       formData,
     );
@@ -80,7 +85,7 @@ async function removeWebAuthenticator(target) {
 
   Main.showLoader(target, true);
 
-  let response = await FormSubmit.fetchRestApi(
+  let response = await fetchRestApi(
     "login/remove_web_authenticator",
     formData,
   );
@@ -107,7 +112,7 @@ async function sendValidationEmail(target) {
   let formData = new FormData();
   formData.append("username", username);
 
-  let response = await FormSubmit.fetchRestApi(
+  let response = await fetchRestApi(
     "login/request_email_code",
     formData,
   );

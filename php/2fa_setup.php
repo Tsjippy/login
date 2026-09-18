@@ -27,12 +27,12 @@ function twoFaSettingsForm($userId = '')
             </p>
         </div>
         <?php
-        wp_enqueue_script('tsjippy_qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login.min.js'), [], PLUGINVERSION, true);
+        wp_enqueue_script_module('@tsjippy/qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login.min.js'), [], PLUGINVERSION);
         return ob_get_clean();
     }
 
     //Load js
-    wp_enqueue_script('tsjippy_2fa_script');
+    wp_enqueue_script_module('@tsjippy/2fa_script');
 
     if (!is_numeric($userId)) {
         $userId = get_current_user_id();

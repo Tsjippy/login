@@ -21,7 +21,7 @@ function passwordResetForm($user)
     wp_enqueue_style('tsjippy_pw_reset_style');
 
     //Load js
-    wp_enqueue_script('tsjippy_password_strength_script');
+    wp_enqueue_script_module('@tsjippy/password_strength_script');
 
     if (get_current_user_id() == $user->ID || !is_user_logged_in()) {
         $message         = "Change your password using the fields below.<br>";

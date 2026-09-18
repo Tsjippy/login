@@ -7,6 +7,11 @@ import DeviceDetector from "device-detector-js";
 
 import { showMessage, showStatusMessage } from "./shared.js";
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 export async function registerWebAuthn() {
   if (window.webauth_register == undefined) {
     window.webauth_register = "running";
@@ -25,7 +30,7 @@ export async function registerWebAuthn() {
   showStatusMessage("Preparing your Passkey...");
 
   // Get registration options from the endpoint
-  const optionsJSON = await FormSubmit.fetchRestApi(
+  const optionsJSON = await fetchRestApi(
     "login/fingerprint_options",
   );
 
@@ -66,7 +71,7 @@ export async function registerWebAuthn() {
   formData.append("identifier", identifier);
   formData.append("publicKeyCredential", btoa(JSON.stringify(attResp)));
 
-  let response = await FormSubmit.fetchRestApi(
+  let response = await fetchRestApi(
     "login/store_fingerprint",
     formData,
   );

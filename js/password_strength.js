@@ -1,5 +1,10 @@
 import { togglePassworView } from "./partials/shared.js";
 
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 console.log("Password strength.js loaded");
 
 function checkPassStrength() {
@@ -88,7 +93,7 @@ async function submitPasswordChange(event) {
 
   let formData = new FormData(form);
 
-  let response = await FormSubmit.fetchRestApi(
+  let response = await fetchRestApi(
     "login/update_password",
     formData,
   );
