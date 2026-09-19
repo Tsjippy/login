@@ -39,7 +39,7 @@ async function logout(event) {
       Main.displayMessage(response);
 
       //redirect to homepage
-      location.href = tsjippy.baseUrl;
+      location.href = location.href;
     }
   }
 }

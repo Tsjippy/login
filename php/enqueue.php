@@ -17,6 +17,13 @@ function loadAssets()
         wp_enqueue_style('tsjippy_login_style');
 
         wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login.min.js'), array('@tsjippy/main', '@tsjippy/purify', '@tsjippy/formsubmit_script'), PLUGINVERSION);
+
+        add_filter( 'script_module_data_@tsjippy/login_script', function($data){
+            $data['restNonce'] = wp_create_nonce('wp_rest');
+            $data['userId']    = get_current_user_id();
+
+            return $data; 
+        } );
     } else {
         wp_enqueue_script_module('@tsjippy/logout_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/logout.min.js'), array('@tsjippy/main', '@tsjippy/formsubmit_script'), PLUGINVERSION);
     }

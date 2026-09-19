@@ -101,16 +101,21 @@ const login = class {
   }
 
   init() {
-    this.form = document.getElementById("loginform");
-    this.msgScreen = document.getElementById("message-wrapper");
-    this.creds = document.getElementById("credentials-wrapper");
-    this.twofa = document.getElementById("authenticator-wrapper");
-    this.email = document.getElementById("email-wrapper");
-    this.login = document.getElementById("login-button-wrapper");
-    this.passwordReset = document.getElementById("password-reset-form");
-    this.username = "";
+    this.form           = document.getElementById("loginform");
+    this.msgScreen      = document.getElementById("message-wrapper");
+    this.creds          = document.getElementById("credentials-wrapper");
+    this.twofa          = document.getElementById("authenticator-wrapper");
+    this.email          = document.getElementById("email-wrapper");
+    this.login          = document.getElementById("login-button-wrapper");
+    this.passwordReset  = document.getElementById("password-reset-form");
+    this.username       = ""
+    this.curScreen      = this.creds;
 
-    this.curScreen = this.creds;
+    this.data           = JSON.parse(
+      document.getElementById(
+          'wp-script-module-data-@tsjippy/statistics_script'
+      ).textContent
+    );
 
     if (
       this.msgScreen != null &&
@@ -323,8 +328,28 @@ const login = class {
         .forEach((el) => el.remove());
     } else {
       // Update the tsjippy variable with new values
-      tsjippy.restNonce = response.nonce;
-      tsjippy.userId = response.id;
+      this.data.restNonce = response.nonce;
+      this.data.userId = response.id;
+
+      document
+          .querySelectorAll('script[type="application/json"]')
+          .forEach(script => {
+              try {
+                  const data = JSON.parse(script.textContent);
+
+                  if ('restNonce' in data) {
+                      data.restNonce = response.nonce;
+                      script.textContent = JSON.stringify(data);
+                  }
+
+                  if ('userId' in data) {
+                      data.userId = response.id;
+                      script.textContent = JSON.stringify(data);
+                  }
+              } catch (e) {
+                  // Not valid JSON, skip
+              }
+          });
 
       // first register a webauthn if needed
       if (createWebAuthn) {
