@@ -4,6 +4,17 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+
+import { 
+  isMobileDevice 
+} from "../../tsjippy-shared-functionality/js/partials/mobile.js";
 
 async function saveTwofaSettings(target) {
   let form = target.closest("form");
@@ -21,7 +32,7 @@ async function saveTwofaSettings(target) {
 
     let orgButtonText = target.innerHTML;
 
-    let loader  = Main.showLoader(target, false, 50, 'Please Wait...', false, true);
+    let loader  = showLoader(target, false, 50, 'Please Wait...', false, true);
 
     let response = await fetchRestApi(
       "login/save_2fa_settings",
@@ -33,7 +44,7 @@ async function saveTwofaSettings(target) {
         .querySelectorAll('[id^="setup-"]:not(.hidden)')
         .forEach((el) => el.classList.add("hidden"));
 
-      Main.displayMessage(response);
+      displayMessage(response);
 
       //Show submit button
       target
@@ -41,7 +52,7 @@ async function saveTwofaSettings(target) {
         .querySelector(".form-submit")
         .classList.add("hidden");
     }else{
-      Main.displayMessage("Invalid code supplied, try again", "error");
+      displayMessage("Invalid code supplied, try again", "error");
       target.innerHTML  = orgButtonText;
     }
   }
@@ -57,7 +68,7 @@ function showTwofaSetup(target) {
   var wrapper = document.getElementById("setup-" + target.value);
   wrapper.classList.remove("hidden");
 
-  if (Main.isMobileDevice()) {
+  if (isMobileDevice()) {
     wrapper
       .querySelectorAll(".mobile.hidden")
       .forEach((el) => el.classList.remove("hidden"));
@@ -83,7 +94,7 @@ async function removeWebAuthenticator(target) {
   let formData = new FormData();
   formData.append("key", target.dataset.key);
 
-  Main.showLoader(target, true);
+  showLoader(target, true);
 
   let response = await fetchRestApi(
     "login/remove_web_authenticator",
@@ -97,13 +108,13 @@ async function removeWebAuthenticator(target) {
       row.remove();
     }
 
-    Main.displayMessage(response);
+    displayMessage(response);
   }
 }
 
 async function sendValidationEmail(target) {
   // Request email code for 2fa login setup
-  let loader = Main.showLoader(target, false, 50, "", true);
+  let loader = showLoader(target, false, 50, "", true);
 
   document.getElementById("email-message").innerHTML =
     `Sending e-mail... ${loader}`;

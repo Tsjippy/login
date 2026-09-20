@@ -4,6 +4,10 @@ import{
   fetchRestApi
 } from "../../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../../tsjippy-shared-functionality/js/partials/show_loader.js";
+
 
 let intervalId;
 let checkCount = 5;
@@ -14,7 +18,7 @@ export function showLoginQrCode() {
 
   showMessage("Fetching QR code...");
 
-  Main.showLoader(document.getElementById(`qrcode-wrapper`).firstChild);
+  showLoader(document.getElementById(`qrcode-wrapper`).firstChild);
 
   // get the QR code
   refreshQrCode();
@@ -28,7 +32,7 @@ function login(response) {
 
   showMessage("Succesfully logged in, redirecting...");
 
-  Main.showLoader(document.getElementById(`qrcode-wrapper`));
+  showLoader(document.getElementById(`qrcode-wrapper`));
 
   if (!response.startsWith("http")) {
     location.reload();

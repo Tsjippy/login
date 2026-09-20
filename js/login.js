@@ -9,8 +9,18 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
 
-import { showLoginQrCode, hideQrCode } from "./partials/qr_login.js";
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+
+import { 
+  showLoginQrCode, 
+  hideQrCode 
+} from "./partials/qr_login.js";
 
 import {
   checkWebauthnAvailable,
@@ -20,6 +30,10 @@ import {
 } from "./partials/webauth.js";
 
 import { registerWebAuthn } from "./partials/register_webauth.js";
+
+import { 
+  waitForInternet 
+} from "../../tsjippy-shared-functionality/js/partials/internet_connection.js";
 
 //Add an event listener to the login or register button
 console.log("Login.js loaded");
@@ -121,7 +135,7 @@ const login = class {
       this.msgScreen != null &&
       this.msgScreen.querySelector(".loader") == null
     ) {
-      Main.showLoader(
+      showLoader(
         this.msgScreen.querySelector(".status-message"),
         false,
         75,
@@ -212,7 +226,7 @@ const login = class {
     }
 
     // Make sure we have a internet connection
-    await Main.waitForInternet();
+    await waitForInternet();
 
     let formData = new FormData(this.form);
 
@@ -290,7 +304,7 @@ const login = class {
       return false;
     }
 
-    await Main.waitForInternet();
+    await waitForInternet();
 
     let response = await fetchRestApi(
       "login/request_login",
@@ -400,7 +414,7 @@ const login = class {
     // Show the email screen
     this.showScreen(this.email);
 
-    let loader = Main.showLoader(null, false, 20, "", true);
+    let loader = showLoader(null, false, 20, "", true);
     showMessage(`Sending e-mail... ${loader}`);
 
     let formData = new FormData();
@@ -458,12 +472,12 @@ const login = class {
     }
 
     if (this.username == "") {
-      Main.displayMessage("Specify your username first", "error");
+      displayMessage("Specify your username first", "error");
       return;
     }
 
     button.classList.add("hidden");
-    let loader = Main.showLoader(
+    let loader = showLoader(
       button,
       false,
       50,
@@ -479,7 +493,7 @@ const login = class {
     );
 
     if (response) {
-      Main.displayMessage(response);
+      displayMessage(response);
 
       // Show the login form
       document.getElementById("loginform").classList.remove("hidden");
@@ -509,7 +523,7 @@ const login = class {
     );
 
     if (response) {
-      Main.displayMessage(response);
+      displayMessage(response);
     }
 
     // reset form

@@ -4,6 +4,13 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+
+import { 
+  Alert 
+} from "../../tsjippy-shared-functionality/js/partials/alert.js";
 
 console.log("logout.js loaded");
 
@@ -29,14 +36,14 @@ async function logout(event) {
       title: `Logging out...`,
     };
 
-    new Main.Alert("", "loader", options);
+    new Alert("", "loader", options);
 
     var formData = new FormData();
 
     var response = await fetchRestApi("login/logout", formData);
 
     if (response) {
-      Main.displayMessage(response);
+      displayMessage(response);
 
       //redirect to homepage
       location.href = location.href;

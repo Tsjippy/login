@@ -4,6 +4,13 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
 
 console.log("Password strength.js loaded");
 
@@ -89,7 +96,7 @@ async function submitPasswordChange(event) {
 
   let form = event.target.closest("form");
 
-  Main.showLoader(event.target, false, 30, 'Changing Password...', false, true);
+  showLoader(event.target, false, 30, 'Changing Password...', false, true);
 
   let formData = new FormData(form);
 
@@ -99,7 +106,7 @@ async function submitPasswordChange(event) {
   );
 
   if (response) {
-    Main.displayMessage(response.message);
+    displayMessage(response.message);
 
     // redirect to login again if resetting own password
     if (!location.href.includes("?user-id=")) {
