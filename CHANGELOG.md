@@ -7,6 +7,7 @@
 - js to modules
 - localized js modules
 - js update
+- load minification js depending on SCRIPT_DEBUG constant
 
 ### Fixed
 - enqueue bug
