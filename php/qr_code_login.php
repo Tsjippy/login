@@ -34,7 +34,7 @@ wp_enqueue_style('tsjippy_style');
             Please authenticate to approve the qr code login request
         </p>
     </main>
-    <script src="<?php echo TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login.min.js'); ?>"></script>
+    <script src="<?php echo TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login' . TSJIPPY\JSEXTENSION); ?>"></script>
 </body>
 
 </html>

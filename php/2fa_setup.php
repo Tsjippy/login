@@ -27,7 +27,7 @@ function twoFaSettingsForm($userId = '')
             </p>
         </div>
         <?php
-        wp_enqueue_script_module('@tsjippy/qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login.min.js'), [], PLUGINVERSION);
+        wp_enqueue_script_module('@tsjippy/qr_code_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/qr_code_login' . TSJIPPY\JSEXTENSION), [], PLUGINVERSION);
         return ob_get_clean();
     }
 

@@ -1,7 +1,7 @@
 // Import the registration hook
 import { checkWebauthnAvailable } from "./webauth.js";
 
-import { startRegistration } from "@simplewebauthn/browser";
+import { startRegistration } from "../node_modules/@simplewebauthn/browser";
 
 import DeviceDetector from "device-detector-js";
 

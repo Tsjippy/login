@@ -1,7 +1,7 @@
 import { 
   startAuthentication, 
   WebAuthnError 
-} from "@simplewebauthn/browser";
+} from "../node_modules/@simplewebauthn/browser";
 
 import { 
   showMessage, 

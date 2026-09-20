@@ -1,5 +1,3 @@
-import DOMPurify from 'dompurify';
-
 export function closeMobileMenu() {
   //close mobile menu
   document
