@@ -28,7 +28,7 @@ if (!isset($message)) {
 }
 
 if ($standAlone && is_user_logged_in()) {
-?>
+    ?>
 
     <body>
         <div style='text-align:center;margin-top:20px;'>
@@ -37,7 +37,7 @@ if ($standAlone && is_user_logged_in()) {
     </body>
     </div>
     </body>
-<?php
+    <?php
     exit();
 }
 

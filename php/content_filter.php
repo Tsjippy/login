@@ -18,6 +18,13 @@ add_filter('wp_die_handler', function ($handler) {
     }
 });
 
+/**
+ * Called when we die
+ * 
+ * @param   string  $message
+ * @param   string  $title
+ * @param   array   $args
+ */
 function wpDieCallLoginModal($message, $title, $args)
 {
     if (wp_doing_cron()) {
