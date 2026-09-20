@@ -116,6 +116,8 @@ export async function webAuthVerification(
       showMessage(error);
 
       showStatusMessage("Passkey Verification Failed");
+
+      loginObj.reset();
     }
 
     return false;

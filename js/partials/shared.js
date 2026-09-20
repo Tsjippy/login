@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 export function closeMobileMenu() {
   //close mobile menu
   document
@@ -12,13 +14,13 @@ export function closeMobileMenu() {
 export function showMessage(message) {
   document
     .querySelectorAll("#message")
-    .forEach((el) => (el.innerHTML = DOMPurify.sanitize(message)));
+    .forEach((el) => (el.innerHTML = message));
 }
 
 export function showStatusMessage(message) {
   document
     .querySelectorAll(".status-message")
-    .forEach((el) => (el.innerHTML = DOMPurify.sanitize(message)));
+    .forEach((el) => (el.innerHTML = message));
 }
 
 export function togglePassworView(ev) {

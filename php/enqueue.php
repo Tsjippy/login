@@ -16,7 +16,7 @@ function loadAssets()
         wp_register_style('tsjippy_login_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/login.min.css'), array(), PLUGINVERSION);
         wp_enqueue_style('tsjippy_login_style');
 
-        wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login.min.js'), array('@tsjippy/main', '@tsjippy/purify', '@tsjippy/formsubmit_script'), PLUGINVERSION);
+        wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login.min.js'), array('@tsjippy/main', '@tsjippy/formsubmit_script'), PLUGINVERSION);
 
         add_filter( 'script_module_data_@tsjippy/login_script', function($data){
             $data['restNonce'] = wp_create_nonce('wp_rest');
