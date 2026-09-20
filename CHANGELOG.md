@@ -4,6 +4,15 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.8.6] - 2026-09-20
+
+
+### Changed
 - js to modules
 - localized js modules
 - js update
@@ -12,8 +21,6 @@
 ### Fixed
 - enqueue bug
 - reset screen on failed passkey
-
-### Updated
 
 ## [10.8.5] - 2026-09-16
 
