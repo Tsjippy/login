@@ -10,6 +10,7 @@
 
 ### Fixed
 - enqueue bug
+- reset screen on failed passkey
 
 ### Updated
 
