@@ -30,7 +30,7 @@ function loadAssets()
 
     wp_register_style('tsjippy_pw_reset_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/pw_reset.min.css'), array(), PLUGINVERSION);
 
-    wp_register_script_module('@tsjippy/password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength.min.js'), array(), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength.min.js'), array('@tsjippy/form_submit_functions'), PLUGINVERSION);
 
     wp_register_script_module('@tsjippy/2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa.min.js'), array('@tsjippy/table_script'), PLUGINVERSION);
 
