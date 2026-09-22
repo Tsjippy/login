@@ -1,4 +1,4 @@
-import { showMessage } from "@tsjippy/shared";
+import { showMessage } from "@tsjippy/login-shared";
 
 import{
   fetchRestApi

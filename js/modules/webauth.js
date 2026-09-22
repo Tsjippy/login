@@ -1,12 +1,12 @@
 import { 
   startAuthentication, 
   WebAuthnError 
-} from "../node_modules/@simplewebauthn/browser/script";
+} from "@simplewebauthn/browser";
 
 import { 
   showMessage, 
   showStatusMessage 
-} from "@tsjippy/shared";
+} from "@tsjippy/login-shared";
 
 import{
   fetchRestApi

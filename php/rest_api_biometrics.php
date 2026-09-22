@@ -21,8 +21,8 @@ add_filter('tsjippy-allowed-rest-api-urls', __NAMESPACE__ . '\addBioUrls');
  */
 function addBioUrls($urls)
 {
-    $urls[]    = TSJIPPY\RESTAPIPREFIX . '/login/auth_finish';
-    $urls[]    = TSJIPPY\RESTAPIPREFIX . '/login/auth_start';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/auth_finish';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/auth_start';
     $urls[] = TSJIPPY\RESTAPIPREFIX . '/login/request_email_code';
 
     return $urls;

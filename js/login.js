@@ -1,9 +1,11 @@
+console.log("Login.js loaded");
+
 import {
   closeMobileMenu,
   showMessage,
   showStatusMessage,
   togglePassworView,
-} from "@tsjippy/shared";
+} from "@tsjippy/login-shared";
 
 import{
   fetchRestApi

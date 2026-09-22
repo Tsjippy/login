@@ -1,4 +1,4 @@
-import { closeMobileMenu } from "@tsjippy/shared";
+import { closeMobileMenu } from "@tsjippy/login-shared";
 
 import{
   fetchRestApi

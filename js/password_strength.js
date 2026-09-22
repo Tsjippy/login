@@ -1,4 +1,4 @@
-import { togglePassworView } from "@tsjippy/shared";
+import { togglePassworView } from "@tsjippy/login-shared";
 
 import{
   fetchRestApi

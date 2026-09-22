@@ -19,20 +19,18 @@ function loadAssets()
     /**
      * Libraries
      */
-    wp_register_script_module('@simplewebauthn/browser', TSJIPPY\pathToUrl(PLUGINPATH . 'js/node_modules/@simplewebauthn/browser/script/index.js'), array(), PLUGINVERSION);
-
-    wp_register_script_module('device-detector-js', TSJIPPY\pathToUrl(PLUGINPATH . 'js/node_modules/device-detector-js/dist/index.js'), array(), PLUGINVERSION);
+    wp_register_script_module('@simplewebauthn/browser', TSJIPPY\pathToUrl(PLUGINPATH . 'js/node_modules/@simplewebauthn/browser/esm/index.js'), array(), PLUGINVERSION);
 
     /**
      * Modules
      */
-    wp_register_script_module('@tsjippy/qr_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/qr_login.js'), array("@tsjippy/shared", "@tsjippy/form_submit_functions", "@tsjippy/show_loader"), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/qr_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/qr_login.js'), array("@tsjippy/login-shared", "@tsjippy/form_submit_functions", "@tsjippy/show_loader"), PLUGINVERSION);
 
-    wp_register_script_module('@tsjippy/register_webauth', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/register_webauth.js'), array("@tsjippy/webauth", "@simplewebauthn/browser", "@tsjippy/shared", "device-detector-js", "@tsjippy/form_submit_functions"), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/register_webauth', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/register_webauth.js'), array("@tsjippy/webauth", "@simplewebauthn/browser", "@tsjippy/login-shared", "@tsjippy/form_submit_functions"), PLUGINVERSION);
 
-    wp_register_script_module('@tsjippy/shared', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/shared.js'), array(), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/login-shared', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/shared.js'), array(), PLUGINVERSION);
 
-    wp_register_script_module('@tsjippy/webauth', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/webauth.js'), array('@simplewebauthn/browser', "@tsjippy/shared", "@tsjippy/form_submit_functions"), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/webauth', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/webauth.js'), array('@simplewebauthn/browser', "@tsjippy/login-shared", "@tsjippy/form_submit_functions"), PLUGINVERSION);
 
     /**
      * Scripts
@@ -56,7 +54,7 @@ function loadAssets()
 
         $deps   = SCRIPT_DEBUG ? [  
             '@tsjippy/form_submit_functions', 
-            "@tsjippy/shared", 
+            "@tsjippy/login-shared", 
             "@tsjippy/show_loader", 
             "@tsjippy/display_message", 
             "@tsjippy/qr_login",
@@ -80,7 +78,7 @@ function loadAssets()
     else {
         $deps   = SCRIPT_DEBUG ? [  
             '@tsjippy/form_submit_functions', 
-            "@tsjippy/shared",  
+            "@tsjippy/login-shared",  
             "@tsjippy/display_message", 
             "@tsjippy/alert",
         ] :
@@ -90,7 +88,7 @@ function loadAssets()
 
     $deps   = SCRIPT_DEBUG ? [  
         '@tsjippy/form_submit_functions', 
-        "@tsjippy/shared", 
+        "@tsjippy/login-shared", 
         "@tsjippy/show_loader", 
         "@tsjippy/display_message"
     ] :

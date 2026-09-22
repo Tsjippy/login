@@ -87,6 +87,9 @@ class CreationCeremony extends WebAuthCeremony
 
     /**
      * Verifies a credential creation response
+     * 
+     * @param   string  $response
+     * @param   string  $identifier
      */
     public function verifyResponse($response, $identifier)
     {
@@ -122,6 +125,12 @@ class CreationCeremony extends WebAuthCeremony
         return "Succesfully Stored The Credential";
     }
 
+    /**
+     * Store in db
+     * 
+     * @param   object  $data    
+     * @param   string  $identifier
+     */
     protected function storeCredential($data, $identifier): void
     {
         $meta = array(

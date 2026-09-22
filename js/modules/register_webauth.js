@@ -3,9 +3,7 @@ import { checkWebauthnAvailable } from "@tsjippy/webauth";
 
 import { startRegistration } from "@simplewebauthn/browser";
 
-import DeviceDetector from "device-detector-js";
-
-import { showMessage, showStatusMessage } from "@tsjippy/shared";
+import { showMessage, showStatusMessage } from "@tsjippy/login-shared";
 
 import{
   fetchRestApi
@@ -18,12 +16,6 @@ export async function registerWebAuthn() {
       return;
     }
   }
-
-  const deviceDetector = new DeviceDetector();
-
-  const device         = deviceDetector.parse(window.navigator.userAgent);
-
-  let identifier       = `${device.device.type}_${device.device.brand}_${device.device.model}_${device.client.name}`;
 
   showMessage("Please take a few seconds to setup your login token...");
   showStatusMessage("Preparing your Passkey...");
@@ -67,7 +59,7 @@ export async function registerWebAuthn() {
   showStatusMessage("Registering Authenticator");
 
   let formData = new FormData();
-  formData.append("identifier", identifier);
+  formData.append("identifier", `${navigator.userAgentData.platform}-${navigator.appCodeName}`);
   formData.append("publicKeyCredential", btoa(JSON.stringify(attResp)));
 
   let response = await fetchRestApi(
