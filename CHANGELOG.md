@@ -7,6 +7,7 @@
 - js refactor
 
 ### Fixed
+- js bugs
 
 ### Updated
 
