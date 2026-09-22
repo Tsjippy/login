@@ -2,19 +2,19 @@ console.log("2fa.js loaded");
 
 import{
   fetchRestApi
-} from "../../tsjippy-forms/js/form_submit_functions.js";
+} from "@tsjippy/form_submit_functions";
 
 import { 
   showLoader 
-} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+} from "@tsjippy/show_loader";
 
 import { 
   displayMessage 
-} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+} from "@tsjippy/display_message";
 
 import { 
   isMobileDevice 
-} from "../../tsjippy-shared-functionality/js/partials/mobile.js";
+} from "@tsjippy/mobile";
 
 async function saveTwofaSettings(target) {
   let form = target.closest("form");

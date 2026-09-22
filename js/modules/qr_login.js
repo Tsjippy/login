@@ -1,13 +1,12 @@
-import { showMessage } from "./shared.js";
+import { showMessage } from "@tsjippy/shared";
 
 import{
   fetchRestApi
-} from "../../../tsjippy-forms/js/form_submit_functions.js";
+} from "@tsjippy/form_submit_functions";
 
 import { 
   showLoader 
-} from "../../../tsjippy-shared-functionality/js/partials/show_loader.js";
-
+} from "@tsjippy/show_loader";
 
 let intervalId;
 let checkCount = 5;

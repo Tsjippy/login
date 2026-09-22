@@ -11,6 +11,8 @@ if (! defined('ABSPATH')) {
 //add_shortcode('tsjippy_twofa_setup', __NAMESPACE__ . '\twoFaSettingsForm');
 function twoFaSettingsForm($userId = '')
 {
+    wp_enqueue_script_module('@tsjippy/2fa_script');
+    
     ob_start();
     //we need to approve a qr code login
     // phpcs:ignore

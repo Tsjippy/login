@@ -11,12 +11,62 @@ if (! defined('ABSPATH')) {
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
 function loadAssets()
 {
-    if (!is_user_logged_in()) {
-        //login form
-        wp_register_style('tsjippy_login_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/login.min.css'), array(), PLUGINVERSION);
-        wp_enqueue_style('tsjippy_login_style');
+    /**
+     * CSS
+     */
+    wp_register_style('tsjippy_pw_reset_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/pw_reset.min.css'), array(), PLUGINVERSION);
 
-        wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login' . TSJIPPY\JSEXTENSION), array('@tsjippy/main', '@tsjippy/formsubmit_script'), PLUGINVERSION);
+    /**
+     * Libraries
+     */
+    wp_register_script_module('@simplewebauthn/browser', TSJIPPY\pathToUrl(PLUGINPATH . 'js/node_modules/@simplewebauthn/browser/script/index.js'), array(), PLUGINVERSION);
+
+    wp_register_script_module('device-detector-js', TSJIPPY\pathToUrl(PLUGINPATH . 'js/node_modules/device-detector-js/dist/index.js'), array(), PLUGINVERSION);
+
+    /**
+     * Modules
+     */
+    wp_register_script_module('@tsjippy/qr_login', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/qr_login.js'), array("@tsjippy/shared", "@tsjippy/form_submit_functions", "@tsjippy/show_loader"), PLUGINVERSION);
+
+    wp_register_script_module('@tsjippy/register_webauth', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/register_webauth.js'), array("@tsjippy/webauth", "@simplewebauthn/browser", "@tsjippy/shared", "device-detector-js", "@tsjippy/form_submit_functions"), PLUGINVERSION);
+
+    wp_register_script_module('@tsjippy/shared', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/shared.js'), array(), PLUGINVERSION);
+
+    wp_register_script_module('@tsjippy/webauth', TSJIPPY\pathToUrl(PLUGINPATH . 'js/modules/webauth.js'), array('@simplewebauthn/browser', "@tsjippy/shared", "@tsjippy/form_submit_functions"), PLUGINVERSION);
+
+    /**
+     * Scripts
+     */
+    // 2FA
+    $deps   = SCRIPT_DEBUG ? [  
+        '@tsjippy/form_submit_functions',  
+        "@tsjippy/show_loader", 
+        "@tsjippy/display_message", 
+        "@tsjippy/mobile"
+    ] :
+    [];
+
+    $deps[] = '@tsjippy/table_script';
+
+    wp_register_script_module('@tsjippy/2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
+
+    //login form
+    if (!is_user_logged_in()) {
+        wp_enqueue_style('tsjippy_login_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/login.min.css'), array(), PLUGINVERSION);
+
+        $deps   = SCRIPT_DEBUG ? [  
+            '@tsjippy/form_submit_functions', 
+            "@tsjippy/shared", 
+            "@tsjippy/show_loader", 
+            "@tsjippy/display_message", 
+            "@tsjippy/qr_login",
+            "@tsjippy/webauth",
+            "@tsjippy/register_webauth",
+            "@tsjippy/internet_connection"
+        ] :
+        [];
+
+        wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
 
         add_filter( 'script_module_data_@tsjippy/login_script', function($data){
             $data['restNonce'] = wp_create_nonce('wp_rest');
@@ -24,27 +74,26 @@ function loadAssets()
 
             return $data; 
         } );
-    } else {
-        wp_enqueue_script_module('@tsjippy/logout_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/logout' . TSJIPPY\JSEXTENSION), array('@tsjippy/main', '@tsjippy/formsubmit_script'), PLUGINVERSION);
+    } 
+    
+    // Logout forms
+    else {
+        $deps   = SCRIPT_DEBUG ? [  
+            '@tsjippy/form_submit_functions', 
+            "@tsjippy/shared",  
+            "@tsjippy/display_message", 
+            "@tsjippy/alert",
+        ] :
+        [];
+        wp_enqueue_script_module('@tsjippy/logout_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/logout' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
     }
 
-    wp_register_style('tsjippy_pw_reset_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/pw_reset.min.css'), array(), PLUGINVERSION);
-
-    wp_register_script_module('@tsjippy/password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength' . TSJIPPY\JSEXTENSION), array('@tsjippy/form_submit_functions'), PLUGINVERSION);
-
-    wp_register_script_module('@tsjippy/2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa' . TSJIPPY\JSEXTENSION), array('@tsjippy/table_script'), PLUGINVERSION);
-
-    if (is_numeric(get_the_ID())) {
-        $passwordResetPage  = SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page');
-        $registerPage       = SETTINGS['register-page'] ?? createDefaultPages('register-page');
-        if (get_the_ID() == $passwordResetPage || get_the_ID() == $registerPage) {
-            wp_enqueue_style('tsjippy_pw_reset_style');
-
-            wp_enqueue_script_module('@tsjippy/password_strength_script');
-        }
-
-        if (get_the_ID() == (SETTINGS['2fa-page'] ?? createDefaultPages('2fa-page'))) {
-            wp_enqueue_script_module('@tsjippy/2fa_script');
-        }
-    }
+    $deps   = SCRIPT_DEBUG ? [  
+        '@tsjippy/form_submit_functions', 
+        "@tsjippy/shared", 
+        "@tsjippy/show_loader", 
+        "@tsjippy/display_message"
+    ] :
+    [];
+    wp_register_script_module('@tsjippy/password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
 }

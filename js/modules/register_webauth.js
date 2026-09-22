@@ -1,16 +1,15 @@
 // Import the registration hook
-import { checkWebauthnAvailable } from "./webauth.js";
+import { checkWebauthnAvailable } from "@tsjippy/webauth";
 
-import { startRegistration } from "../node_modules/@simplewebauthn/browser";
+import { startRegistration } from "@simplewebauthn/browser";
 
 import DeviceDetector from "device-detector-js";
 
-import { showMessage, showStatusMessage } from "./shared.js";
+import { showMessage, showStatusMessage } from "@tsjippy/shared";
 
 import{
   fetchRestApi
-} from "../../../tsjippy-forms/js/form_submit_functions.js";
-
+} from "@tsjippy/form_submit_functions";
 
 export async function registerWebAuthn() {
   if (window.webauth_register == undefined) {

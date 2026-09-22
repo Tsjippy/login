@@ -1,17 +1,16 @@
 import { 
   startAuthentication, 
   WebAuthnError 
-} from "../node_modules/@simplewebauthn/browser";
+} from "../node_modules/@simplewebauthn/browser/script";
 
 import { 
   showMessage, 
   showStatusMessage 
-} from "./shared.js";
+} from "@tsjippy/shared";
 
 import{
   fetchRestApi
-} from "../../../tsjippy-forms/js/form_submit_functions.js";
-
+} from "@tsjippy/form_submit_functions";
 
 window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(
   (result) => {

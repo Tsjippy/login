@@ -3,37 +3,37 @@ import {
   showMessage,
   showStatusMessage,
   togglePassworView,
-} from "./partials/shared.js";
+} from "@tsjippy/shared";
 
 import{
   fetchRestApi
-} from "../../tsjippy-forms/js/form_submit_functions.js";
+} from "@tsjippy/form_submit_functions";
 
 import { 
   showLoader 
-} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+} from "@tsjippy/show_loader";
 
 import { 
   displayMessage 
-} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+} from "@tsjippy/display_message";
 
 import { 
   showLoginQrCode, 
   hideQrCode 
-} from "./partials/qr_login.js";
+} from "@tsjippy/qr_login";
 
 import {
   checkWebauthnAvailable,
   webAuthVerification,
   checkImmediateMediationAvailability,
   verifyWebauthn,
-} from "./partials/webauth.js";
+} from "@tsjippy/webauth";
 
-import { registerWebAuthn } from "./partials/register_webauth.js";
+import { registerWebAuthn } from "@tsjippy/register_webauth";
 
 import { 
   waitForInternet 
-} from "../../tsjippy-shared-functionality/js/partials/internet_connection.js";
+} from "@tsjippy/internet_connection";
 
 //Add an event listener to the login or register button
 console.log("Login.js loaded");

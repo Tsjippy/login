@@ -1,4 +1,4 @@
-import { webAuthVerification } from "./partials/webauth.js";
+import { webAuthVerification } from "@tsjippy/webauth";
 
 console.log("Qr code login loaded");
 
