@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.8.7] - 2026-09-22
+
+
+### Changed
 - js refactor
 
 ### Fixed
 - js bugs
-
-### Updated
 
 ## [10.8.6] - 2026-09-20
 
