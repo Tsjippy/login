@@ -7,6 +7,7 @@
 
 ### Fixed
 - js variables
+- login
 
 ### Updated
 
