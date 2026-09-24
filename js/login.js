@@ -1,5 +1,3 @@
-console.log("Login.js loaded");
-
 import {
   closeMobileMenu,
   showMessage,

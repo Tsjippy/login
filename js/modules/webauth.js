@@ -146,15 +146,10 @@ export async function checkImmediateMediationAvailability() {
     const capabilities = await PublicKeyCredential.getClientCapabilities();
 
     if (capabilities.immediateGet && window.PasswordCredential) {
-      console.log("Immediate Mediation with passwords supported.");
       return true;
     } else if (capabilities.immediateGet) {
-      console.log("Immediate Mediation without passwords supported.");
-
       return true;
     } else {
-      console.log("Immediate Mediation unsupported.");
-
       return false;
     }
   } catch (error) {
