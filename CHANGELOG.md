@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- js variables
-- login
 
 ### Updated
+
+## [10.9.1] - 2026-09-24
+
+
+### Fixed
+- js variables
+- login
 
 ## [10.8.9] - 2026-09-23
 
