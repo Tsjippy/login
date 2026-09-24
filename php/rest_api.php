@@ -29,6 +29,9 @@ function addLoginUrls($urls)
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\loginRestApi');
+/**
+ * Registers restapi end points
+ */
 function loginRestApi()
 {
     // check credentials
@@ -193,7 +196,9 @@ function checkPassword($check, $password, $storedHash, $userId)
     return $check;
 }
 
-// Verify username and password
+/**
+ * Verify username and password
+ */
 function checkCredentials()
 {
     $username   = TSJIPPY\sanitize($_POST['username']);
@@ -357,7 +362,9 @@ function userLogin()
     ];
 }
 
-// Send password reset e-mail
+/**
+ * Send password reset e-mail
+ */
 function requestPasswordReset()
 {
     $username   = TSJIPPY\sanitize($_POST['username']);
@@ -388,7 +395,9 @@ function requestPasswordReset()
     return "Password reset link send to $email";
 }
 
-//Save a new password
+/**
+ * Save a new password
+ */
 function processPasswordUpdate()
 {
     $userId    = $_POST['user-id'];

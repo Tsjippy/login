@@ -7,6 +7,9 @@ use TSJIPPY;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_action('init', __NAMESPACE__ . '\initBlocks');
+/**
+ * Registers login blocks
+ */
 function initBlocks()
 {
     register_block_type(
@@ -62,6 +65,11 @@ function initBlocks()
 
 //Shortcode to return the amount of loggins in words
 add_shortcode("tsjippy-login-count", __NAMESPACE__ . '\loginCount');
+/**
+ * Returns the login count as string
+ * 
+ * @return string
+ */
 function loginCount()
 {
 	$userId				= get_current_user_id();
@@ -76,6 +84,11 @@ function loginCount()
 }
 
 // Display password reset
+/**
+ * Returns the password reset form html
+ * 
+ * @return string
+ */
 function changePassword()
 {
     $user    = '';

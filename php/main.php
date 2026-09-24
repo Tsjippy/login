@@ -10,6 +10,9 @@ if (! defined('ABSPATH')) {
 
 //disable wp-login.php except for logout
 add_action('init', __NAMESPACE__ . '\redirectToLogin');
+/**
+ * Redirects to login ajax screen
+ */
 function redirectToLogin()
 {
     // do not run during rest request
@@ -107,6 +110,9 @@ function loginModal($message = '', $required = false, $username = '')
 
 //add hidden login modal to page if not logged in
 add_action('loop_end', __NAMESPACE__ . '\loopEnd', 99999);
+/**
+ * Shows login modal if needed
+ */
 function loopEnd()
 {
     if (!is_main_query()) {

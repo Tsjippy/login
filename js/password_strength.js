@@ -92,7 +92,7 @@ function updateIndicator(indicator) {
 }
 
 async function submitPasswordChange(event) {
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 
   let form = event.target.closest("form");
 

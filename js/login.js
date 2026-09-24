@@ -37,6 +37,8 @@ import {
   waitForInternet 
 } from "@tsjippy/internet_connection";
 
+import "@tsjippy/nonce_script";
+
 //Add an event listener to the login or register button
 console.log("Login.js loaded");
 
@@ -58,7 +60,7 @@ const login = class {
   eventListeners() {
     document.addEventListener("keypress", (e) => {
       if (e.key === "Enter" && this.creds != null) {
-        e.stopImmediatePropagation();
+        e.stopPropagation();
 
         if (
           this.curScreen == this.creds &&
@@ -102,7 +104,7 @@ const login = class {
         return;
       }
 
-      event.stopImmediatePropagation();
+      event.stopPropagation();
     });
 
     document.addEventListener("input", (event) => {
@@ -129,7 +131,7 @@ const login = class {
 
     this.data           = JSON.parse(
       document.getElementById(
-          'wp-script-module-data-@tsjippy/statistics_script'
+          'wp-script-module-data-@tsjippy/nonce_script'
       ).textContent
     );
 

@@ -9,6 +9,12 @@ if (! defined('ABSPATH')) {
 }
 
 add_filter('tsjippy-user-management-user-info-page', __NAMESPACE__ . '\userInfoPage', 10, 3);
+/**
+ * Filters the tab content of the profile page
+ * @param   array       $html                   contains index 'tabs' for the tab buttons html and 'html' for the content of each tab
+ * @param   bool        $showCurrentUserData    Current or another user
+ * @param   \WP_User    $user                   The user data
+ */
 function userInfoPage($html, $showCurrentUserData, $user)
 {
     /*

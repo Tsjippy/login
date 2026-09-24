@@ -17,6 +17,6 @@
   "dependencies": {
     "@simplewebauthn/browser": "^14.0.0",
     "device-detector-js": "^3.0.3",
-    "dompurify": "^3.4.15"
+    "dompurify": "^3.4.16"
   }
 }

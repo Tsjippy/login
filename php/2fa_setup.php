@@ -8,7 +8,13 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-//add_shortcode('tsjippy_twofa_setup', __NAMESPACE__ . '\twoFaSettingsForm');
+/**
+ * Renders the 2fa form
+ * 
+ * @param string|int    $userId
+ * 
+ * @return  string html
+ */
 function twoFaSettingsForm($userId = '')
 {
     wp_enqueue_script_module('@tsjippy/2fa_script');

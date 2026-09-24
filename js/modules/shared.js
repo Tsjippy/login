@@ -22,7 +22,7 @@ export function showStatusMessage(message) {
 }
 
 export function togglePassworView(ev) {
-  ev.stopImmediatePropagation();
+  ev.stopPropagation();
 
   var target = ev.target;
 

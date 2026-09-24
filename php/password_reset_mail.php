@@ -37,6 +37,19 @@ function sendPasswordResetMessage($user)
 }
 
 add_filter('retrieve_password_message', __NAMESPACE__ . '\passwordMessage', 10, 4);
+/**
+ * Filters the message body of the password reset mail.
+ *
+ * If the filtered message is empty, the password reset email will not be sent.
+ *
+ * @since 2.8.0
+ * @since 4.1.0 Added `$user_login` and `$user_data` parameters.
+ *
+ * @param string  $message    Email message.
+ * @param string  $key        The activation key.
+ * @param string  $userLogin  The username for the user.
+ * @param WP_User $user       WP_User object.
+ */
 function passwordMessage($message, $key, $userLogin, $user)
 {
     $pageurl     = get_permalink(SETTINGS['password-reset-page'] ?? createDefaultPages('password-reset-page'));

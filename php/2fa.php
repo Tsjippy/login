@@ -234,6 +234,9 @@ function authenticate($user)
 
 //Redirect to 2fa page if not setup
 add_action('init', __NAMESPACE__ . '\redirectTo2fa');
+/**
+ * Redirects to the 2fa page
+ */
 function redirectTo2fa()
 {
     // do not run during rest request

@@ -23,9 +23,12 @@ use Webauthn\PublicKeyCredentialParameters;
  */
 class CreationCeremony extends WebAuthCeremony
 {
-    public $verificationType;
-    public $ceremonyRequestManager;
+    public mixed $verificationType;
+    public mixed $ceremonyRequestManager;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();

@@ -9,6 +9,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
+/**
+ * Registeres the CSS and JS
+ */
 function loadAssets()
 {
     /**
@@ -45,6 +48,7 @@ function loadAssets()
     [];
 
     $deps[] = '@tsjippy/table_script';
+    $deps[] = "@tsjippy/nonce_script";
 
     wp_register_script_module('@tsjippy/2fa_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/2fa' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
 
@@ -64,14 +68,8 @@ function loadAssets()
         ] :
         [];
 
+        $deps[] = "@tsjippy/nonce_script";
         wp_enqueue_script_module('@tsjippy/login_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/login' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
-
-        add_filter( 'script_module_data_@tsjippy/login_script', function($data){
-            $data['restNonce'] = wp_create_nonce('wp_rest');
-            $data['userId']    = get_current_user_id();
-
-            return $data; 
-        } );
     } 
     
     // Logout forms
@@ -83,6 +81,8 @@ function loadAssets()
             "@tsjippy/alert",
         ] :
         [];
+
+        $deps[] = "@tsjippy/nonce_script";
         wp_enqueue_script_module('@tsjippy/logout_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/logout' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
     }
 
@@ -93,5 +93,7 @@ function loadAssets()
         "@tsjippy/display_message"
     ] :
     [];
+
+    $deps[] = "@tsjippy/nonce_script";
     wp_register_script_module('@tsjippy/password_strength_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/password_strength' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
 }

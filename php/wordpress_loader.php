@@ -8,6 +8,9 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * loads wp files
+ */
 function loadWordpress($title)
 {
 
@@ -25,7 +28,7 @@ function loadWordpress($title)
     do_action('wp_enqueue_scripts');
     do_action('wp_enqueue_style');
 
-?>
+    ?>
     <!DOCTYPE html>
     <html <?php language_attributes(); ?>>
 
@@ -38,5 +41,5 @@ function loadWordpress($title)
         wp_print_styles();
         ?>
     </head>
-<?php
+    <?php
 }

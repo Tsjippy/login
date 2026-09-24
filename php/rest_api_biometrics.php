@@ -29,6 +29,9 @@ function addBioUrls($urls)
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\bioRestApi');
+/**
+ * Registeres rest api endpoints
+ */
 function bioRestApi()
 {
     // Send authentication request for storing fingerprint
@@ -174,6 +177,9 @@ function bioRestApi()
     );
 }
 
+/**
+ * Send a verification code through email
+ */
 function requestEmailCode()
 {
     $username   = TSJIPPY\sanitize($_REQUEST['username']);
@@ -195,6 +201,9 @@ function requestEmailCode()
     }
 }
 
+/**
+ * Removes a 2fa authenticator method
+ */
 function removeWebAuthenticator()
 {
     $key        = TSJIPPY\sanitize($_POST['userHandle']);
@@ -252,7 +261,9 @@ function checkBioPassword($check, $password, $storedHash, $userId)
     return $check;
 }
 
-// Save 2fa options
+/**
+ * Save 2fa options
+ */
 function saveTwoFaSettings()
 {
     $userId         = get_current_user_id();
