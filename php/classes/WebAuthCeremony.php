@@ -23,18 +23,21 @@ if (! defined('ABSPATH')) {
  */
 class WebAuthCeremony
 {
-    public $verificationType;
-    public $rpEntity;
-    public $manager;
-    public $serializer;
-    public $publicKeyCredential;
-    public $factory;
-    public $user;
-    public $credentials;
-    public $credentialMetas;
-    public $domain;
-    public $userEntity;
+    public mixed $verificationType;
+    public mixed $rpEntity;
+    public mixed $manager;
+    public mixed $serializer;
+    public mixed $publicKeyCredential;
+    public mixed $factory;
+    public mixed $user;
+    public mixed $credentials;
+    public mixed $credentialMetas;
+    public mixed $domain;
+    public mixed $userEntity;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->user = wp_get_current_user();
@@ -89,6 +92,8 @@ class WebAuthCeremony
 
     /**
      * Get the profile picture for use in the request
+     * 
+     * @param int   $userId
      */
     public function getProfilePicture($userId)
     {
@@ -162,6 +167,8 @@ class WebAuthCeremony
 
     /**
      * Unserializes a public key json and converts it to a PublicKeyCredential instance
+     * 
+     * @param   string  $data
      */
     public function loadPublicKey($data)
     {
@@ -303,6 +310,8 @@ class WebAuthCeremony
 
     /**
      * Delete a credential
+     * 
+     * @param   string  $id
      */
     public function removeCredential($id)
     {
