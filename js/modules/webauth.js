@@ -131,12 +131,8 @@ export async function checkWebauthnAvailable() {
       await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     if (available) {
       webauthnSupported = true;
-    } else {
-      console.log("WebAuthn supported, Platform Authenticator not supported.");
-    }
-  } else {
-    console.log("Not supported.");
-  }
+    } 
+  } 
 
   return webauthnSupported;
 }

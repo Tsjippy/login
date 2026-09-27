@@ -324,9 +324,6 @@ const login = class {
     // We are logging in from an iframe
     if (window.self !== window.top) {
       // change message
-      console.log(window.parent.document.getElementById("iframe-loader"));
-      console.log(window.parent.document);
-      console.log(window.parent);
       window.parent.document.getElementById("iframe-loader").textContent =
         "Succesfully logged in, you may now close this popup";
 
@@ -335,8 +332,6 @@ const login = class {
 
       // Update user id
       window.parent.userId = response.id;
-
-      console.log(window.parent.document.getElementById("iframe-loader"));
 
       // close all iframes
       window.parent.document

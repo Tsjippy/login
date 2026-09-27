@@ -69,13 +69,6 @@ async function refreshQrCode() {
       wrapper.innerHTML = response;
 
       showMessage("Scan the QR code to login");
-
-      console.log(
-        `New token: ${document.getElementById("login-qr-code").dataset.token}`,
-      );
-      console.log(
-        `New key: ${document.getElementById("login-qr-code").dataset.key}`,
-      );
     } else {
       wrapperinnerHTML = "";
 
